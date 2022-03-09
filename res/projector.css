@@ -1,0 +1,360 @@
+#app {
+	height: 100%;
+	width: 100%;
+	position: fixed;
+	background: url(../img/bg_portrait.jpg) #643 0/cover;
+	color: white;
+	display: flex;
+	font: 2.5vh "Open Sans", sans-serif;
+	justify-content: center;
+	text-shadow: 2px 2px black;
+	touch-action: none;
+	-webkit-user-select: none;
+	user-select: none;
+}
+
+select,
+button {
+	border-radius: .5em;
+	color: white;
+	font-family: inherit;
+	font-size: 120%;
+	line-height: 1.2;
+	text-shadow: inherit;
+	cursor: pointer;
+	transition: color .5s, box-shadow .5s;
+}
+
+select {
+	appearance: none;
+	background: url(../img/arrow.svg) no-repeat right .5em top 50% / .65em auto;
+	border: 0;
+	padding: 0 1.5em 0 .2em;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin: .2em 0;
+}
+
+.menu select {
+	border: .1em solid;
+}
+
+option {
+	background: black;
+}
+
+button {
+	align-self: center;
+	background: none;
+	border: .2em solid;
+	padding: 0 .3em;
+	font-weight: bold;
+}
+
+:disabled {
+	color: gray;
+}
+
+.menu #table,
+.menu #desc-menu,
+#decor,
+#deck-elem,
+#desc-show,
+#card-modal {
+	display: none;
+}
+
+#main {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	margin: .2em;
+}
+
+#menu-column-1,
+#menu-column-2 {
+	display: flex;
+	flex-direction: column;
+	max-width: 100vh;
+}
+
+#menu-column-1 {
+	flex: 1;
+	justify-content: space-between;
+}
+
+#menu-column-2 {
+	overflow: auto;
+}
+
+#decor {
+	position: absolute;
+	height: 100%;
+	right: 0;
+	transform: translateX(50%);
+	opacity: .5;
+	z-index: -1;
+}
+
+.title,
+.subtitle {
+	font: 130% Edo, sans-serif;
+	text-align: center;
+}
+
+#title {
+	font-size: 300%;
+}
+
+#start {
+	margin-bottom: .5em;
+}
+
+.scrollable {
+	border-radius: .5em;
+	box-shadow: 0 -1.2em .8em -1em inset;
+	text-align: justify;
+	overflow: auto;
+	padding: 0 .2em .5em;
+}
+
+#copyright {
+	font-size: 85%;
+	align-self: center;
+	white-space: nowrap;
+}
+
+#layout-sel {
+	font-weight: bold;
+	display: block;
+}
+
+#table {
+	position: relative;
+	flex: 1;
+	overflow: hidden;
+}
+
+.slot {
+	transform: translate(-50%, -50%);
+	box-shadow: 0 0 .8em inset;
+	min-width: 2.7em;
+	transform-style: preserve-3d;
+	left: 50%;
+	top: -20vh;
+	transition: left 1s, top 1s;
+}
+
+.slot,
+#deck-elem,
+.anim-card {
+	position: absolute;
+	height: 5em;
+	border-radius: .3em;
+}
+
+.slot img {
+	height: 100%;
+	border-radius: inherit;
+	cursor: pointer;
+	transition: box-shadow .5s;
+}
+
+.slot span {
+	position: absolute;
+	left: 110%;
+	font: 150%/0 Edo, sans-serif;
+	transform: translateZ(-1px); /* improves performance on weaker devices, no idea why ¯\_(ツ)_/¯ */
+}
+
+.slot img,
+.anim-card {
+	box-shadow: 0 0 .5em;
+}
+
+#selected,
+select:focus {
+	outline: none;
+	box-shadow: 0 0 .6em .3em red;
+}
+
+#deck-elem {
+	bottom: 1em;
+	left: 1em;
+	box-shadow: .15em .15em 0 .1em #333, .3em .3em 0 .1em #333,	.15em .15em .5em .3em;
+	cursor: pointer;
+	transition: box-shadow .5s;
+}
+
+#deck-elem:hover {
+	box-shadow: .15em .15em 0 .1em #333, .3em .3em 0 .1em #333, .15em .15em .5em .3em red;
+}
+
+#deck-elem[src*="restart"] {
+	height: 3em;
+}
+
+#desc-show {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+#desc-hide {
+	margin-top: .4em;
+}
+
+#desc-menu {
+	position: fixed;
+	flex: 0 0 40%;
+	left: 0;
+	right: 0;
+	height: 100%;
+	padding: .4em;
+	background: rgba(0, 0, 0, .75);
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+}
+
+.anim-card,
+#deck-elem,
+#desc-menu {
+	z-index: 1;
+}
+
+#card-modal {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, .75);
+	padding: 1em;
+	cursor: zoom-out;
+}
+
+#img-zoomed {
+	height: 100%;
+	width: 100%;
+	object-fit: contain;
+	animation: zoom .6s forwards;
+}
+
+@keyframes zoom {
+	from {transform: scale(.5)}
+}
+
+#desc-title {
+	font-size: 150%;
+}
+
+#card-img {
+	height: 35vh;
+	border-radius: .5em;
+	box-shadow: 0 0 1em;
+	cursor: zoom-in;
+}
+
+#card-name {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+#desc-container {
+	flex: 1;
+}
+
+#intro,
+#layout-desc,
+#pos-list,
+.card-reading {
+	white-space: pre-line;
+}
+
+@media screen and (orientation: landscape) {
+	#app {
+		background-image: url(../img/bg.jpg);
+	}
+	#desc-menu {
+		position: static;
+	}
+	@media (max-height: 600px) {
+		#app {
+			font-size: 4vh;
+		}
+		#main {
+			flex-direction: row;
+		}
+		#menu-column-1,
+		#menu-column-2 {
+			flex: 1 1 0px;
+		}
+	}
+}
+
+.cross #s1 {left: 37%; top: 50%}
+.cross #s2 {left: 37%; top: 52%; transform: translate(-50%, -50%) rotate(90deg)}
+.cross #s3 {left: 37%; top: 28%}
+.cross #s4 {left: 37%; top: 72%}
+.cross #s5 {left: 14%; top: 50%}
+.cross #s6 {left: 60%; top: 50%}
+.cross #s7 {left: 83%; top: 83%}
+.cross #s8 {left: 83%; top: 61%}
+.cross #s9 {left: 83%; top: 39%}
+.cross #s10 {left: 83%; top: 17%}
+.faust #s1, .disorder #s2, .marry #s4 {left: 20%; top: 65%}
+.faust #s2, .disorder #s1, .marry #s1 {left: 50%; top: 20%}
+.faust #s3, .disorder #s3, .marry #s5 {left: 80%; top: 65%}
+.faust #s4, .disorder #s4, .marry #s2 {left: 20%; top: 35%}
+.faust #s5, .disorder #s6, .marry #s6 {left: 50%; top: 80%}
+.faust #s6, .disorder #s5, .marry #s3 {left: 80%; top: 35%}
+.faust #s7, .disorder #s7, .one #s1, .swing #s11, .solution #s1, .station #s1 {left: 50%; top: 50%}
+.problem #s1 {left: 50%; top: 35%}
+.problem #s2 {left: 25%; top: 60%}
+.problem #s3 {left: 50%; top: 60%}
+.problem #s4 {left: 75%; top: 60%}
+.progress #s1 {left: 20%; top: 50%}
+.progress #s2 {left: 40%; top: 50%}
+.progress #s3 {left: 60%; top: 50%}
+.progress #s4 {left: 20%; top: 25%}
+.progress #s5 {left: 40%; top: 25%}
+.progress #s6 {left: 60%; top: 25%}
+.progress #s7 {left: 45%; top: 75%}
+.progress #s8 {left: 65%; top: 75%}
+.progress #s9 {left: 85%; top: 75%}
+.progress #s10 {left: 20%; top: 75%}
+.solution #s2 {left: 10%; top: 25%}
+.solution #s3 {left: 30%; top: 25%}
+.solution #s4 {left: 70%; top: 25%}
+.solution #s5 {left: 90%; top: 25%}
+.solution #s6 {left: 10%; top: 50%}
+.solution #s7 {left: 30%; top: 50%}
+.solution #s8 {left: 70%; top: 50%}
+.solution #s9 {left: 90%; top: 50%}
+.solution #s10 {left: 30%; top: 75%}
+.solution #s11 {left: 70%; top: 75%}
+.station #s2 {left: 75%; top: 25%}
+.station #s3 {left: 75%; top: 50%}
+.station #s4 {left: 75%; top: 75%}
+.station #s5 {left: 25%; top: 75%}
+.station #s6 {left: 25%; top: 50%}
+.station #s7 {left: 25%; top: 25%}
+.swing #s1 {left: 25%; top: 20%}
+.swing #s2 {left: 20%; top: 35%}
+.swing #s3 {left: 25%; top: 50%}
+.swing #s4 {left: 20%; top: 65%}
+.swing #s5 {left: 25%; top: 80%}
+.swing #s6 {left: 75%; top: 20%}
+.swing #s7 {left: 80%; top: 35%}
+.swing #s8 {left: 75%; top: 50%}
+.swing #s9 {left: 80%; top: 65%}
+.swing #s10 {left: 75%; top: 80%}
+.choice #s1 {left: 20%; top: 50%}
+.choice #s2 {left: 40%; top: 35%}
+.choice #s3 {left: 60%; top: 35%}
+.choice #s4 {left: 80%; top: 35%}
+.choice #s5 {left: 40%; top: 65%}
+.choice #s6 {left: 60%; top: 65%}
+.choice #s7 {left: 80%; top: 65%}
