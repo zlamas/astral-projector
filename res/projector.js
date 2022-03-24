@@ -1,4 +1,4 @@
-$(function() {
+(function() {
 "use strict";
 let theme, layout, subject, deck, nextSlotId, deckArray, descriptions, titles, slotCount, readings, extraMajors, altRankNames, altSuitNames, deckSize, meanings;
 
@@ -34,47 +34,23 @@ menuFadeTime = 500,
 imgFadeTime = 300,
 imgPath = "img/",
 
-$layoutSel = $("#layout-sel").change(function() {
-	layout = this.value;
-	theme = themes[layout];
-	$table.prop("class", layout);
+$app = $("#app").click(function(){}), // prevent double-tap to zoom on ios
 
-	if (theme == null) {
-		$subjectSel.prop("disabled", false);
-		if (!subject)
-			$subjectSel.prop("selectedIndex", 0);
-	} else
-		$subjectSel.prop("disabled", true).val(theme).change();
-}).one("change", function() {
-	$deckSel.prop("disabled", false);
-}),
-
-$subjectSel = $("#subject-sel").change(function() { subject = this.value }),
-
-$deckSel = $("#deck-sel").change(function() { 
-	deck = this.value;
-
-	$.extend(roman, 
-		justice8.indexOf(deck) >= 0 ?
-		{8: "XI", 11: "VIII"} :
-		{8: "VIII", 11: "XI"}
-	);
-	
-	extraMajors = extraMajorNames[deck] || [];
-	altRankNames = altRanks[deck];
-	altSuitNames = altSuits[deck];
-}),
+$layoutSel = $("#layout-sel"),
+$subjectSel = $("#subject-sel"),
+$deckSel = $("#deck-sel"),
 
 $startButton = $("#start"),
 $showButton = $("#desc-show"),
 $hideButton = $("#desc-hide"),
+
 $table = $("#table"),
 $deckElem = $("#deck-elem"),
 $slots = $(".slot"),
-$cardImgs = $slots.children("img"),
+$cardImgs = $(".slot img"),
 $animCard = $("<img>").prop("class", "anim-card"),
 
-$descMenu = $("#desc-menu").hide().click(function(e) { e.stopPropagation() }),
+$descMenu = $("#desc-menu"),
 $descTitle = $("#desc-title"),
 $descContainer = $("#desc-container"),
 
@@ -88,8 +64,10 @@ $textElems = $("#pos-name, #card-name, #card-classic-name, #general-reading, #la
 $cardInfo = $("#card-info"),
 $readingContainers = $(".card-reading"),
 
-$descriptionImgElems = $("#img-zoomed, #card-img"),
-$imgModal = $("#card-modal"),
+$descImg = $("#card-img"),
+$cardModal = $("#card-modal"),
+$cardModalImg = $("#img-zoomed"),
+$descImgElems = $descImg.add($cardModalImg),
 $decor = $("#decor");
 
 function randomInt(min, max) {
@@ -116,7 +94,8 @@ function updateDescription(id) {
 function resetDescription() {
 	if (nextSlotId > 0)
 		$descTitle.text("Нажмите на карту, чтобы увидеть её значение");
-	$cardInfo.add($readingContainers).hide();
+	$cardInfo.hide();
+	$readingContainers.hide();
 	$layoutInfo.show();
 }
 
@@ -150,8 +129,7 @@ function resetTable() {
 	$cardImgs
 		.finish()
 		.fadeOut(imgFadeTime)
-		.filter(":hidden")
-		.prop("src", "");
+		.off("load");
 	
 	$slots.css("z-index", "");
 	$descTitle.text("Жмите на колоду, чтобы заполнить расклад");
@@ -204,24 +182,25 @@ function drawCard() {
 	const
 		$slotImg = $cardImgs.eq(nextSlotId),
 		$slotElem = $slotImg.parent(),
-		slotPosition = $slotElem.position(),
-		deckPosition = $deckElem.position(),
-		$animCardInstance = $animCard.clone().appendTo($table);
-
-	$animCardInstance.css({
-		left: deckPosition.left,
-		top: deckPosition.top
-	}).animate({
-		left: slotPosition.left,
-		top: slotPosition.top
-	}, cardAnimTime, function() {
-		$slotImg.prop("src", imgPath + deck + "/" + id + ".jpg")
-			.one("load", function() {
-				$animCardInstance.fadeOut(imgFadeTime, function() { 
-					this.remove();
-				});
+		$animCardInstance = $animCard.clone().appendTo($table),
+		displayCard = function() {
+			$slotImg.fadeIn(imgFadeTime);
+			$animCardInstance.fadeOut(imgFadeTime, function() { 
+				this.remove();
 			});
-		$slotElem.css("z-index", 1);
+		};
+
+	$slotImg.prop("src", imgPath + deck + "/" + id + ".jpg");
+
+	$animCardInstance
+		.css($deckElem.offset())
+		.animate($slotElem.offset(), cardAnimTime, function() {
+			if ($slotImg.prop("complete"))
+				displayCard();
+			else
+				$slotImg.one("load", displayCard);
+			
+			$slotElem.css("z-index", 1);
 	});
 
 	if (++nextSlotId == slotCount)
@@ -232,7 +211,50 @@ function deselect() {
 	$("#selected").prop("id", "");
 }
 
-$decor.add($deckElem).add($cardImgs)
+$layoutSel.change(function() {
+	layout = this.value;
+	theme = themes[layout];
+	$table.prop("class", layout);
+
+	if (theme == null) {
+		$subjectSel.prop("disabled", false);
+		if (!subject)
+			$subjectSel.prop("selectedIndex", 0);
+	} else
+		$subjectSel.prop("disabled", true).val(theme).change();
+});
+
+$subjectSel.change(function() { subject = this.value });
+
+$deckSel.change(function() { 
+	deck = this.value;
+
+	$.extend(roman, 
+		justice8.indexOf(deck) >= 0 ?
+		{8: "XI", 11: "VIII"} :
+		{8: "VIII", 11: "XI"}
+	);
+	
+	extraMajors = extraMajorNames[deck] || [];
+	altRankNames = altRanks[deck];
+	altSuitNames = altSuits[deck];
+})
+
+// fix scrolling bug on ios (thanks apple)
+$(".scrollable").on("touchstart", function(e) {
+	this.atTop = (this.scrollTop <= 0);
+	this.atBottom = (this.scrollTop >= this.scrollHeight - this.clientHeight);
+	this.lastY = e.touches[0].clientY;
+}).on("touchmove", function(e) {
+	const up = (e.touches[0].clientY > this.lastY);
+
+	this.lastY = e.touches[0].clientY;
+
+	if ((up && this.atTop) || (!up && this.atBottom))
+		e.preventDefault();
+});
+
+$decor.add($deckElem)
 	.on("load", function() { $(this).fadeIn(imgFadeTime) });
 
 if ($decor.prop("complete"))
@@ -241,48 +263,23 @@ if ($decor.prop("complete"))
 $showButton.click(showDescription);
 $hideButton.click(hideDescription);
 
-$("#card-img").click(function() {
-	$imgModal.fadeIn(menuFadeTime);
+$descImg.click(function() {
+	$cardModal.fadeIn(menuFadeTime);
 });
 
-$imgModal.click(function() {
-	$imgModal.fadeOut(menuFadeTime);
-});
-
-$("select").on("change.start", function() {
-	$startButton.prop("disabled", !(deck && (subject || theme === "")));
-});
-
-$cardImgs.click(function(e) {
-	const index = $cardImgs.index(this);
-
-	deselect();
-	this.id = "selected";
-	$descriptionImgElems.prop("src", this.src);
-	updateDescription(index);
-
-	e.stopPropagation();
-});
-
-// fix scrolling bug on ios (thanks apple)
-$(".scrollable").on("touchstart", function(e) {
-	this.allowUp = (this.scrollTop > 0);
-	this.allowDown = (this.scrollTop < this.scrollHeight - this.clientHeight);
-	this.prevTop = null;
-	this.prevBot = null;
-	this.lastY = e.targetTouches[0].pageY;
-}).on("touchmove", function(e) {
-	const up = (e.targetTouches[0].pageY > this.lastY);
-
-	this.lastY = e.targetTouches[0].pageY;
-
-	if ((up && this.allowUp) || (!up && this.allowDown))
-		e.stopPropagation();
-	else
-		e.preventDefault();
+$cardModal.click(function() {
+	$cardModal.fadeOut(menuFadeTime);
 });
 
 $.getJSON("res/text.json", function(data) {
+	function setStartButtonState() {
+		$startButton.prop("disabled", !(deck && (subject || theme === "")));
+	}
+
+	setStartButtonState();
+
+	$app.on("change", setStartButtonState);
+
 	$layoutSel.on("change.data", function() {
 		titles = data.titles[layout];
 		$layoutDesc.text(data.descriptions[layout]);
@@ -301,27 +298,37 @@ $.getJSON("res/text.json", function(data) {
 		meanings = data.meanings[deck] || data.meanings.normal;
 	});
 
-	$startButton.click(function() {
+	$startButton.text("НАЧАТЬ").click(function() {
 		this.remove();
 		$("#header, #menu-column-2").slideUp(openingTime);
-
+		
 		$table.fadeIn(openingTime, function() {
 			showDescription();
 			$deckElem.click(drawCard);
 		});
-
-		$("select")
-			.off(".start")
-			.trigger("change.data")
-			.change(resetTable);
 		
-		$("#app").prop("class", "");
+		$("select").trigger("change.data");
+		
+		$descMenu.hide().click(function(e) { e.stopPropagation() });
+		$app.prop("class", "");
 		resetTable();
 
-		$(document).click(function() {
-			deselect();
-			resetDescription();
+		$app.off("change")
+			.change(resetTable)
+			.click(function(e) {
+				const
+					target = e.target,
+					index = $cardImgs.index(target);
+					
+				deselect();
+
+				if (index >= 0) {
+					target.id = "selected";
+					$descImgElems.prop("src", target.src);
+					updateDescription(index);
+				} else
+					resetDescription();
 		});
 	});
 });
-});
+})();

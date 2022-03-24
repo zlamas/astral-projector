@@ -11,8 +11,10 @@
 	<meta name="msapplication-TileColor" content="#643">
 	<meta name="theme-color" content="#643">
 	<title>Астральный Проектор</title>
-	<link rel="stylesheet" href="/common/common.min.css">
+	<link rel="stylesheet" href="/common/common.css">
 	<link rel="stylesheet" href="res/projector.min.css">
+	<script src="res/jquery.min.js" defer></script>
+	<script src="res/projector.min.js" defer></script>
 </head>
 <body>
 <div id="app" class="menu">
@@ -57,10 +59,10 @@
 				<div class="slot" id="s9"><span>9</span><img></div>
 				<div class="slot" id="s10"><span>10</span><img></div>
 				<div class="slot" id="s11"><span>11</span><img></div>
-				<img id="deck-elem">
+				<img id="deck-elem" src="img/restart.svg">
 				<button id="desc-show">Описание</button>
 			</div>
-			<select id="deck-sel" autocomplete="off" disabled>
+			<select id="deck-sel" autocomplete="off">
 				<option disabled selected>Выберите колоду:</option>
 				<option value="santamuerte">Santa Muerte Tarot</option>
 				<option value="alice">Wonderland Tarot</option>
@@ -78,20 +80,19 @@
 				<option value="waite">Таро Уэйта</option>
 				<option value="pagancat">Таро Языческих Кошек</option>
 			</select>
-			<button id="start" autocomplete="off" disabled>НАЧАТЬ</button>
+			<button id="start" autocomplete="off" disabled>Загрузка...</button>
 		</div>
 		<div id="menu-column-2">
 			<div id="intro" class="scrollable">Дорогой друг!
-				
-				Перед Вами виртуальный помощник таролога. С его помощью Вы можете работать с любой из 50 самых популярных колод карт Таро. Вы можете выбирать из 10 различных схем расклада по самым актуальным сферам жизни: работа, финансы, отношения, духовное развитие, здоровье, прогнозы и так далее.
-				
-				Эта программа станет хорошим учителем для начинающих тарологов и прекрасным компаньоном для опытных мастеров. В любой точке мира, в транспорте, на даче, на морском побережье — где бы Вы ни были, Ваш Таро-помощник «Астральный Проектор» всегда с Вами!
-				
-				Приятного погружения в волшебный мир Таро!
-				
-				С уважением,
-				таролог Екатерина Нагорная и команда Black Cat Tarot
-			</div>
+
+Перед Вами виртуальный помощник таролога. С его помощью Вы можете работать с любой из 50 самых популярных колод карт Таро. Вы можете выбирать из 10 различных схем расклада по самым актуальным сферам жизни: работа, финансы, отношения, духовное развитие, здоровье, прогнозы и так далее.
+
+Эта программа станет хорошим учителем для начинающих тарологов и прекрасным компаньоном для опытных мастеров. В любой точке мира, в транспорте, на даче, на морском побережье — где бы Вы ни были, Ваш Таро-помощник «Астральный Проектор» всегда с Вами!
+
+Приятного погружения в волшебный мир Таро!
+
+С уважением,
+таролог Екатерина Нагорная и команда Black Cat Tarot</div>
 			<div id="copyright">© 2022 Black Cat Tarot (Версия beta.3)</div>
 		</div>
 	</div>
@@ -120,7 +121,5 @@
 		<button id="desc-hide">Скрыть</button>
 	</div>
 </div>
-<script src="res/jquery.min.js"></script>
-<script src="res/projector.min.js"></script>
 </body>
 </html>
