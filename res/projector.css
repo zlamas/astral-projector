@@ -22,7 +22,7 @@ button {
 	line-height: 1.2;
 	text-shadow: inherit;
 	cursor: pointer;
-	transition: color .5s, box-shadow .5s;
+	transition: color .5s, border-color .5s, box-shadow .5s;
 }
 
 select {
@@ -54,6 +54,7 @@ button {
 
 :disabled {
 	color: gray;
+	border-color: gray;
 }
 
 .menu #table,
@@ -166,7 +167,7 @@ button {
 	position: absolute;
 	left: 110%;
 	font: 150%/0 Edo, sans-serif;
-	transform: translateZ(-1px);
+	transform: scaleZ(.1);
 }
 
 .slot img,
