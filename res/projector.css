@@ -139,10 +139,9 @@ button {
 }
 
 .slot {
-	transform: translate(-50%, -50%);
+	transform: translate3d(-50%, -50%, .1px);
 	box-shadow: 0 0 .8em inset;
 	min-width: 2.7em;
-	transform-style: preserve-3d;
 	left: 50%;
 	top: -20vh;
 	transition: left 1s, top 1s;
@@ -167,7 +166,6 @@ button {
 	position: absolute;
 	left: 110%;
 	font: 150%/0 Edo, sans-serif;
-	transform: scaleZ(.1);
 }
 
 .slot img,
@@ -249,7 +247,7 @@ select:focus {
 }
 
 @keyframes zoom {
-	from {padding: 25vh}
+	from {transform: scale(.5)}
 }
 
 #desc-title {
@@ -301,7 +299,7 @@ select:focus {
 }
 
 .cross #s1 {left: 37%; top: 50%}
-.cross #s2 {left: 37%; top: 52%; transform: translate(-50%, -50%) rotate(90deg)}
+.cross #s2 {left: 37%; top: 52%; transform: translate3d(-50%, -50%, .1px) rotate(90deg)}
 .cross #s3 {left: 37%; top: 28%}
 .cross #s4 {left: 37%; top: 72%}
 .cross #s5 {left: 14%; top: 50%}
