@@ -1,8 +1,94 @@
-(function() {
+(() => {
 "use strict";
 let theme, layout, subject, deck, nextSlotId, deckArray, descriptions, titles, slotCount, readings, extraMajors, altRankNames, altSuitNames, deckSize, meanings;
 
-const 
+Object.assign(HTMLElement.prototype, {
+	hide() {
+		this.style.display = "none";
+		return this;
+	},
+	show() {
+		this.style.display = "";
+		if (getComputedStyle(this).display == "none")
+			this.style.display = "block";
+		return this;
+	},
+	on: addEventListener,
+	off: removeEventListener,
+	offset() {
+		const rect = this.getBoundingClientRect();
+		return { left: rect.x + "px", top: rect.y + "px" };
+	},
+	fadeIn(time, callback) {
+		if (getComputedStyle(this).display != "none")
+			time = 0;
+
+		return this.show().animateAndDo(
+			[ { opacity: 0 }, {} ],
+			{ duration: time, easing: "ease-in-out" },
+			callback
+		);
+	},
+	fadeOut(time, callback) {
+		const animation = this.animateAndDo(
+			[ {}, { opacity: 0 } ],
+			{ duration: time, easing: "ease-in-out" },
+			callback
+		);
+
+		animation.finished
+			.then(() => this.hide())
+			.catch(() => {});
+
+		return animation;
+	},
+	slideUp(time, callback) {
+		this.style.overflow = "hidden";
+
+		const animation = this.animateAndDo(
+			{ height: [ this.offsetHeight + "px", 0 ] },
+			{ duration: time, easing: "ease-in-out" },
+			callback
+		);
+
+		animation.finished
+			.then(() => this.hide().style.overflow = "")
+			.catch(() => {});
+
+		return animation;
+	},
+	animateAndDo(keyframes, options, callback) {
+		const animation = this.animate(keyframes, options);
+
+		if (callback)
+			animation.finished
+				.then(callback.bind(this))
+				.catch(() => {});
+		
+		return animation;
+	},
+	stop(clearAll, jumpToEnd) {
+		const
+			animations = this.getAnimations(),
+			current = animations.shift();
+
+		if (jumpToEnd)
+			current.finish();
+		else
+			current.pause();
+
+		if (clearAll)
+			animations.forEach(anim => anim.cancel())
+	}
+});
+
+const
+GetById = document.getElementById.bind(document),
+GetByIds = (...args) => args.map(id => GetById(id)),
+Create = (tag, options) => Object.assign(document.createElement(tag), options),
+Each = (list, callback) => Array.prototype.forEach.call(list, callback),
+Index = (list, elem) => Array.prototype.indexOf.call(list, elem),
+
 roman = ["0","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI"],
 justice8 = ["78doors", "botticelli", "durer", "casanova", "wild", "klimt"],
 major = ["Дурак","Маг","Верховная Жрица","Императрица","Император","Иерофант","Влюблённые","Колесница","Сила","Отшельник","Колесо Фортуны","Правосудие","Повешенный","Смерть","Умеренность","Дьявол","Башня","Звезда","Луна","Солнце","Суд","Мир"],
@@ -34,41 +120,41 @@ menuFadeTime = 500,
 imgFadeTime = 300,
 imgPath = "img/",
 
-$app = $("#app").click(function(){}), // prevent double-tap to zoom on ios
+app = GetById("app"),
 
-$layoutSel = $("#layout-sel"),
-$subjectSel = $("#subject-sel"),
-$deckSel = $("#deck-sel"),
+selectElems = app.getElementsByTagName("select"),
+[ layoutSel, subjectSel, deckSel ] = selectElems,
 
-$startButton = $("#start"),
-$showButton = $("#desc-show"),
-$hideButton = $("#desc-hide"),
+startButton = GetById("start"),
+showButton = GetById("desc-show"),
+hideButton = GetById("desc-hide"),
 
-$table = $("#table"),
-$deckElem = $("#deck-elem"),
-$slots = $(".slot"),
-$cardImgs = $(".slot img"),
-$animCard = $("<img>").prop("class", "anim-card"),
+table = GetById("table"),
+deckElem = GetById("deck-elem"),
+slots = table.getElementsByClassName("slot"),
+cardImgs = table.querySelectorAll(".slot img"),
 
-$descMenu = $("#desc-menu"),
-$descTitle = $("#desc-title"),
-$descContainer = $("#desc-container"),
+animCard = Create("img", {className: "anim-card"}),
+animCardInsts = table.getElementsByClassName("anim-card"),
 
-$layoutInfo = $("#layout-info"),
-$layoutDesc = $("#layout-desc"),
+descMenu = GetById("desc-menu"),
+descTitle = GetById("desc-title"),
+descContainer = GetById("desc-container"),
 
-$posContainer = $("#pos-container"),
-$posList = $("#pos-list"),
+layoutInfo = GetById("layout-info"),
+layoutDesc = GetById("layout-desc"),
 
-$textElems = $("#pos-name, #card-name, #card-classic-name, #general-reading, #layout-reading"),
-$cardInfo = $("#card-info"),
-$readingContainers = $(".card-reading"),
+posContainer = GetById("pos-container"),
+posList = GetById("pos-list"),
 
-$descImg = $("#card-img"),
-$cardModal = $("#card-modal"),
-$cardModalImg = $("#img-zoomed"),
-$descImgElems = $descImg.add($cardModalImg),
-$decor = $("#decor");
+textElems = GetByIds("pos-name", "card-name", "card-classic-name", "general-reading", "layout-reading"),
+cardInfo = GetById("card-info"),
+readingContainers = descContainer.getElementsByClassName("card-reading"),
+
+cardModal = GetById("card-modal"),
+cardModalImg = GetById("img-zoomed"),
+descImg = GetById("card-img"),
+decor = GetById("decor");
 
 function randomInt(min, max) {
 	return Math.floor( Math.random() * (max - min + 1) ) + min;
@@ -77,37 +163,36 @@ function randomInt(min, max) {
 function updateDescription(id) {
 	const data = descriptions[id];
 
-	$descTitle.text(slotCount > 1 ? "Позиция " + (id + 1) : "");
-	
-	data.forEach(function(text, i) {
-		$textElems[i].textContent = text;
-	});
+	descTitle.textContent = slotCount > 1 ? "Позиция " + (id + 1) : "";
+
+	Each(data, (text, i) => textElems[i].textContent = text);
 
 	if (data[3] || data[4])
-		$readingContainers.show();
+		Each(readingContainers, elem => elem.show());
 
-	$cardInfo.show();
-	$layoutInfo.hide();
+	cardInfo.show();
+	layoutInfo.hide();
 	showDescription();
 }
 
 function resetDescription() {
 	if (nextSlotId > 0)
-		$descTitle.text("Нажмите на карту, чтобы увидеть её значение");
-	$cardInfo.hide();
-	$readingContainers.hide();
-	$layoutInfo.show();
+		descTitle.textContent = "Нажмите на карту, чтобы увидеть её значение";
+
+	Each(readingContainers, elem => elem.hide());
+	cardInfo.hide();
+	layoutInfo.show();
 }
 
 function showDescription() {
-	$descMenu.fadeIn(menuFadeTime);
-	$showButton.fadeOut(menuFadeTime);
-	$descContainer.scrollTop(0);
+	descMenu.fadeIn(menuFadeTime);
+	showButton.fadeOut(menuFadeTime);
+	descContainer.scrollTop = 0;
 }
 
 function hideDescription() {
-	$descMenu.fadeOut(menuFadeTime);
-	$showButton.fadeIn(menuFadeTime);
+	descMenu.fadeOut(menuFadeTime);
+	showButton.fadeIn(menuFadeTime);
 	deselect();
 }
 
@@ -117,22 +202,21 @@ function resetTable() {
 	deckSize = 77 + extraMajors.length;
 	descriptions = [];
 
-	$deckElem
-		.hide()
-		.add($animCard)
-		.prop("src", imgPath + deck + "/back.jpg");
+	deckElem.hide().src = animCard.src = imgPath + deck + "/back.jpg";
 	
-	$(".anim-card")
-		.stop(true)
-		.fadeOut(imgFadeTime, function() { this.remove() });
+	Each(animCardInsts, elem => {
+		elem.stop(true);
+		elem.fadeOut(imgFadeTime, () => elem.remove())
+	});
 	
-	$cardImgs
-		.finish()
-		.fadeOut(imgFadeTime)
-		.off("load");
+	Each(cardImgs, elem => {
+		elem.fadeOut(imgFadeTime);
+		elem.onload = null;
+	});
 	
-	$slots.css("z-index", "");
-	$descTitle.text("Жмите на колоду, чтобы заполнить расклад");
+	Each(slots, elem => elem.style.zIndex = "");
+
+	descTitle.textContent = "Жмите на колоду, чтобы заполнить расклад";
 }
 
 function drawCard() {
@@ -148,8 +232,9 @@ function drawCard() {
 	deckArray[id] = deckSize--;
 	
 	if (id > 21) {
-		const suit = Math.floor((id - 22) / 14),
-			  rank = id - 22 - 14 * suit;
+		const
+			suit = Math.floor((id - 22) / 14),
+			rank = id - 22 - 14 * suit;
 
 		if (suit < 4) {
 			if (rank > 9 && altRankNames) {
@@ -180,56 +265,82 @@ function drawCard() {
 	];
 
 	const
-		$slotImg = $cardImgs.eq(nextSlotId),
-		$slotElem = $slotImg.parent(),
-		$animCardInstance = $animCard.clone().appendTo($table),
-		displayCard = function() {
-			$slotImg.fadeIn(imgFadeTime);
-			$animCardInstance.fadeOut(imgFadeTime, function() { 
+		slotImg = cardImgs[nextSlotId],
+		slotElem = slotImg.parentElement,
+		animCardInstance = table.appendChild(animCard.cloneNode()),
+		displayCard = () => {
+			slotImg.fadeIn(imgFadeTime);
+			animCardInstance.fadeOut(imgFadeTime, function() {
 				this.remove();
 			});
 		};
 
-	$slotImg.prop("src", imgPath + deck + "/" + id + ".jpg");
+	slotImg.src = imgPath + deck + "/" + id + ".jpg";
 
-	$animCardInstance
-		.css($deckElem.offset())
-		.animate($slotElem.offset(), cardAnimTime, function() {
-			if ($slotImg.prop("complete"))
+	animCardInstance.animateAndDo(
+		[ deckElem.offset(), slotElem.offset() ],
+		{ duration: cardAnimTime, easing: "ease-in-out", fill: "forwards" },
+		() => {
+			if (slotImg.complete)
 				displayCard();
 			else
-				$slotImg.one("load", displayCard);
+				slotImg.onload = displayCard;
 			
-			$slotElem.css("z-index", 1);
+			slotElem.style.zIndex = 1;
 	});
 
 	if (++nextSlotId == slotCount)
-		$deckElem.hide().prop("src", imgPath + "restart.svg");
+		deckElem.hide().src = imgPath + "restart.svg";
 }
 
 function deselect() {
-	$("#selected").prop("id", "");
+	const selected = GetById("selected");
+	if (selected)
+		selected.id = "";
 }
 
-$layoutSel.change(function() {
-	layout = this.value;
-	theme = themes[layout];
-	$table.prop("class", layout);
+// prevent double-tap to zoom on ios
+app.on("click", () => {});
 
-	if (theme == null) {
-		$subjectSel.prop("disabled", false);
-		if (!subject)
-			$subjectSel.prop("selectedIndex", 0);
-	} else
-		$subjectSel.prop("disabled", true).val(theme).change();
+// fix scrolling bug on ios
+Each(app.getElementsByClassName("scrollable"), elem => {
+	elem.on("touchstart", function(e) {
+		this.atTop = (this.scrollTop <= 0);
+		this.atBottom = (this.scrollTop >= this.scrollHeight - this.clientHeight);
+		this.lastY = e.touches[0].clientY;
+	});
+	elem.on("touchmove", function(e) {
+		const up = (e.touches[0].clientY > this.lastY);
+
+		this.lastY = e.touches[0].clientY;
+
+		if ((up && this.atTop) || (!up && this.atBottom))
+			e.preventDefault();
+	});
 });
 
-$subjectSel.change(function() { subject = this.value });
+layoutSel.on("change", function() {
+	layout = this.value;
+	theme = themes[layout];
+	table.className = layout;
 
-$deckSel.change(function() { 
+	if (theme == null) {
+		subjectSel.disabled = false;
+		if (!subject)
+			subjectSel.selectedIndex = 0;
+	} else {
+		subjectSel.disabled = true;
+		subjectSel.value = theme;
+		subjectSel.dispatchEvent(new Event("change"));
+	}
+});
+
+subjectSel.on("change", function() { subject = this.value }),
+
+deckSel.on("change", function() {
 	deck = this.value;
 
-	$.extend(roman, 
+	Object.assign(roman,
 		justice8.indexOf(deck) >= 0 ?
 		{8: "XI", 11: "VIII"} :
 		{8: "VIII", 11: "XI"}
@@ -238,96 +349,91 @@ $deckSel.change(function() {
 	extraMajors = extraMajorNames[deck] || [];
 	altRankNames = altRanks[deck];
 	altSuitNames = altSuits[deck];
-})
-
-// fix scrolling bug on ios (thanks apple)
-$(".scrollable").on("touchstart", function(e) {
-	this.atTop = (this.scrollTop <= 0);
-	this.atBottom = (this.scrollTop >= this.scrollHeight - this.clientHeight);
-	this.lastY = e.touches[0].clientY;
-}).on("touchmove", function(e) {
-	const up = (e.touches[0].clientY > this.lastY);
-
-	this.lastY = e.touches[0].clientY;
-
-	if ((up && this.atTop) || (!up && this.atBottom))
-		e.preventDefault();
 });
 
-$decor.add($deckElem)
-	.on("load", function() { $(this).fadeIn(imgFadeTime) });
+if (decor.complete)
+	decor.show();
+else
+	decor.on("load", function() { this.fadeIn(imgFadeTime) });
 
-if ($decor.prop("complete"))
-	$decor.show();
+deckElem.on("load", function() { this.fadeIn(imgFadeTime) });
 
-$showButton.click(showDescription);
-$hideButton.click(hideDescription);
+showButton.on("click", showDescription);
+hideButton.on("click", hideDescription);
 
-$descImg.click(function() {
-	$cardModal.fadeIn(menuFadeTime);
+descImg.on("click", function() {
+	cardModal.fadeIn(menuFadeTime);
 });
 
-$cardModal.click(function() {
-	$cardModal.fadeOut(menuFadeTime);
+cardModal.on("click", function() {
+	cardModal.fadeOut(menuFadeTime);
 });
 
-$.getJSON("res/text.json", function(data) {
+fetch("res/text.json")
+	.then(response => response.json())
+	.then(data => {
 	function setStartButtonState() {
-		$startButton.prop("disabled", !(deck && (subject || theme === "")));
+		startButton.disabled = !(deck && (subject || theme === ""));
 	}
 
 	setStartButtonState();
 
-	$app.on("change", setStartButtonState);
+	app.on("change", setStartButtonState);
 
-	$layoutSel.on("change.data", function() {
+	layoutSel.on("change", () => {
 		titles = data.titles[layout];
-		$layoutDesc.text(data.descriptions[layout]);
+		layoutDesc.textContent = data.descriptions[layout];
 
 		if ((slotCount = titles.length) > 1) {
-			$posContainer.show();
-			$posList.text(data.postext[layout]);
-		} else $posContainer.hide();
+			posContainer.show();
+			posList.textContent = data.postext[layout];
+		} else posContainer.hide();
 	});
 
-	$subjectSel.on("change.data", function() {
+	subjectSel.on("change", () => {
 		readings = data.readings[subject];
 	});
 
-	$deckSel.on("change.data", function() {
+	deckSel.on("change", () => {
 		meanings = data.meanings[deck] || data.meanings.normal;
 	});
 
-	$startButton.text("НАЧАТЬ").click(function() {
+	startButton.textContent = "НАЧАТЬ";
+
+	startButton.on("click", function() {
 		this.remove();
-		$("#header, #menu-column-2").slideUp(openingTime);
 		
-		$table.fadeIn(openingTime, function() {
+		GetById("header").slideUp(openingTime);
+		GetById("menu-column-2").slideUp(openingTime);
+
+		table.fadeIn(openingTime, () => {
 			showDescription();
-			$deckElem.click(drawCard);
+			deckElem.on("click", drawCard);
 		});
 		
-		$("select").trigger("change.data");
+		Each(selectElems, elem => elem.dispatchEvent(new Event("change")));
 		
-		$descMenu.hide().click(function(e) { e.stopPropagation() });
-		$app.prop("class", "");
+		descMenu.hide().on("click", e => e.stopPropagation());
+		app.className = "";
 		resetTable();
 
-		$app.off("change")
-			.change(resetTable)
-			.click(function(e) {
-				const
-					target = e.target,
-					index = $cardImgs.index(target);
-					
-				deselect();
+		app.off("change", setStartButtonState);
 
-				if (index >= 0) {
-					target.id = "selected";
-					$descImgElems.prop("src", target.src);
-					updateDescription(index);
-				} else
-					resetDescription();
+		app.on("change", resetTable);
+
+		app.on("click", e => {
+			const
+				target = e.target,
+				index = Index(cardImgs, target);
+
+			deselect();
+
+			if (index >= 0) {
+				target.id = "selected";
+				descImg.src = cardModalImg.src = target.src;
+				updateDescription(index);
+			} else
+				resetDescription();
 		});
 	});
 });
