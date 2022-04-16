@@ -2,6 +2,11 @@
 "use strict";
 let theme, layout, subject, deck, nextSlotId, deckArray, descriptions, titles, slotCount, readings, extraMajors, altRankNames, altSuitNames, deckSize, meanings;
 
+Object.assign(EventTarget.prototype, {
+	on: addEventListener,
+	off: removeEventListener
+});
+
 Object.assign(HTMLElement.prototype, {
 	hide() {
 		this.style.display = "none";
@@ -13,32 +18,34 @@ Object.assign(HTMLElement.prototype, {
 			this.style.display = "block";
 		return this;
 	},
-	on: addEventListener,
-	off: removeEventListener,
 	offset() {
 		const rect = this.getBoundingClientRect();
 		return { left: rect.x + "px", top: rect.y + "px" };
 	},
 	fadeIn(time, callback) {
-		if (getComputedStyle(this).display != "none")
+		const style = getComputedStyle(this);
+
+		if (style.display == "none")
+			this.show();
+		else
 			time = 0;
 
-		return this.show().animateAndDo(
-			[ { opacity: 0 }, {} ],
+		return this.animateAndDo(
+			{ opacity: [ 0, style.opacity ] },
 			{ duration: time, easing: "ease-in-out" },
 			callback
 		);
 	},
 	fadeOut(time, callback) {
-		const animation = this.animateAndDo(
-			[ {}, { opacity: 0 } ],
+		const
+		style = getComputedStyle(this),
+		animation = this.animateAndDo(
+			{ opacity: [ style.opacity, 0 ] },
 			{ duration: time, easing: "ease-in-out" },
 			callback
 		);
 
-		animation.finished
-			.then(() => this.hide())
-			.catch(() => {});
+		animation.on("finish", () => this.hide());
 
 		return animation;
 	},
@@ -51,9 +58,7 @@ Object.assign(HTMLElement.prototype, {
 			callback
 		);
 
-		animation.finished
-			.then(() => this.hide().style.overflow = "")
-			.catch(() => {});
+		animation.on("finish", () => this.hide().style.overflow = "");
 
 		return animation;
 	},
@@ -61,13 +66,11 @@ Object.assign(HTMLElement.prototype, {
 		const animation = this.animate(keyframes, options);
 
 		if (callback)
-			animation.finished
-				.then(callback.bind(this))
-				.catch(() => {});
+			animation.on("finish", callback.bind(this));
 		
 		return animation;
 	},
-	stop(clearAll, jumpToEnd) {
+	stop(clearQueue, jumpToEnd) {
 		const
 			animations = this.getAnimations(),
 			current = animations.shift();
@@ -77,7 +80,7 @@ Object.assign(HTMLElement.prototype, {
 		else
 			current.pause();
 
-		if (clearAll)
+		if (clearQueue)
 			animations.forEach(anim => anim.cancel())
 	}
 });
