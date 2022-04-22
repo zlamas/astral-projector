@@ -32,7 +32,7 @@ Object.assign(HTMLElement.prototype, {
 
 		return this.animateAndDo(
 			{ opacity: [ 0, style.opacity ] },
-			{ duration: time, easing: "ease-in-out" },
+			{ duration: time },
 			callback
 		);
 	},
@@ -41,7 +41,7 @@ Object.assign(HTMLElement.prototype, {
 		style = getComputedStyle(this),
 		animation = this.animateAndDo(
 			{ opacity: [ style.opacity, 0 ] },
-			{ duration: time, easing: "ease-in-out" },
+			{ duration: time },
 			callback
 		);
 
@@ -54,7 +54,7 @@ Object.assign(HTMLElement.prototype, {
 
 		const animation = this.animateAndDo(
 			{ height: [ this.offsetHeight + "px", 0 ] },
-			{ duration: time, easing: "ease-in-out" },
+			{ duration: time },
 			callback
 		);
 
@@ -63,17 +63,20 @@ Object.assign(HTMLElement.prototype, {
 		return animation;
 	},
 	animateAndDo(keyframes, options, callback) {
-		const animation = this.animate(keyframes, options);
+		const animation = this.animate(
+			keyframes,
+			Object.assign({}, animationDefaults, options)
+		);
 
 		if (callback)
 			animation.on("finish", callback.bind(this));
-		
+
 		return animation;
 	},
 	stop(clearQueue, jumpToEnd) {
 		const
-			animations = this.getAnimations(),
-			current = animations.shift();
+		animations = this.getAnimations(),
+		current = animations.shift();
 
 		if (jumpToEnd)
 			current.finish();
@@ -81,7 +84,7 @@ Object.assign(HTMLElement.prototype, {
 			current.pause();
 
 		if (clearQueue)
-			animations.forEach(anim => anim.cancel())
+			Each(animations, anim => anim.cancel());
 	}
 });
 
@@ -93,10 +96,11 @@ Each = (list, callback) => Array.prototype.forEach.call(list, callback),
 Index = (list, elem) => Array.prototype.indexOf.call(list, elem),
 
 roman = ["0","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI"],
-justice8 = ["78doors", "botticelli", "durer", "casanova", "wild", "klimt"],
+justice8 = ["78doors","botticelli","durer","casanova","wild","klimt"],
 major = ["Дурак","Маг","Верховная Жрица","Императрица","Император","Иерофант","Влюблённые","Колесница","Сила","Отшельник","Колесо Фортуны","Правосудие","Повешенный","Смерть","Умеренность","Дьявол","Башня","Звезда","Луна","Солнце","Суд","Мир"],
-suitNames = ["Пентаклей", "Кубков", "Жезлов", "Мечей"],
+suitNames = ["Пентаклей","Кубков","Жезлов","Мечей"],
 rankNames = ["Туз","Двойка","Тройка","Четвёрка","Пятёрка","Шестёрка","Семёрка","Восьмёрка","Девятка","Десятка","Паж","Рыцарь","Королева","Король"],
+
 themes = {
 	disorder: "lifegoal",
 	station: "relship",
@@ -111,11 +115,12 @@ altSuits = {
 altRanks = {
 	"wild": ["Дочь","Сын","Мать","Отец"]
 },
-altMajors = {
-
-},
+// altMajors = { },
 extraMajorNames = {
 	"quantum": ["Феникс","Вселенная"]
+},
+animationDefaults = {
+	easing: "ease-in-out"
 },
 openingTime = 3000,
 cardAnimTime = 1000,
@@ -206,17 +211,17 @@ function resetTable() {
 	descriptions = [];
 
 	deckElem.hide().src = animCard.src = imgPath + deck + "/back.jpg";
-	
+
 	Each(animCardInsts, elem => {
 		elem.stop(true);
 		elem.fadeOut(imgFadeTime, () => elem.remove())
 	});
-	
+
 	Each(cardImgs, elem => {
 		elem.fadeOut(imgFadeTime);
 		elem.onload = null;
 	});
-	
+
 	Each(slots, elem => elem.style.zIndex = "");
 
 	descTitle.textContent = "Жмите на колоду, чтобы заполнить расклад";
@@ -225,7 +230,7 @@ function resetTable() {
 function drawCard() {
 	if (nextSlotId == slotCount)
 		return resetTable();
-	
+
 	let id = randomInt(0, deckSize),
 		name = "",
 		altName = "";
@@ -233,11 +238,11 @@ function drawCard() {
 	while (deckArray[id])
 		id = deckArray[id];
 	deckArray[id] = deckSize--;
-	
+
 	if (id > 21) {
 		const
-			suit = Math.floor((id - 22) / 14),
-			rank = id - 22 - 14 * suit;
+		suit = Math.floor((id - 22) / 14),
+		rank = id - 22 - 14 * suit;
 
 		if (suit < 4) {
 			if (rank > 9 && altRankNames) {
@@ -245,7 +250,7 @@ function drawCard() {
 				altName += rankNames[rank] + " ";
 			} else
 				name += rankNames[rank] + " ";
-			
+
 			if (altSuitNames) {
 				name += altSuitNames[suit];
 				altName += suitNames[suit];
@@ -253,9 +258,9 @@ function drawCard() {
 			 	name += suitNames[suit];
 		} else
 			name = extraMajors[rank];
-	} else if (altMajors[deck]) {
-		altName = major[id];
-		name = roman[id] + " " + altMajors[deck][id];
+	// } else if (altMajors[deck]) {
+	// 	altName = major[id];
+	// 	name = roman[id] + " " + altMajors[deck][id];
 	} else
 		name = roman[id] + " " + major[id];
 
@@ -268,29 +273,31 @@ function drawCard() {
 	];
 
 	const
-		slotImg = cardImgs[nextSlotId],
-		slotElem = slotImg.parentElement,
-		animCardInstance = table.appendChild(animCard.cloneNode()),
-		displayCard = () => {
-			slotImg.fadeIn(imgFadeTime);
-			animCardInstance.fadeOut(imgFadeTime, function() {
-				this.remove();
-			});
-		};
+	slotImg = cardImgs[nextSlotId],
+	slotElem = slotImg.parentElement,
+	animCardInstance = table.appendChild(animCard.cloneNode()),
+	displayCard = () => {
+		slotImg.fadeIn(imgFadeTime);
+		animCardInstance.fadeOut(
+			imgFadeTime,
+			function() { this.remove() }
+		);
+	};
 
 	slotImg.src = imgPath + deck + "/" + id + ".jpg";
 
 	animCardInstance.animateAndDo(
 		[ deckElem.offset(), slotElem.offset() ],
-		{ duration: cardAnimTime, easing: "ease-in-out", fill: "forwards" },
+		{ duration: cardAnimTime, fill: "forwards" },
 		() => {
 			if (slotImg.complete)
 				displayCard();
 			else
 				slotImg.onload = displayCard;
-			
+
 			slotElem.style.zIndex = 1;
-	});
+		}
+	);
 
 	if (++nextSlotId == slotCount)
 		deckElem.hide().src = imgPath + "restart.svg";
@@ -344,11 +351,11 @@ deckSel.on("change", function() {
 	deck = this.value;
 
 	Object.assign(roman,
-		justice8.indexOf(deck) >= 0 ?
+		Index(justice8, deck) >= 0 ?
 		{8: "XI", 11: "VIII"} :
 		{8: "VIII", 11: "XI"}
 	);
-	
+
 	extraMajors = extraMajorNames[deck] || [];
 	altRankNames = altRanks[deck];
 	altSuitNames = altSuits[deck];
@@ -390,7 +397,8 @@ fetch("res/text.json")
 		if ((slotCount = titles.length) > 1) {
 			posContainer.show();
 			posList.textContent = data.postext[layout];
-		} else posContainer.hide();
+		} else
+			posContainer.hide();
 	});
 
 	subjectSel.on("change", () => {
@@ -405,7 +413,7 @@ fetch("res/text.json")
 
 	startButton.on("click", function() {
 		this.remove();
-		
+
 		GetById("header").slideUp(openingTime);
 		GetById("menu-column-2").slideUp(openingTime);
 
@@ -413,9 +421,9 @@ fetch("res/text.json")
 			showDescription();
 			deckElem.on("click", drawCard);
 		});
-		
+
 		Each(selectElems, elem => elem.dispatchEvent(new Event("change")));
-		
+
 		descMenu.hide().on("click", e => e.stopPropagation());
 		app.className = "";
 		resetTable();
@@ -426,8 +434,8 @@ fetch("res/text.json")
 
 		app.on("click", e => {
 			const
-				target = e.target,
-				index = Index(cardImgs, target);
+			target = e.target,
+			index = Index(cardImgs, target);
 
 			deselect();
 
