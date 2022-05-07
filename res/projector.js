@@ -72,19 +72,6 @@ Object.assign(HTMLElement.prototype, {
 			animation.on("finish", callback.bind(this));
 
 		return animation;
-	},
-	stop(clearQueue, jumpToEnd) {
-		const
-		animations = this.getAnimations(),
-		current = animations.shift();
-
-		if (jumpToEnd)
-			current.finish();
-		else
-			current.pause();
-
-		if (clearQueue)
-			Each(animations, anim => anim.cancel());
 	}
 });
 
@@ -213,7 +200,8 @@ function resetTable() {
 	deckElem.hide().src = animCard.src = imgPath + deck + "/back.jpg";
 
 	Each(animCardInsts, elem => {
-		elem.stop(true);
+		if (elem.anim)
+			elem.anim.pause();
 		elem.fadeOut(imgFadeTime, () => elem.remove())
 	});
 
@@ -275,10 +263,10 @@ function drawCard() {
 	const
 	slotImg = cardImgs[nextSlotId],
 	slotElem = slotImg.parentElement,
-	animCardInstance = table.appendChild(animCard.cloneNode()),
+	animCardInst = table.appendChild(animCard.cloneNode()),
 	displayCard = () => {
 		slotImg.fadeIn(imgFadeTime);
-		animCardInstance.fadeOut(
+		animCardInst.fadeOut(
 			imgFadeTime,
 			function() { this.remove() }
 		);
@@ -286,7 +274,7 @@ function drawCard() {
 
 	slotImg.src = imgPath + deck + "/" + id + ".jpg";
 
-	animCardInstance.animateAndDo(
+	animCardInst.anim = animCardInst.animateAndDo(
 		[ deckElem.offset(), slotElem.offset() ],
 		{ duration: cardAnimTime, fill: "forwards" },
 		() => {
