@@ -297,25 +297,28 @@ function deselect() {
 		selected.id = "";
 }
 
-// prevent double-tap to zoom on ios
-app.on("click", () => {});
+// ios specific fixes
+if ("standalone" in navigator) {
+	// prevent double-tap to zoom
+	app.on("click", () => {});
 
-// fix scrolling bug on ios
-Each(app.getElementsByClassName("scrollable"), elem => {
-	elem.on("touchstart", function(e) {
-		this.atTop = (this.scrollTop <= 0);
-		this.atBottom = (this.scrollTop >= this.scrollHeight - this.clientHeight);
-		this.lastY = e.touches[0].clientY;
+	// fix scrolling bug
+	Each(app.getElementsByClassName("scrollable"), elem => {
+		elem.on("touchstart", function(e) {
+			this.atTop = (this.scrollTop <= 0);
+			this.atBottom = (this.scrollTop >= this.scrollHeight - this.clientHeight);
+			this.lastY = e.touches[0].clientY;
+		});
+		elem.on("touchmove", function(e) {
+			const up = (e.touches[0].clientY > this.lastY);
+
+			this.lastY = e.touches[0].clientY;
+
+			if ((up && this.atTop) || (!up && this.atBottom))
+				e.preventDefault();
+		});
 	});
-	elem.on("touchmove", function(e) {
-		const up = (e.touches[0].clientY > this.lastY);
-
-		this.lastY = e.touches[0].clientY;
-
-		if ((up && this.atTop) || (!up && this.atBottom))
-			e.preventDefault();
-	});
-});
+}
 
 layoutSel.on("change", function() {
 	layout = this.value;
