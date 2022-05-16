@@ -1,21 +1,21 @@
 @font-face {
 	font-family: Edo;
 	font-display: swap;
-	src: url(edo.woff) format("woff");
+	src: url(edo.woff2);
 }
 
 @font-face {
 	font-family: "Open Sans";
 	font-weight: 400;
 	font-display: swap;
-	src: url(OpenSans-Regular.woff) format("woff");
+	src: url(OpenSans-Regular.woff2);
 }
 
 @font-face {
 	font-family: "Open Sans";
 	font-weight: 700;
 	font-display: swap;
-	src: url(OpenSans-Bold.woff) format("woff");
+	src: url(OpenSans-Bold.woff2);
 }
 
 body {
