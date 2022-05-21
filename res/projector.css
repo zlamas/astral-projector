@@ -143,7 +143,7 @@ button {
 }
 
 .slot {
-	transform: translate3d(-50%, -50%, .1px);
+	transform: translate3d(-50%, -50%, 1px);
 	box-shadow: 0 0 .8em inset;
 	min-width: 2.7em;
 	left: 50%;
@@ -299,7 +299,7 @@ select:focus {
 }
 
 .cross #s1 {left: 37%; top: 50%}
-.cross #s2 {left: 37%; top: 52%; transform: translate3d(-50%, -50%, .1px) rotate(90deg)}
+.cross #s2 {left: 37%; top: 52%; transform: translate3d(-50%, -50%, 1px) rotate(90deg)}
 .cross #s3 {left: 37%; top: 28%}
 .cross #s4 {left: 37%; top: 72%}
 .cross #s5 {left: 14%; top: 50%}

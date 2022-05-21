@@ -1,33 +1,8 @@
 (function() {
 "use strict";
-let theme, layout, subject, deck, nextSlotId, deckArray, descriptions, titles, slotCount, readings, extraMajors, altRankNames, altSuitNames, deckSize, meanings;
+let theme, layout, subject, deck, nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suitNames, rankNames, titles, meanings, readings, extraMajors, altRankNames, altSuitNames;
 
-const 
-roman = ["0","I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV","XVI","XVII","XVIII","XIX","XX","XXI"],
-justice8 = ["78doors", "botticelli", "durer", "casanova", "wild", "klimt"],
-major = ["Дурак","Маг","Верховная Жрица","Императрица","Император","Иерофант","Влюблённые","Колесница","Сила","Отшельник","Колесо Фортуны","Правосудие","Повешенный","Смерть","Умеренность","Дьявол","Башня","Звезда","Луна","Солнце","Суд","Мир"],
-suitNames = ["Пентаклей", "Кубков", "Жезлов", "Мечей"],
-rankNames = ["Туз","Двойка","Тройка","Четвёрка","Пятёрка","Шестёрка","Семёрка","Восьмёрка","Девятка","Десятка","Паж","Рыцарь","Королева","Король"],
-themes = {
-	disorder: "lifegoal",
-	station: "relship",
-	swing: "relship",
-	choice: "",
-	marry: "relship",
-	one: ""
-},
-altSuits = {
-	"alice": ["Устриц","Шляп","Перцемолок","Фламинго"]
-},
-altRanks = {
-	"wild": ["Дочь","Сын","Мать","Отец"]
-},
-altMajors = {
-
-},
-extraMajorNames = {
-	"quantum": ["Феникс","Вселенная"]
-},
+const
 openingTime = 3000,
 cardAnimTime = 1000,
 menuFadeTime = 500,
@@ -78,7 +53,7 @@ function updateDescription(id) {
 	const data = descriptions[id];
 
 	$descTitle.text(slotCount > 1 ? "Позиция " + (id + 1) : "");
-	
+
 	data.forEach(function(text, i) {
 		$textElems[i].textContent = text;
 	});
@@ -121,16 +96,16 @@ function resetTable() {
 		.hide()
 		.add($animCard)
 		.prop("src", imgPath + deck + "/back.jpg");
-	
+
 	$(".anim-card")
 		.stop(true)
 		.fadeOut(imgFadeTime, function() { this.remove() });
-	
+
 	$cardImgs
 		.finish()
 		.fadeOut(imgFadeTime)
 		.off("load");
-	
+
 	$slots.css("z-index", "");
 	$descTitle.text("Жмите на колоду, чтобы заполнить расклад");
 }
@@ -138,7 +113,7 @@ function resetTable() {
 function drawCard() {
 	if (nextSlotId == slotCount)
 		return resetTable();
-	
+
 	let id = randomInt(0, deckSize),
 		name = "",
 		altName = "";
@@ -146,10 +121,11 @@ function drawCard() {
 	while (deckArray[id])
 		id = deckArray[id];
 	deckArray[id] = deckSize--;
-	
+
 	if (id > 21) {
-		const suit = Math.floor((id - 22) / 14),
-			  rank = id - 22 - 14 * suit;
+		const
+		suit = Math.floor((id - 22) / 14),
+		rank = id - 22 - 14 * suit;
 
 		if (suit < 4) {
 			if (rank > 9 && altRankNames) {
@@ -157,7 +133,7 @@ function drawCard() {
 				altName += rankNames[rank] + " ";
 			} else
 				name += rankNames[rank] + " ";
-			
+
 			if (altSuitNames) {
 				name += altSuitNames[suit];
 				altName += suitNames[suit];
@@ -165,9 +141,9 @@ function drawCard() {
 			 	name += suitNames[suit];
 		} else
 			name = extraMajors[rank];
-	} else if (altMajors[deck]) {
-		altName = major[id];
-		name = roman[id] + " " + altMajors[deck][id];
+//	} else if (altMajors[deck]) {
+//		altName = major[id];
+//		name = roman[id] + " " + altMajors[deck][id];
 	} else
 		name = roman[id] + " " + major[id];
 
@@ -180,15 +156,15 @@ function drawCard() {
 	];
 
 	const
-		$slotImg = $cardImgs.eq(nextSlotId),
-		$slotElem = $slotImg.parent(),
-		$animCardInstance = $animCard.clone().appendTo($table),
-		displayCard = function() {
-			$slotImg.fadeIn(imgFadeTime);
-			$animCardInstance.fadeOut(imgFadeTime, function() { 
-				this.remove();
-			});
-		};
+	$slotImg = $cardImgs.eq(nextSlotId),
+	$slotElem = $slotImg.parent(),
+	$animCardInstance = $animCard.clone().appendTo($table),
+	displayCard = function() {
+		$slotImg.fadeIn(imgFadeTime);
+		$animCardInstance.fadeOut(imgFadeTime, function() {
+			this.remove();
+		});
+	};
 
 	$slotImg.prop("src", imgPath + deck + "/" + id + ".jpg");
 
@@ -199,7 +175,7 @@ function drawCard() {
 				displayCard();
 			else
 				$slotImg.one("load", displayCard);
-			
+
 			$slotElem.css("z-index", 1);
 	});
 
@@ -211,10 +187,13 @@ function deselect() {
 	$("#selected").prop("id", "");
 }
 
+function setStartButtonState() {
+	$startButton.prop("disabled", !(deck && (subject || theme === "")));
+}
+
 $layoutSel.change(function() {
 	layout = this.value;
-	theme = themes[layout];
-	$table.prop("class", layout);
+	theme = this.selectedOptions[0].getAttribute("theme");
 
 	if (theme == null) {
 		$subjectSel.prop("disabled", false);
@@ -223,22 +202,6 @@ $layoutSel.change(function() {
 	} else
 		$subjectSel.prop("disabled", true).val(theme).change();
 });
-
-$subjectSel.change(function() { subject = this.value });
-
-$deckSel.change(function() { 
-	deck = this.value;
-
-	$.extend(roman, 
-		justice8.indexOf(deck) >= 0 ?
-		{8: "XI", 11: "VIII"} :
-		{8: "VIII", 11: "XI"}
-	);
-	
-	extraMajors = extraMajorNames[deck] || [];
-	altRankNames = altRanks[deck];
-	altSuitNames = altSuits[deck];
-})
 
 // fix scrolling bug on ios
 $(".scrollable").on("touchstart", function(e) {
@@ -272,13 +235,10 @@ $cardModal.click(function() {
 });
 
 $.getJSON("res/text.json", function(data) {
-	function setStartButtonState() {
-		$startButton.prop("disabled", !(deck && (subject || theme === "")));
-	}
-
 	setStartButtonState();
-
 	$app.on("change", setStartButtonState);
+
+	({ roman, major, suitNames, rankNames } = data);
 
 	$layoutSel.on("change.data", function() {
 		titles = data.titles[layout];
@@ -291,24 +251,36 @@ $.getJSON("res/text.json", function(data) {
 	});
 
 	$subjectSel.on("change.data", function() {
+		subject = this.value;
 		readings = data.readings[subject];
 	});
 
 	$deckSel.on("change.data", function() {
+		deck = this.value;
 		meanings = data.meanings[deck] || data.meanings.normal;
+
+		$.extend(roman,
+			this.selectedOptions[0].hasAttribute("classic") ?
+			{8: "XI", 11: "VIII"} :
+			{8: "VIII", 11: "XI"}
+		);
+
+		extraMajors = data.extraMajorNames[deck] || [];
+		altRankNames = data.altRanks[deck];
+		altSuitNames = data.altSuits[deck];
 	});
 
 	$startButton.text("НАЧАТЬ").click(function() {
 		this.remove();
 		$("#header, #menu-column-2").slideUp(openingTime);
-		
+
 		$table.fadeIn(openingTime, function() {
 			showDescription();
 			$deckElem.click(drawCard);
 		});
-		
+
 		$("select").trigger("change.data");
-		
+
 		$descMenu.hide().click(function(e) { e.stopPropagation() });
 		$app.prop("class", "");
 		resetTable();
@@ -317,9 +289,9 @@ $.getJSON("res/text.json", function(data) {
 			.change(resetTable)
 			.click(function(e) {
 				const
-					target = e.target,
-					index = $cardImgs.index(target);
-					
+				target = e.target,
+				index = $cardImgs.index(target);
+
 				deselect();
 
 				if (index >= 0) {
