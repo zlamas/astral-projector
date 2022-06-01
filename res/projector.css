@@ -17,10 +17,14 @@
 	from {transform: scale(.5)}
 }
 
+@keyframes fade-in {
+	from {opacity: 0}
+}
+
 select,
 button {
 	border-radius: .5em;
-	color: white;
+	color: inherit;
 	font-family: inherit;
 	font-size: 120%;
 	line-height: 1.2;
@@ -33,15 +37,12 @@ select {
 	appearance: none;
 	background: url(../img/arrow.svg) no-repeat right .5em top 50% / .65em auto;
 	border: 0;
-	padding: 0 1.5em 0 .2em;
-	width: 100%;
+	box-shadow: 0 1px 0;
+	margin: .2em 0;
+	padding: .2em 1.5em .2em .2em;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	margin: .2em 0;
-}
-
-.menu select {
-	border: .1em solid;
+	width: 100%;
 }
 
 option {
@@ -51,23 +52,18 @@ option {
 button {
 	align-self: center;
 	background: none;
-	border: .2em solid;
-	padding: 0 .3em;
+	border: 2px solid;
+	padding: .1em .5em;
 	font-weight: bold;
 }
 
 :disabled {
-	color: gray;
-	border-color: gray;
+	color: grey;
+	border-color: grey;
 }
 
-.menu #table,
-.menu #desc-menu,
-#decor,
-#deck-elem,
-#desc-show,
-#card-modal {
-	display: none;
+.hidden {
+	display: none !important;
 }
 
 #main {
@@ -102,6 +98,12 @@ button {
 	z-index: -1;
 }
 
+#decor,
+#deck-elem,
+.slot img {
+	animation: fade-in .3s ease-in-out;
+}
+
 .title,
 .subtitle {
 	font: 130% Edo, sans-serif;
@@ -113,7 +115,7 @@ button {
 }
 
 #start {
-	margin-bottom: .5em;
+	margin: .5em 0;
 }
 
 .scrollable {
@@ -140,6 +142,7 @@ button {
 	position: relative;
 	flex: 1;
 	overflow: hidden;
+	animation: fade-in 3s ease-in-out;
 }
 
 .slot {
@@ -211,15 +214,18 @@ select:focus {
 
 #desc-menu {
 	position: fixed;
+	background: rgba(0, 0, 0, .75);
 	flex: 0 0 40%;
-	left: 0;
-	right: 0;
 	height: 100%;
 	padding: .4em;
-	background: rgba(0, 0, 0, .75);
 	display: flex;
 	flex-direction: column;
 	text-align: center;
+}
+
+#desc-menu,
+#desc-show {
+	animation: .5s fade-in ease-in-out;
 }
 
 .anim-card {
@@ -228,26 +234,26 @@ select:focus {
 
 .anim-card,
 #deck-elem,
-#desc-menu {
+#desc-menu,
+#card-modal {
 	z-index: 1;
 }
 
 #card-modal {
 	position: fixed;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
+	height: 100%;
+	width: 100%;
 	background: rgba(0, 0, 0, .75);
 	padding: 1em;
 	cursor: zoom-out;
+	animation: .5s fade-in;
 }
 
 #img-zoomed {
 	height: 100%;
 	width: 100%;
 	object-fit: contain;
-	animation: .5s zoom forwards;
+	animation: .5s zoom;
 }
 
 #desc-title {

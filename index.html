@@ -16,7 +16,7 @@
 	<script src="res/projector.min.js" async></script>
 </head>
 <body>
-<div id="app" class="menu">
+<div id="app">
 	<div id="main">
 		<img id="decor" srcset="img/cards_720.png 240w, img/cards.png 360w" sizes="(max-height: 720px) 240px, 360px" src="img/cards.png">
 		<div id="menu-column-1">
@@ -46,7 +46,7 @@
 				<option value="money">Деньги и карьера: что важно сегодня</option>
 				<option value="lifegoal">Цель жизни: что важно сегодня</option>
 			</select>
-			<div id="table">
+			<div id="table" class="hidden">
 				<div class="slot" id="s1"><span>1</span><img></div>
 				<div class="slot" id="s2"><span>2</span><img></div>
 				<div class="slot" id="s3"><span>3</span><img></div>
@@ -59,7 +59,7 @@
 				<div class="slot" id="s10"><span>10</span><img></div>
 				<div class="slot" id="s11"><span>11</span><img></div>
 				<img id="deck-elem" src="img/restart.svg">
-				<button id="desc-show">Описание</button>
+				<button id="desc-show" class="hidden">Описание</button>
 			</div>
 			<select id="deck-sel" autocomplete="off">
 				<option disabled selected>Выберите колоду:</option>
@@ -95,8 +95,7 @@
 			<div id="copyright">© 2022 Black Cat Tarot (Версия beta.3)</div>
 		</div>
 	</div>
-	<div id="desc-menu">
-		<div id="card-modal"><img id="img-zoomed"></div>
+	<div id="desc-menu" class="hidden">
 		<div id="desc-title" class="title"></div>
 		<div id="card-info">
 			<div id="pos-name" class="subtitle"></div>
@@ -119,6 +118,7 @@
 		</div>
 		<button id="desc-hide">Скрыть</button>
 	</div>
+	<div id="card-modal" class="hidden"><img id="img-zoomed"></div>
 </div>
 </body>
 </html>
