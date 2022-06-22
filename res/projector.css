@@ -39,7 +39,7 @@ button {
 	font-size: 120%;
 	line-height: 1.2;
 	text-shadow: inherit;
-	transition: color 0.5s, border-color 0.5s, box-shadow 0.5s;
+	transition: color 0.5s, box-shadow 0.5s;
 }
 
 select {
