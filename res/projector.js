@@ -1,6 +1,6 @@
 "use strict";
 {
-let subject, deck, nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suitNames, rankNames, titles, meanings, readings, extraMajorNames, altRankNames, altSuitNames;
+let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suitNames, rankNames, titles, meanings, readings, extraMajorNames, altRankNames, altSuitNames;
 
 const
 getById = document.getElementById.bind(document),
@@ -96,7 +96,7 @@ function resetTable() {
 	descriptions = [];
 
 	hide(deckElem);
-	deckElem.src = animCard.src = imgPath + deck + "/back.jpg";
+	deckElem.src = animCard.src = imgPath + deckSel.value + "/back.jpg";
 
 	each(animCardInsts, el => {
 		if (el.anim)
@@ -119,7 +119,7 @@ function updateDescription(slot) {
 	each(descriptions[slot], (str, i) => textElems[i].textContent = str);
 
 	show(readingContainers[0]);
-	if (subject)
+	if (subjectSel.value)
 		show(readingContainers[1]);
 
 	show(cardInfo);
@@ -204,7 +204,7 @@ function drawCard() {
 			.then(() => animCardInst.remove());
 	};
 
-	slotImg.src = imgPath + deck + "/" + id + ".jpg";
+	slotImg.src = imgPath + deckSel.value + "/" + id + ".jpg";
 
 	(animCardInst.anim = animCardInst.animate(
 		[ getOffset(deckElem), getOffset(slotElem) ],
@@ -267,12 +267,6 @@ layoutSel.addEventListener("change", function() {
 		subjectSel.dispatchEvent(change);
 	}
 });
-subjectSel.addEventListener("change", function() {
-	subject = this.value;
-});
-deckSel.addEventListener("change", function() {
-	deck = this.value;
-});
 
 if (!decor.complete) {
 	hide(decor);
@@ -293,7 +287,7 @@ fetch("res/text.json")
 .then(response => response.json())
 .then(data => {
 	const setStartButtonState =
-		() => startButton.disabled = !(deck && (subject != null));
+		() => startButton.disabled = !(deckSel.value && (subjectSel.value || subjectSel.disabled));
 
 	setStartButtonState();
 	app.addEventListener("change", setStartButtonState);
@@ -316,16 +310,17 @@ fetch("res/text.json")
 		});
 
 		subjectSel.addEventListener("change", function() {
-			readings = data.readings[subject];
+			readings = data.readings[this.value];
 		});
 
 		deckSel.addEventListener("change", function() {
-			meanings = data.meanings[deck] || data.meanings.normal;
-
+			const deck = this.value;
+			
 			roman = this.selectedOptions[0].hasAttribute("classic") ?
 				Object.assign({8: "XI", 11: "VIII"}, data.roman) :
 				data.roman;
 
+			meanings = data.meanings[deck] || data.meanings.normal;
 			extraMajorNames = data.extraMajors[deck] || [];
 			altSuitNames = data.altSuits[deck];
 			altRankNames = data.altRanks[deck];
