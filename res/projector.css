@@ -1,10 +1,11 @@
 #app {
+	display: flex;
+	position: fixed;
 	height: 100%;
 	width: 100%;
-	position: fixed;
-	background: url(../img/bg_portrait.jpg) #643 0/cover;
+
+	background: url(../img/bg_portrait.jpg) #643 0 / cover;
 	color: white;
-	display: flex;
 	font: 2.5vh "Open Sans", sans-serif;
 	justify-content: center;
 	text-shadow: 2px 2px black;
@@ -13,36 +14,45 @@
 	user-select: none;
 }
 
+#app .hidden {
+	display: none;
+}
+
 @keyframes zoom {
-	from {transform: scale(.5)}
+	from {
+		transform: scale(0.5);
+	}
 }
 
 @keyframes fade-in {
-	from {opacity: 0}
+	from {
+		opacity: 0;
+	}
 }
 
 select,
 button {
-	border-radius: .5em;
+	border-radius: 0.5em;
 	color: inherit;
+	cursor: pointer;
 	font-family: inherit;
 	font-size: 120%;
 	line-height: 1.2;
 	text-shadow: inherit;
-	cursor: pointer;
-	transition: color .5s, border-color .5s, box-shadow .5s;
+	transition: color 0.5s, border-color 0.5s, box-shadow 0.5s;
 }
 
 select {
+	width: 100%;
+
 	appearance: none;
-	background: url(../img/arrow.svg) no-repeat right .5em top 50% / .65em auto;
+	background: url(../img/arrow.svg) no-repeat right 0.5em top 50% / 0.65em auto;
 	border: 0;
 	box-shadow: 0 1px 0;
-	margin: .2em 0;
-	padding: .2em 1.5em .2em .2em;
+	margin: 0.2em 0;
+	padding: 0.2em 1.5em 0.2em 0.2em;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	width: 100%;
 }
 
 option {
@@ -53,31 +63,29 @@ button {
 	align-self: center;
 	background: none;
 	border: 2px solid;
-	padding: .1em .5em;
+	padding: 0.1em 0.5em;
 	font-weight: bold;
 }
 
 :disabled {
-	color: grey;
 	border-color: grey;
-}
-
-.hidden {
-	display: none !important;
+	color: grey;
 }
 
 #main {
 	display: flex;
-	flex-direction: column;
 	position: relative;
-	margin: .2em;
+
+	flex-direction: column;
+	margin: 0.2em;
 }
 
 #menu-column-1,
 #menu-column-2 {
 	display: flex;
-	flex-direction: column;
 	max-width: 100vh;
+
+	flex-direction: column;
 }
 
 #menu-column-1 {
@@ -93,15 +101,16 @@ button {
 	position: absolute;
 	height: 100%;
 	right: 0;
+
+	opacity: 0.5;
 	transform: translateX(50%);
-	opacity: .5;
 	z-index: -1;
 }
 
 #decor,
 #deck-elem,
 .slot img {
-	animation: fade-in .3s ease-in-out;
+	animation: fade-in 0.3s ease-in-out;
 }
 
 .title,
@@ -115,42 +124,45 @@ button {
 }
 
 #start {
-	margin: .5em 0;
+	margin: 0.5em 0;
 }
 
 .scrollable {
-	border-radius: .5em;
-	box-shadow: 0 -1.2em .8em -1em inset;
-	text-align: justify;
+	border-radius: 0.5em;
+	box-shadow: 0 -1.2em 0.8em -1em inset;
 	overflow: auto;
-	padding: 0 .2em .5em;
+	padding: 0 0.2em 0.5em;
+	text-align: justify;
 	touch-action: pan-y;
 }
 
 #copyright {
-	font-size: 85%;
 	align-self: center;
+	font-size: 85%;
 	white-space: nowrap;
 }
 
 #layout-sel {
-	font-weight: bold;
 	display: block;
+
+	font-weight: bold;
 }
 
 #table {
 	position: relative;
+
+	animation: fade-in 3s ease-in-out;
 	flex: 1;
 	overflow: hidden;
-	animation: fade-in 3s ease-in-out;
 }
 
 .slot {
-	transform: translate3d(-50%, -50%, 1px);
-	box-shadow: 0 0 .8em inset;
-	min-width: 2.7em;
 	left: 50%;
 	top: -20vh;
+	min-width: 2.7em;
+
+	box-shadow: 0 0 0.8em inset;
+	transform: translate3d(-50%, -50%, 1px);
 	transition: left 1s, top 1s;
 }
 
@@ -159,46 +171,50 @@ button {
 .anim-card {
 	position: absolute;
 	height: 5em;
-	border-radius: .3em;
+
+	border-radius: 0.3em;
 }
 
 .slot img {
 	height: 100%;
+
 	border-radius: inherit;
 	cursor: pointer;
-	transition: box-shadow .5s;
+	transition: box-shadow 0.5s;
 }
 
 .slot span {
 	position: absolute;
 	left: 110%;
+
 	font: 150%/0 Edo, sans-serif;
 }
 
 .slot img,
 .anim-card {
-	box-shadow: 0 0 .5em;
+	box-shadow: 0 0 0.5em;
 }
 
 #selected,
 select:focus {
+	box-shadow: 0 0 0.6em 0.3em red;
 	outline: none;
-	box-shadow: 0 0 .6em .3em red;
 }
 
 #deck-elem {
 	bottom: 1em;
 	left: 1em;
-	box-shadow: .15em .15em 0 .1em #333, .3em .3em 0 .1em #333,	.15em .15em .5em .3em;
+
+	box-shadow: 0.15em 0.15em 0 0.1em #333, 0.3em 0.3em 0 0.1em #333,	.15em 0.15em 0.5em 0.3em;
 	cursor: pointer;
-	transition: box-shadow .5s;
+	transition: box-shadow 0.5s;
 }
 
 #deck-elem:hover {
-	box-shadow: .15em .15em 0 .1em #333, .3em .3em 0 .1em #333, .15em .15em .5em .3em red;
+	box-shadow: 0.15em 0.15em 0 0.1em #333, 0.3em 0.3em 0 0.1em #333, 0.15em 0.15em 0.5em 0.3em red;
 }
 
-#deck-elem[src*="restart"] {
+#deck-elem[src^="restart"] {
 	height: 3em;
 }
 
@@ -209,23 +225,24 @@ select:focus {
 }
 
 #desc-hide {
-	margin-top: .4em;
+	margin-top: 0.4em;
 }
 
 #desc-menu {
-	position: fixed;
-	background: rgba(0, 0, 0, .75);
-	flex: 0 0 40%;
-	height: 100%;
-	padding: .4em;
 	display: flex;
+	position: fixed;
+	height: 100%;
+
+	background: rgba(0, 0, 0, 0.7);
+	flex: 0 0 40%;
 	flex-direction: column;
+	padding: 0.4em;
 	text-align: center;
 }
 
 #desc-menu,
 #desc-show {
-	animation: .5s fade-in ease-in-out;
+	animation: 0.5s fade-in ease-in-out;
 }
 
 .anim-card {
@@ -243,17 +260,19 @@ select:focus {
 	position: fixed;
 	height: 100%;
 	width: 100%;
-	background: rgba(0, 0, 0, .75);
+
+	background: rgba(0, 0, 0, 0.7);
 	padding: 1em;
 	cursor: zoom-out;
-	animation: .5s fade-in;
+	animation: 0.5s fade-in;
 }
 
 #img-zoomed {
 	height: 100%;
 	width: 100%;
+
+	animation: 0.5s zoom;
 	object-fit: contain;
-	animation: .5s zoom;
 }
 
 #desc-title {
@@ -262,7 +281,8 @@ select:focus {
 
 #card-img {
 	height: 35vh;
-	border-radius: .5em;
+
+	border-radius: 0.5em;
 	box-shadow: 0 0 1em;
 	cursor: zoom-in;
 }
@@ -287,16 +307,20 @@ select:focus {
 	#app {
 		background-image: url(../img/bg.jpg);
 	}
+
 	#desc-menu {
 		position: static;
 	}
+
 	@media (max-height: 600px) {
 		#app {
 			font-size: 4vh;
 		}
+
 		#main {
 			flex-direction: row;
 		}
+
 		#menu-column-1,
 		#menu-column-2 {
 			flex: 1 1 0px;
