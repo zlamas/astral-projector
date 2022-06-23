@@ -286,8 +286,10 @@ cardModal.addEventListener("click", () => {
 fetch("res/text.json")
 .then(response => response.json())
 .then(data => {
-	const setStartButtonState =
-		() => startButton.disabled = !(deckSel.value && (subjectSel.value || subjectSel.disabled));
+	function setStartButtonState() {
+		if (deckSel.selectedIndex)
+			startButton.disabled = !(subjectSel.selectedIndex || subjectSel.disabled);
+	}
 
 	setStartButtonState();
 	app.addEventListener("change", setStartButtonState);
