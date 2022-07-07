@@ -30,7 +30,7 @@ showButton = getById("desc-show"),
 hideButton = getById("desc-hide"),
 
 table = getById("table"),
-deckElem = getById("deck-elem"),
+[ deckElem, restartButton ] = table.getElementsByClassName("deck-elem"),
 slots = table.getElementsByClassName("slot"),
 cardImgs = table.querySelectorAll(".slot img"),
 
@@ -95,7 +95,7 @@ function resetTable() {
 	deckArray = [];
 	descriptions = [];
 
-	hide(deckElem);
+	hide(restartButton);
 	deckElem.src = animCard.src = imgPath + deckSel.value + "/back.jpg";
 
 	each(animCardInsts, el => {
@@ -149,9 +149,6 @@ function hideDescription() {
 }
 
 function drawCard() {
-	if (nextSlotId == slotCount)
-		return resetTable();
-
 	let id = randomInt(0, deckSize),
 		name = "",
 		altName = "";
@@ -223,8 +220,8 @@ function drawCard() {
 	});
 
 	if (++nextSlotId == slotCount) {
+		show(restartButton);
 		hide(deckElem);
-		deckElem.src = imgPath + "restart.svg";
 	}
 }
 
@@ -273,6 +270,7 @@ if (!decor.complete) {
 	decor.addEventListener("load", function() { show(this) });
 }
 
+restartButton.addEventListener("click", () => resetTable());
 showButton.addEventListener("click", showDescription);
 hideButton.addEventListener("click", hideDescription);
 
