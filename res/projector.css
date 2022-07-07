@@ -108,7 +108,7 @@ button {
 }
 
 #decor,
-#deck-elem,
+.deck-elem,
 .slot img {
 	animation: fade-in 0.3s ease-in-out;
 }
@@ -167,7 +167,7 @@ button {
 }
 
 .slot,
-#deck-elem,
+.deck-elem,
 .anim-card {
 	position: absolute;
 	height: 5em;
@@ -201,7 +201,7 @@ select:focus {
 	outline: none;
 }
 
-#deck-elem {
+.deck-elem {
 	bottom: 1em;
 	left: 1em;
 
@@ -210,11 +210,11 @@ select:focus {
 	transition: box-shadow 0.5s;
 }
 
-#deck-elem:hover {
+.deck-elem:hover {
 	box-shadow: 0.15em 0.15em 0 0.1em #333, 0.3em 0.3em 0 0.1em #333, 0.15em 0.15em 0.5em 0.3em red;
 }
 
-#deck-elem[src^="restart"] {
+#restart {
 	height: 3em;
 }
 
@@ -250,7 +250,7 @@ select:focus {
 }
 
 .anim-card,
-#deck-elem,
+.deck-elem,
 #desc-menu,
 #card-modal {
 	z-index: 1;
@@ -309,7 +309,7 @@ select:focus {
 	}
 
 	#desc-menu {
-		position: static;
+		position: relative;
 	}
 
 	@media (max-height: 600px) {
