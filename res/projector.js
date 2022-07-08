@@ -4,23 +4,20 @@ let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suit
 
 const
 getById = document.getElementById.bind(document),
-getByIds = (...args) => args.map(id => getById(id)),
-create = (tag, options) => Object.assign(document.createElement(tag), options),
-each = (list, callback) => Array.prototype.forEach.call(list, callback),
-index = (list, el) => Array.prototype.indexOf.call(list, el),
-
-randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
+each = (list, callback) => [].forEach.call(list, callback),
 hide = el => el.classList.add("hidden"),
 show = el => el.classList.remove("hidden"),
+randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
 
 change = new Event("change"),
 openingTime = 3000,
-cardAnimTime = 1000,
+cardFlyTime = 1000,
 menuFadeTime = 500,
 imgFadeTime = 300,
 imgPath = "img/",
 
 app = getById("app"),
+decor = getById("decor"),
 
 selectElems = app.getElementsByTagName("select"),
 [ layoutSel, subjectSel, deckSel ] = selectElems,
@@ -33,18 +30,16 @@ table = getById("table"),
 [ deckElem, restartButton ] = table.getElementsByClassName("deck-elem"),
 slots = table.getElementsByClassName("slot"),
 cardImgs = table.querySelectorAll(".slot img"),
-
-animCard = create("img", {className: "anim-card"}),
+animCard = Object.assign(document.createElement("img"), { className: "anim-card" }),
 animCardInsts = table.getElementsByClassName("anim-card"),
-decor = getById("decor"),
 
 descMenu = getById("desc-menu"),
-
 cardModal = getById("card-modal"),
 cardModalImg = getById("img-zoomed"),
 descImg = getById("card-img"),
 
-textElems = getByIds("desc-title", "pos-name", "card-name", "card-classic-name", "general-reading", "layout-reading"),
+textElems = ["desc-title", "pos-name", "card-name", "card-classic-name", "general-reading", "layout-reading"]
+	.map(id => getById(id)),
 descTitle = textElems[0],
 cardInfo = getById("card-info"),
 
@@ -101,15 +96,10 @@ function resetTable() {
 	each(animCardInsts, el => {
 		if (el.anim)
 			el.anim.pause();
-		fadeOut(el, imgFadeTime).finished
-			.then(() => el.remove());
+		fadeOut(el, imgFadeTime).finished.then(() => el.remove());
 	});
 
-	each(cardImgs, el => {
-		fadeOut(el, imgFadeTime);
-		el.onload = null;
-	});
-
+	each(cardImgs, el => fadeOut(el, imgFadeTime));
 	each(slots, el => el.style.zIndex = "");
 
 	descTitle.textContent = "Жмите на колоду, чтобы заполнить расклад";
@@ -194,29 +184,27 @@ function drawCard() {
 	const
 	slotImg = cardImgs[nextSlotId],
 	slotElem = slotImg.parentElement,
-	animCardInst = table.appendChild(animCard.cloneNode()),
-	displayCard = () => {
-		show(slotImg);
-		fadeOut(animCardInst, imgFadeTime).finished
-			.then(() => animCardInst.remove());
-	};
+	animCardInst = table.appendChild(animCard.cloneNode());
 
 	slotImg.src = imgPath + deckSel.value + "/" + id + ".jpg";
 
 	(animCardInst.anim = animCardInst.animate(
 		[ getOffset(deckElem), getOffset(slotElem) ],
 		{
-			duration: cardAnimTime,
+			duration: cardFlyTime,
 			fill: "forwards",
 			easing: "ease-in-out"
 		}
 	)).finished.then(() => {
-		if (slotImg.complete)
-			displayCard();
-		else
-			slotImg.onload = displayCard;
+		slotImg.onload = () => {
+			fadeOut(animCardInst, imgFadeTime).finished.then(() => animCardInst.remove());
+			slotElem.style.zIndex = 1;
+			show(slotImg);
+			slotImg.onload = null;
+		};
 
-		slotElem.style.zIndex = 1;
+		if (slotImg.complete)
+			slotImg.onload();
 	});
 
 	if (++nextSlotId == slotCount) {
@@ -239,27 +227,23 @@ if ("standalone" in navigator) {
 	// fix scrolling bug
 	each(app.getElementsByClassName("scrollable"), elem => {
 		elem.addEventListener("touchstart", function(e) {
-			this.atTop = (this.scrollTop <= 0);
-			this.atBottom = (this.scrollTop >= this.scrollHeight - this.clientHeight);
-			this.lastY = e.touches[0].clientY;
+			elem.atTop = (elem.scrollTop <= 0);
+			elem.atBottom = (elem.scrollTop >= elem.scrollHeight - elem.clientHeight);
+			elem.lastY = e.touches[0].clientY;
 		});
 		elem.addEventListener("touchmove", function(e) {
-			const up = (e.touches[0].clientY > this.lastY);
+			const up = (e.touches[0].clientY > elem.lastY);
 
-			this.lastY = e.touches[0].clientY;
-
-			if ((up && this.atTop) || (!up && this.atBottom))
+			if ((up && elem.atTop) || (!up && elem.atBottom))
 				e.preventDefault();
 		});
 	});
 }
 
-layoutSel.addEventListener("change", function() {
-	const theme = this.selectedOptions[0].getAttribute("theme");
+layoutSel.addEventListener("change", () => {
+	const theme = layoutSel.selectedOptions[0].getAttribute("theme");
 
-	subjectSel.disabled = (theme != null);
-
-	if (theme != null) {
+	if (subjectSel.disabled = (theme != null)) {
 		subjectSel.value = theme;
 		subjectSel.dispatchEvent(change);
 	}
@@ -267,25 +251,21 @@ layoutSel.addEventListener("change", function() {
 
 if (!decor.complete) {
 	hide(decor);
-	decor.addEventListener("load", function() { show(this) });
+	decor.addEventListener("load", () => show(decor));
 }
 
-restartButton.addEventListener("click", () => resetTable());
+restartButton.addEventListener("click", resetTable);
 showButton.addEventListener("click", showDescription);
 hideButton.addEventListener("click", hideDescription);
 
-descImg.addEventListener("click", () => {
-	show(cardModal);
-});
-cardModal.addEventListener("click", () => {
-	fadeOut(cardModal, menuFadeTime);
-});
+descImg.addEventListener("click", () => show(cardModal));
+cardModal.addEventListener("click", () => fadeOut(cardModal, menuFadeTime));
 
 fetch("res/text.json")
 .then(response => response.json())
 .then(data => {
 	function setStartButtonState() {
-		if (deckSel.selectedIndex)
+		if (layoutSel.selectedIndex && deckSel.selectedIndex)
 			startButton.disabled = !(subjectSel.selectedIndex || subjectSel.disabled);
 	}
 
@@ -293,11 +273,11 @@ fetch("res/text.json")
 	app.addEventListener("change", setStartButtonState);
 
 	startButton.textContent = "НАЧАТЬ";
-	startButton.addEventListener("click", function() {
+	startButton.addEventListener("click", () => {
 		({ major, suitNames, rankNames } = data);
 
 		layoutSel.addEventListener("change", function() {
-			const layout = this.value;
+			const layout = layoutSel.value;
 			table.className = layout;
 			titles = data.titles[layout];
 			layoutDesc.textContent = data.descriptions[layout];
@@ -309,14 +289,14 @@ fetch("res/text.json")
 				hide(posContainer);
 		});
 
-		subjectSel.addEventListener("change", function() {
-			readings = data.readings[this.value];
-		});
+		subjectSel.addEventListener("change", () =>
+			readings = data.readings[subjectSel.value]
+		);
 
-		deckSel.addEventListener("change", function() {
-			const deck = this.value;
+		deckSel.addEventListener("change", () => {
+			const deck = deckSel.value;
 			
-			roman = this.selectedOptions[0].hasAttribute("classic") ?
+			roman = deckSel.selectedOptions[0].hasAttribute("classic") ?
 				Object.assign({8: "XI", 11: "VIII"}, data.roman) :
 				data.roman;
 
@@ -326,15 +306,12 @@ fetch("res/text.json")
 			altRankNames = data.altRanks[deck];
 		});
 
-		deckElem.addEventListener("load", function() {
-			show(this);
-		});
+		deckElem.addEventListener("load", () => show(deckElem));
 
 		startButton.remove();
 
 		slideUp(getById("header"), openingTime);
-		slideUp(getById("menu-column-2"), openingTime).finished
-		.then(() => {
+		slideUp(getById("menu-column-2"), openingTime).finished.then(() => {
 			showDescription();
 			deckElem.addEventListener("click", drawCard);
 		});
@@ -347,7 +324,7 @@ fetch("res/text.json")
 		getById("menu-column-1").addEventListener("click", e => {
 			const
 			target = e.target,
-			slot = index(cardImgs, target);
+			slot = [].indexOf.call(cardImgs, target);
 
 			deselect();
 
