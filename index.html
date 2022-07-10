@@ -17,10 +17,11 @@
 <div id="app">
 	<div id="main">
 		<img id="decor" srcset="img/cards_720.png 240w, img/cards.png 360w" sizes="(max-height: 720px) 240px, 360px" src="img/cards.png">
-		<div id="menu-column-1">
+		<div id="main-column">
 			<div id="header">
 				<div id="title" class="title">АСТРАЛЬНЫЙ ПРОЕКТОР</div>
 				<div class="subtitle">Виртуальный помощник таролога</div>
+				<div id="copyright">© 2022 Black Cat Tarot (Версия beta.3)</div>
 			</div>
 			<select id="layout-sel" autocomplete="off">
 				<option disabled selected>Выберите расклад:</option>
@@ -56,8 +57,9 @@
 				<div class="slot" id="s9"><span>9</span><img></div>
 				<div class="slot" id="s10"><span>10</span><img></div>
 				<div class="slot" id="s11"><span>11</span><img></div>
-				<img class="deck-elem">
-				<img class="deck-elem" id="restart" src="img/restart.svg">
+				<img class="deck-elem hidden" id="deck">
+				<img class="deck-elem hidden" id="restart" src="img/restart.svg">
+				<img class="deck-elem" id="deck-loading" src="img/deck_loading.svg">
 				<button id="desc-show" class="hidden">Описание</button>
 			</div>
 			<select id="deck-sel" autocomplete="off">
@@ -80,8 +82,7 @@
 			</select>
 			<button id="start" autocomplete="off" disabled>Загрузка...</button>
 		</div>
-		<div id="menu-column-2">
-			<div id="intro" class="scrollable">Дорогой друг!
+		<div id="intro" class="scrollable">Дорогой друг!
 
 Перед Вами виртуальный помощник таролога. С его помощью Вы можете работать с любой из 50 самых популярных колод карт Таро. Вы можете выбирать из 10 различных схем расклада по самым актуальным сферам жизни: работа, финансы, отношения, духовное развитие, здоровье, прогнозы и так далее.
 
@@ -91,19 +92,10 @@
 
 С уважением,
 таролог Екатерина Нагорная и команда Black Cat Tarot</div>
-			<div id="copyright">© 2022 Black Cat Tarot (Версия beta.3)</div>
-		</div>
 	</div>
 	<div id="desc-menu" class="hidden">
 		<div id="desc-title" class="title"></div>
-		<div id="card-info">
-			<div id="pos-name" class="subtitle"></div>
-			<img id="card-img">
-			<div>
-				<span id="card-name"></span>
-				<span id="card-classic-name"></span>
-			</div>
-		</div>
+		<div id="pos-name" class="subtitle"></div>
 		<div id="desc-container" class="scrollable">
 			<div id="layout-info">
 				<div id="layout-desc"></div>
@@ -112,8 +104,15 @@
 					<div id="pos-list"></div>
 				</div>
 			</div>
-			<div class="card-reading"><b>Общее значение карты: </b><span id="general-reading"></span></div>
-			<div class="card-reading"><b>Значение карты в этом раскладе: </b><span id="layout-reading"></span></div>
+			<div id="card-info">
+				<img id="card-img">
+				<div>
+					<span id="card-name"></span>
+					<span id="card-alt-name"></span>
+				</div>
+				<div class="card-reading"><b>Общее значение карты: </b><span id="general-reading"></span></div>
+				<div class="card-reading"><b>Значение карты в этом раскладе: </b><span id="layout-reading"></span></div>
+			</div>
 		</div>
 		<button id="desc-hide">Скрыть</button>
 	</div>
