@@ -3,7 +3,6 @@
 	position: fixed;
 	height: 100%;
 	width: 100%;
-
 	background: url(../img/bg_portrait.jpg) #643 0 / cover;
 	color: white;
 	font: 2.5vh "Open Sans", sans-serif;
@@ -19,38 +18,35 @@
 }
 
 @keyframes zoom {
-	from {
+	0% {
 		transform: scale(0.5);
 	}
 }
 
 @keyframes fade-in {
-	from {
+	0% {
 		opacity: 0;
 	}
 }
 
 select,
 button {
+	all: unset;
 	border-radius: 0.5em;
-	color: inherit;
 	cursor: pointer;
-	font-family: inherit;
 	font-size: 120%;
 	line-height: 1.2;
-	text-shadow: inherit;
 	transition: color 0.5s, border-color 0.5s, box-shadow 0.5s;
 }
 
 select {
 	width: 100%;
-
-	appearance: none;
 	background: url(../img/arrow.svg) no-repeat right 0.5em top 50% / 0.65em auto;
-	border: 0;
 	box-shadow: 0 1px 0;
 	margin: 0.2em 0;
 	padding: 0.2em 1.5em 0.2em 0.2em;
+
+	/* firefox can't wrap text in select, so we cut it short */
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
@@ -61,10 +57,9 @@ option {
 
 button {
 	align-self: center;
-	background: none;
 	border: 2px solid;
-	padding: 0.1em 0.5em;
 	font-weight: bold;
+	padding: 0.1em 0.5em;
 }
 
 :disabled {
@@ -75,33 +70,27 @@ button {
 #main {
 	display: flex;
 	position: relative;
-
 	flex-direction: column;
 	margin: 0.2em;
 }
 
-#menu-column-1,
-#menu-column-2 {
+#main-column {
 	display: flex;
-	max-width: 100vh;
-
-	flex-direction: column;
-}
-
-#menu-column-1 {
 	flex: 1;
+	flex-direction: column;
 	justify-content: space-between;
+	text-align: center;
 }
 
-#menu-column-2 {
-	overflow: auto;
+#main-column,
+#intro {
+	max-width: 100vh;
 }
 
 #decor {
 	position: absolute;
 	height: 100%;
 	right: 0;
-
 	opacity: 0.5;
 	transform: translateX(50%);
 	z-index: -1;
@@ -110,7 +99,7 @@ button {
 #decor,
 .deck-elem,
 .slot img {
-	animation: fade-in 0.3s ease-in-out;
+	animation: fade-in 0.5s ease-in-out;
 }
 
 .title,
@@ -132,25 +121,19 @@ button {
 	box-shadow: 0 -1.2em 0.8em -1em inset;
 	overflow: auto;
 	padding: 0 0.2em 0.5em;
-	text-align: justify;
 	touch-action: pan-y;
 }
 
 #copyright {
-	align-self: center;
 	font-size: 85%;
-	white-space: nowrap;
 }
 
 #layout-sel {
-	display: block;
-
 	font-weight: bold;
 }
 
 #table {
 	position: relative;
-
 	animation: fade-in 3s ease-in-out;
 	flex: 1;
 	overflow: hidden;
@@ -160,7 +143,6 @@ button {
 	left: 50%;
 	top: -20vh;
 	min-width: 2.7em;
-
 	box-shadow: 0 0 0.8em inset;
 	transform: translate3d(-50%, -50%, 1px);
 	transition: left 1s, top 1s;
@@ -171,13 +153,15 @@ button {
 .anim-card {
 	position: absolute;
 	height: 5em;
-
 	border-radius: 0.3em;
+}
+
+.anim-card {
+	position: fixed;
 }
 
 .slot img {
 	height: 100%;
-
 	border-radius: inherit;
 	cursor: pointer;
 	transition: box-shadow 0.5s;
@@ -186,8 +170,7 @@ button {
 .slot span {
 	position: absolute;
 	left: 110%;
-
-	font: 150%/0 Edo, sans-serif;
+	font: 150% / 0 Edo, sans-serif;
 }
 
 .slot img,
@@ -198,24 +181,32 @@ button {
 #selected,
 select:focus {
 	box-shadow: 0 0 0.6em 0.3em red;
-	outline: none;
 }
 
 .deck-elem {
 	bottom: 1em;
 	left: 1em;
-
-	box-shadow: 0.15em 0.15em 0 0.1em #333, 0.3em 0.3em 0 0.1em #333,	.15em 0.15em 0.5em 0.3em;
+	box-shadow:
+		0.15em 0.15em 0 0.1em #333,
+		0.3em 0.3em 0 0.1em #333,
+		0.15em 0.15em 0.5em 0.3em;
 	cursor: pointer;
 	transition: box-shadow 0.5s;
 }
 
 .deck-elem:hover {
-	box-shadow: 0.15em 0.15em 0 0.1em #333, 0.3em 0.3em 0 0.1em #333, 0.15em 0.15em 0.5em 0.3em red;
+	box-shadow:
+		0.15em 0.15em 0 0.1em #333,
+		0.3em 0.3em 0 0.1em #333,
+		0.15em 0.15em 0.5em 0.3em red;
 }
 
 #restart {
 	height: 3em;
+}
+
+#deck-loading {
+	cursor: not-allowed; 
 }
 
 #desc-show {
@@ -232,7 +223,6 @@ select:focus {
 	display: flex;
 	position: fixed;
 	height: 100%;
-
 	background: rgba(0, 0, 0, 0.7);
 	flex: 0 0 40%;
 	flex-direction: column;
@@ -245,43 +235,16 @@ select:focus {
 	animation: 0.5s fade-in ease-in-out;
 }
 
-.anim-card {
-	position: fixed;
-}
-
-.anim-card,
-.deck-elem,
-#desc-menu,
-#card-modal {
-	z-index: 1;
-}
-
-#card-modal {
-	position: fixed;
-	height: 100%;
-	width: 100%;
-
-	background: rgba(0, 0, 0, 0.7);
-	padding: 1em;
-	cursor: zoom-out;
-	animation: 0.5s fade-in;
-}
-
-#img-zoomed {
-	height: 100%;
-	width: 100%;
-
-	animation: 0.5s zoom;
-	object-fit: contain;
-}
-
 #desc-title {
 	font-size: 150%;
 }
 
-#card-img {
-	height: 35vh;
+#desc-container {
+	flex: 1;
+}
 
+#card-img {
+	height: 15em;
 	border-radius: 0.5em;
 	box-shadow: 0 0 1em;
 	cursor: zoom-in;
@@ -292,14 +255,35 @@ select:focus {
 	font-weight: bold;
 }
 
-#desc-container {
-	flex: 1;
+#card-modal {
+	position: fixed;
+	height: 100%;
+	width: 100%;
+	animation: 0.5s fade-in;
+	background: rgba(0, 0, 0, 0.7);
+	cursor: zoom-out;
+	padding: 1em;
+}
+
+#img-zoomed {
+	height: 100%;
+	width: 100%;
+	animation: 0.5s zoom;
+	object-fit: contain;
+}
+
+.anim-card,
+.deck-elem,
+#desc-menu,
+#card-modal {
+	z-index: 1;
 }
 
 #intro,
 #layout-desc,
 #pos-list,
 .card-reading {
+	text-align: justify;
 	white-space: pre-line;
 }
 
@@ -309,7 +293,7 @@ select:focus {
 	}
 
 	#desc-menu {
-		position: relative;
+		position: unset;
 	}
 
 	@media (max-height: 600px) {
@@ -321,9 +305,8 @@ select:focus {
 			flex-direction: row;
 		}
 
-		#menu-column-1,
-		#menu-column-2 {
-			flex: 1 1 0px;
+		#intro {
+			flex: 1;
 		}
 	}
 }
