@@ -246,7 +246,7 @@ select:focus {
 #card-img {
 	height: 15em;
 	border-radius: 0.5em;
-	box-shadow: 0 0 1em;
+	box-shadow: 0 0 10px;
 	cursor: zoom-in;
 }
 
@@ -270,6 +270,10 @@ select:focus {
 	width: 100%;
 	animation: 0.5s zoom;
 	object-fit: contain;
+}
+
+#card-info {
+	padding-top: 10px;
 }
 
 .anim-card,
