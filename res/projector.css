@@ -219,6 +219,11 @@ select:focus {
 	margin-top: 0.4em;
 }
 
+#site-link {
+	align-self: center;
+	color: unset;
+}
+
 #desc-menu {
 	display: flex;
 	position: fixed;
