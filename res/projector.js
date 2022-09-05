@@ -159,12 +159,12 @@ function drawCard() {
 				name += altSuitNames[suit];
 				altName += suitNames[suit];
 			} else
-			 	name += suitNames[suit];
+				name += suitNames[suit];
 		} else
 			name = extraMajorNames[rank];
-	// } else if (altMajors[deck]) {
-	// 	altName = major[id];
-	// 	name = roman[id] + " " + altMajors[deck][id];
+//	} else if (altMajors[deck]) {
+//		altName = major[id];
+//		name = roman[id] + " " + altMajors[deck][id];
 	} else
 		name = roman[id] + " " + major[id];
 
@@ -290,7 +290,7 @@ fetch("res/text.json")
 
 		deckSel.addEventListener("change", () => {
 			const deck = deckSel.value;
-			
+
 			hide(deckElem);
 			show(deckLoading);
 
