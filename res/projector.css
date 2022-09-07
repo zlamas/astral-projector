@@ -7,6 +7,7 @@
 	color: white;
 	font: 2.5vh "Open Sans", sans-serif;
 	justify-content: center;
+	text-align: center;
 	text-shadow: 2px 2px black;
 	touch-action: none;
 	-webkit-user-select: none;
@@ -34,14 +35,14 @@ button {
 	all: unset;
 	border-radius: 0.5em;
 	cursor: pointer;
-	font-size: 120%;
+	font-size: 1.2em;
 	line-height: 1.2;
 	transition: color 0.5s, border-color 0.5s, box-shadow 0.5s;
 }
 
 select {
 	width: 100%;
-	background: url(../img/arrow.svg) no-repeat right 0.5em top 50% / 0.65em auto;
+	background: url(/img/arrow.svg) no-repeat right 0.5em top 50% / 0.65em auto;
 	box-shadow: 0 1px 0;
 	margin: 0.2em 0;
 	padding: 0.2em 1.5em 0.2em 0.2em;
@@ -79,7 +80,7 @@ button {
 	flex: 1;
 	flex-direction: column;
 	justify-content: space-between;
-	text-align: center;
+
 }
 
 #main-column,
@@ -104,12 +105,11 @@ button {
 
 .title,
 .subtitle {
-	font: 130% Edo, sans-serif;
-	text-align: center;
+	font: 1.3em Edo, sans-serif;
 }
 
 #title {
-	font-size: 300%;
+	font-size: 3em;
 }
 
 #start {
@@ -125,7 +125,7 @@ button {
 }
 
 #copyright {
-	font-size: 85%;
+	font-size: 0.85em;
 }
 
 #layout-sel {
@@ -139,21 +139,21 @@ button {
 	overflow: hidden;
 }
 
-.slot {
-	left: 50%;
-	top: -20vh;
-	min-width: 2.7em;
-	box-shadow: 0 0 0.8em inset;
-	transform: translate3d(-50%, -50%, 1px);
-	transition: left 1s, top 1s;
-}
-
 .slot,
 .deck-elem,
 .anim-card {
-	position: absolute;
 	height: 5em;
 	border-radius: 0.3em;
+}
+
+.slot {
+	position: absolute;
+	top: -20vh;
+	left: 50%;
+	min-width: 2.7em;
+	box-shadow: 0 0 0.8em inset;
+	transform: translate3d(-50%, -50%, 1px);
+	transition: top 1s, left 1s;
 }
 
 .anim-card {
@@ -170,7 +170,7 @@ button {
 .slot span {
 	position: absolute;
 	left: 110%;
-	font: 150% / 0 Edo, sans-serif;
+	font: 1.5em / 0 Edo, sans-serif;
 }
 
 .slot img,
@@ -184,6 +184,7 @@ select:focus {
 }
 
 .deck-elem {
+	position: absolute;
 	bottom: 1em;
 	left: 1em;
 	box-shadow:
@@ -232,7 +233,6 @@ select:focus {
 	flex: 0 0 40%;
 	flex-direction: column;
 	padding: 0.4em;
-	text-align: center;
 }
 
 #desc-menu,
@@ -241,7 +241,7 @@ select:focus {
 }
 
 #desc-title {
-	font-size: 150%;
+	font-size: 1.5em;
 }
 
 #desc-container {
@@ -256,7 +256,7 @@ select:focus {
 }
 
 #card-name {
-	font-size: 120%;
+	font-size: 1.2em;
 	font-weight: bold;
 }
 
@@ -320,67 +320,67 @@ select:focus {
 	}
 }
 
-.cross #s1 {left: 37%; top: 50%}
-.cross #s2 {left: 37%; top: 52%; transform: translate3d(-50%, -50%, 1px) rotate(90deg)}
-.cross #s3 {left: 37%; top: 28%}
-.cross #s4 {left: 37%; top: 72%}
-.cross #s5 {left: 14%; top: 50%}
-.cross #s6 {left: 60%; top: 50%}
-.cross #s7 {left: 83%; top: 83%}
-.cross #s8 {left: 83%; top: 61%}
-.cross #s9 {left: 83%; top: 39%}
-.cross #s10 {left: 83%; top: 17%}
-.faust #s1, .disorder #s2, .marry #s4 {left: 20%; top: 65%}
-.faust #s2, .disorder #s1, .marry #s1 {left: 50%; top: 20%}
-.faust #s3, .disorder #s3, .marry #s5 {left: 80%; top: 65%}
-.faust #s4, .disorder #s4, .marry #s2 {left: 20%; top: 35%}
-.faust #s5, .disorder #s6, .marry #s6 {left: 50%; top: 80%}
-.faust #s6, .disorder #s5, .marry #s3 {left: 80%; top: 35%}
-.faust #s7, .disorder #s7, .one #s1, .swing #s11, .solution #s1, .station #s1 {left: 50%; top: 50%}
-.problem #s1 {left: 50%; top: 35%}
-.problem #s2 {left: 25%; top: 60%}
-.problem #s3 {left: 50%; top: 60%}
-.problem #s4 {left: 75%; top: 60%}
-.progress #s1 {left: 20%; top: 50%}
-.progress #s2 {left: 40%; top: 50%}
-.progress #s3 {left: 60%; top: 50%}
-.progress #s4 {left: 20%; top: 25%}
-.progress #s5 {left: 40%; top: 25%}
-.progress #s6 {left: 60%; top: 25%}
-.progress #s7 {left: 45%; top: 75%}
-.progress #s8 {left: 65%; top: 75%}
-.progress #s9 {left: 85%; top: 75%}
-.progress #s10 {left: 20%; top: 75%}
-.solution #s2 {left: 10%; top: 25%}
-.solution #s3 {left: 30%; top: 25%}
-.solution #s4 {left: 70%; top: 25%}
-.solution #s5 {left: 90%; top: 25%}
-.solution #s6 {left: 10%; top: 50%}
-.solution #s7 {left: 30%; top: 50%}
-.solution #s8 {left: 70%; top: 50%}
-.solution #s9 {left: 90%; top: 50%}
-.solution #s10 {left: 30%; top: 75%}
-.solution #s11 {left: 70%; top: 75%}
-.station #s2 {left: 75%; top: 25%}
-.station #s3 {left: 75%; top: 50%}
-.station #s4 {left: 75%; top: 75%}
-.station #s5 {left: 25%; top: 75%}
-.station #s6 {left: 25%; top: 50%}
-.station #s7 {left: 25%; top: 25%}
-.swing #s1 {left: 25%; top: 20%}
-.swing #s2 {left: 20%; top: 35%}
-.swing #s3 {left: 25%; top: 50%}
-.swing #s4 {left: 20%; top: 65%}
-.swing #s5 {left: 25%; top: 80%}
-.swing #s6 {left: 75%; top: 20%}
-.swing #s7 {left: 80%; top: 35%}
-.swing #s8 {left: 75%; top: 50%}
-.swing #s9 {left: 80%; top: 65%}
-.swing #s10 {left: 75%; top: 80%}
-.choice #s1 {left: 20%; top: 50%}
-.choice #s2 {left: 40%; top: 35%}
-.choice #s3 {left: 60%; top: 35%}
-.choice #s4 {left: 80%; top: 35%}
-.choice #s5 {left: 40%; top: 65%}
-.choice #s6 {left: 60%; top: 65%}
-.choice #s7 {left: 80%; top: 65%}
+.cross #s1 {top: 50%; left: 37%}
+.cross #s2 {top: 52%; left: 37%; transform: translate3d(-50%, -50%, 1px) rotate(90deg)}
+.cross #s3 {top: 28%; left: 37%}
+.cross #s4 {top: 72%; left: 37%}
+.cross #s5 {top: 50%; left: 14%}
+.cross #s6 {top: 50%; left: 60%}
+.cross #s7 {top: 83%; left: 83%}
+.cross #s8 {top: 61%; left: 83%}
+.cross #s9 {top: 39%; left: 83%}
+.cross #s10 {top: 17%; left: 83%}
+.faust #s1, .disorder #s2, .marry #s4 {top: 65%; left: 20%}
+.faust #s2, .disorder #s1, .marry #s1 {top: 20%; left: 50%}
+.faust #s3, .disorder #s3, .marry #s5 {top: 65%; left: 80%}
+.faust #s4, .disorder #s4, .marry #s2 {top: 35%; left: 20%}
+.faust #s5, .disorder #s6, .marry #s6 {top: 80%; left: 50%}
+.faust #s6, .disorder #s5, .marry #s3 {top: 35%; left: 80%}
+.faust #s7, .disorder #s7, .one #s1, .swing #s11, .solution #s1, .station #s1 {top: 50%; left: 50%}
+.problem #s1 {top: 35%; left: 50%}
+.problem #s2 {top: 60%; left: 25%}
+.problem #s3 {top: 60%; left: 50%}
+.problem #s4 {top: 60%; left: 75%}
+.progress #s1 {top: 50%; left: 20%}
+.progress #s2 {top: 50%; left: 40%}
+.progress #s3 {top: 50%; left: 60%}
+.progress #s4 {top: 25%; left: 20%}
+.progress #s5 {top: 25%; left: 40%}
+.progress #s6 {top: 25%; left: 60%}
+.progress #s7 {top: 75%; left: 45%}
+.progress #s8 {top: 75%; left: 65%}
+.progress #s9 {top: 75%; left: 85%}
+.progress #s10 {top: 75%; left: 20%}
+.solution #s2 {top: 25%; left: 10%}
+.solution #s3 {top: 25%; left: 30%}
+.solution #s4 {top: 25%; left: 70%}
+.solution #s5 {top: 25%; left: 90%}
+.solution #s6 {top: 50%; left: 10%}
+.solution #s7 {top: 50%; left: 30%}
+.solution #s8 {top: 50%; left: 70%}
+.solution #s9 {top: 50%; left: 90%}
+.solution #s10 {top: 75%; left: 30%}
+.solution #s11 {top: 75%; left: 70%}
+.station #s2 {top: 25%; left: 75%}
+.station #s3 {top: 50%; left: 75%}
+.station #s4 {top: 75%; left: 75%}
+.station #s5 {top: 75%; left: 25%}
+.station #s6 {top: 50%; left: 25%}
+.station #s7 {top: 25%; left: 25%}
+.swing #s1 {top: 20%; left: 25%}
+.swing #s2 {top: 35%; left: 20%}
+.swing #s3 {top: 50%; left: 25%}
+.swing #s4 {top: 65%; left: 20%}
+.swing #s5 {top: 80%; left: 25%}
+.swing #s6 {top: 20%; left: 75%}
+.swing #s7 {top: 35%; left: 80%}
+.swing #s8 {top: 50%; left: 75%}
+.swing #s9 {top: 65%; left: 80%}
+.swing #s10 {top: 80%; left: 75%}
+.choice #s1 {top: 50%; left: 20%}
+.choice #s2 {top: 35%; left: 40%}
+.choice #s3 {top: 35%; left: 60%}
+.choice #s4 {top: 35%; left: 80%}
+.choice #s5 {top: 65%; left: 40%}
+.choice #s6 {top: 65%; left: 60%}
+.choice #s7 {top: 65%; left: 80%}

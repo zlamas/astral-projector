@@ -1,20 +1,20 @@
 @font-face {
-	font-family: Edo;
 	font-display: swap;
+	font-family: "Edo";
 	src: url(edo.woff2);
 }
 
 @font-face {
+	font-display: swap;
 	font-family: "Open Sans";
 	font-weight: 400;
-	font-display: swap;
 	src: url(OpenSans-Regular.woff2);
 }
 
 @font-face {
+	font-display: swap;
 	font-family: "Open Sans";
 	font-weight: 700;
-	font-display: swap;
 	src: url(OpenSans-Bold.woff2);
 }
 
