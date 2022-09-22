@@ -30,6 +30,11 @@
 	}
 }
 
+h1 {
+	font: 3em "Edo", sans-serif;
+	margin: 0;
+}
+
 select,
 button {
 	all: unset;
@@ -46,6 +51,7 @@ select {
 	box-shadow: 0 1px 0;
 	margin: 0.2em 0;
 	padding: 0.2em 1.5em 0.2em 0.2em;
+	text-align-last: center; /* for webkit */
 
 	/* firefox can't wrap text in select, so we cut it short */
 	overflow: hidden;
@@ -103,13 +109,8 @@ button {
 	animation: fade-in 0.5s ease-in-out;
 }
 
-.title,
-.subtitle {
-	font: 1.3em Edo, sans-serif;
-}
-
-#title {
-	font-size: 3em;
+.title {
+	font: 1.3em "Edo", sans-serif;
 }
 
 #start {
@@ -170,7 +171,7 @@ button {
 .slot span {
 	position: absolute;
 	left: 110%;
-	font: 1.5em / 0 Edo, sans-serif;
+	font: 1.5em / 0 "Edo", sans-serif;
 }
 
 .slot img,
