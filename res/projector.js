@@ -269,7 +269,7 @@ fetch("res/text.json")
 
 	startButton.textContent = "НАЧАТЬ";
 	startButton.addEventListener("click", () => {
-		({ major, suitNames, rankNames } = data);
+		({ roman, major, suitNames, rankNames } = data);
 
 		layoutSel.addEventListener("change", () => {
 			const layout = layoutSel.value;
@@ -294,9 +294,9 @@ fetch("res/text.json")
 			hide(deckElem);
 			show(deckLoading);
 
-			roman = deckSel.selectedOptions[0].hasAttribute("classic") ?
-				Object.assign({8: "XI", 11: "VIII"}, data.roman) :
-				data.roman;
+			Object.assign(roman, deckSel.selectedOptions[0].hasAttribute("classic") ?
+				{8: "XI", 11: "VIII"} :
+				{8: "VIII", 11: "XI"});
 
 			meanings = data.meanings[deck] || data.meanings.normal;
 			extraMajorNames = data.extraMajors[deck] || [];
