@@ -49,7 +49,7 @@ select {
 	width: 100%;
 	background: url(/img/arrow.svg) no-repeat right 0.5em top 50% / 0.65em auto;
 	box-shadow: 0 1px 0;
-	margin: 0.2em 0;
+	margin: 0.5em 0;
 	padding: 0.2em 1.5em 0.2em 0.2em;
 	text-align-last: center; /* for webkit */
 
@@ -75,18 +75,17 @@ button {
 }
 
 #main {
-	display: flex;
+	display: grid;
 	position: relative;
-	flex-direction: column;
+	grid-auto-columns: 1fr;
+	grid-auto-rows: 1fr auto;
 	margin: 0.2em;
 }
 
 #main-column {
 	display: flex;
-	flex: 1;
 	flex-direction: column;
 	justify-content: space-between;
-
 }
 
 #main-column,
@@ -105,7 +104,7 @@ button {
 
 #decor,
 .deck-elem,
-.slot img {
+.slot > img {
 	animation: fade-in 0.5s ease-in-out;
 }
 
@@ -129,7 +128,7 @@ button {
 	font-size: 0.85em;
 }
 
-#layout-sel {
+#spread-select {
 	font-weight: bold;
 }
 
@@ -141,8 +140,8 @@ button {
 }
 
 .slot,
-.deck-elem,
-.anim-card {
+.deck-img,
+.animated-card {
 	height: 5em;
 	border-radius: 0.3em;
 }
@@ -157,25 +156,25 @@ button {
 	transition: top 1s, left 1s;
 }
 
-.anim-card {
+.animated-card {
 	position: fixed;
 }
 
-.slot img {
+.slot > img {
 	height: 100%;
 	border-radius: inherit;
 	cursor: pointer;
 	transition: box-shadow 0.5s;
 }
 
-.slot span {
+.slot > span {
 	position: absolute;
 	left: 110%;
 	font: 1.5em / 0 "Edo", sans-serif;
 }
 
-.slot img,
-.anim-card {
+.slot > img,
+.animated-card {
 	box-shadow: 0 0 0.5em;
 }
 
@@ -184,7 +183,7 @@ select:focus {
 	box-shadow: 0 0 0.6em 0.3em red;
 }
 
-.deck-elem {
+.deck-img {
 	position: absolute;
 	bottom: 1em;
 	left: 1em;
@@ -196,7 +195,7 @@ select:focus {
 	transition: box-shadow 0.5s;
 }
 
-.deck-elem:hover {
+.deck-img:hover {
 	box-shadow:
 		0.15em 0.15em 0 0.1em #333,
 		0.3em 0.3em 0 0.1em #333,
@@ -211,13 +210,13 @@ select:focus {
 	cursor: not-allowed; 
 }
 
-#desc-show {
+#details-show {
 	position: absolute;
 	bottom: 0;
 	right: 0;
 }
 
-#desc-hide {
+#details-hide {
 	margin-top: 0.4em;
 }
 
@@ -226,7 +225,7 @@ select:focus {
 	color: unset;
 }
 
-#desc-menu {
+#details {
 	display: flex;
 	position: fixed;
 	height: 100%;
@@ -236,16 +235,16 @@ select:focus {
 	padding: 0.4em;
 }
 
-#desc-menu,
-#desc-show {
+#details,
+#details-show {
 	animation: 0.5s fade-in ease-in-out;
 }
 
-#desc-title {
+#details-title {
 	font-size: 1.5em;
 }
 
-#desc-container {
+#details-wrapper {
 	flex: 1;
 }
 
@@ -261,7 +260,7 @@ select:focus {
 	font-weight: bold;
 }
 
-#card-modal {
+#modal {
 	position: fixed;
 	height: 100%;
 	width: 100%;
@@ -271,7 +270,7 @@ select:focus {
 	padding: 1em;
 }
 
-#img-zoomed {
+#modal > img {
 	height: 100%;
 	width: 100%;
 	animation: 0.5s zoom;
@@ -282,16 +281,16 @@ select:focus {
 	padding-top: 10px;
 }
 
-.anim-card,
+.animated-card,
 .deck-elem,
-#desc-menu,
-#card-modal {
+#details,
+#modal {
 	z-index: 1;
 }
 
 #intro,
-#layout-desc,
-#pos-list,
+#spread-details,
+#position-list,
 .card-reading {
 	text-align: justify;
 	white-space: pre-line;
@@ -302,21 +301,17 @@ select:focus {
 		background-image: url(../img/bg.jpg);
 	}
 
-	#desc-menu {
+	#details {
 		position: unset;
 	}
 
 	@media (max-height: 600px) {
 		#app {
-			font-size: 4vh;
+			font-size: 3.5vh;
 		}
 
 		#main {
-			flex-direction: row;
-		}
-
-		#intro {
-			flex: 1;
+			grid-auto-flow: column;
 		}
 	}
 }
@@ -352,22 +347,12 @@ select:focus {
 .progress #s8 {top: 75%; left: 65%}
 .progress #s9 {top: 75%; left: 85%}
 .progress #s10 {top: 75%; left: 20%}
-.solution #s2 {top: 25%; left: 10%}
-.solution #s3 {top: 25%; left: 30%}
-.solution #s4 {top: 25%; left: 70%}
-.solution #s5 {top: 25%; left: 90%}
-.solution #s6 {top: 50%; left: 10%}
-.solution #s7 {top: 50%; left: 30%}
-.solution #s8 {top: 50%; left: 70%}
-.solution #s9 {top: 50%; left: 90%}
-.solution #s10 {top: 75%; left: 30%}
-.solution #s11 {top: 75%; left: 70%}
-.station #s2 {top: 25%; left: 75%}
-.station #s3 {top: 50%; left: 75%}
-.station #s4 {top: 75%; left: 75%}
-.station #s5 {top: 75%; left: 25%}
-.station #s6 {top: 50%; left: 25%}
-.station #s7 {top: 25%; left: 25%}
+.solution #s2, .station #s7 {top: 25%; left: 30%}
+.solution #s3, .station #s2 {top: 25%; left: 70%}
+.solution #s4, .station #s6 {top: 50%; left: 30%}
+.solution #s5, .station #s3 {top: 50%; left: 70%}
+.solution #s6, .station #s5 {top: 75%; left: 30%}
+.solution #s7, .station #s4 {top: 75%; left: 70%}
 .swing #s1 {top: 20%; left: 25%}
 .swing #s2 {top: 35%; left: 20%}
 .swing #s3 {top: 50%; left: 25%}
