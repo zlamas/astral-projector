@@ -14,11 +14,7 @@
 	user-select: none;
 }
 
-#app .hidden {
-	display: none;
-}
-
-@keyframes zoom {
+@keyframes zoom-in {
 	0% {
 		transform: scale(0.5);
 	}
@@ -74,12 +70,28 @@ button {
 	color: grey;
 }
 
+#app .hidden {
+	display: none;
+}
+
+.title {
+	font: 1.3em "Edo", sans-serif;
+}
+
+.scrollable {
+	border-radius: 0.5em;
+	box-shadow: 0 -1.2em 0.8em -1em inset;
+	overflow: auto;
+	padding: 0 0.2em 0.5em;
+	touch-action: pan-y;
+}
+
 #main {
 	display: grid;
 	position: relative;
-	grid-auto-columns: 1fr;
 	grid-auto-rows: 1fr auto;
 	margin: 0.2em;
+	overflow-y: clip;
 }
 
 #main-column {
@@ -90,6 +102,7 @@ button {
 
 #main-column,
 #intro {
+	min-width: 50vw;
 	max-width: 100vh;
 }
 
@@ -102,30 +115,19 @@ button {
 	z-index: -1;
 }
 
-#decor,
-.deck-elem,
-.slot > img {
-	animation: fade-in 0.5s ease-in-out;
-}
-
-.title {
-	font: 1.3em "Edo", sans-serif;
-}
-
-#start {
-	margin: 0.5em 0;
-}
-
-.scrollable {
-	border-radius: 0.5em;
-	box-shadow: 0 -1.2em 0.8em -1em inset;
-	overflow: auto;
-	padding: 0 0.2em 0.5em;
-	touch-action: pan-y;
-}
-
 #copyright {
 	font-size: 0.85em;
+}
+
+#button-wrapper {
+	display: grid;
+	cursor: pointer;
+	grid-auto-flow: column;
+	text-decoration: underline;
+}
+
+#site-link {
+	color: unset;
 }
 
 #spread-select {
@@ -136,7 +138,6 @@ button {
 	position: relative;
 	animation: fade-in 3s ease-in-out;
 	flex: 1;
-	overflow: hidden;
 }
 
 .slot,
@@ -148,7 +149,7 @@ button {
 
 .slot {
 	position: absolute;
-	top: -20vh;
+	top: -50vh;
 	left: 50%;
 	min-width: 2.7em;
 	box-shadow: 0 0 0.8em inset;
@@ -210,19 +211,8 @@ select:focus {
 	cursor: not-allowed; 
 }
 
-#details-show {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-}
-
-#details-hide {
-	margin-top: 0.4em;
-}
-
-#site-link {
-	align-self: center;
-	color: unset;
+#start {
+	margin: 0.5em 0;
 }
 
 #details {
@@ -235,17 +225,16 @@ select:focus {
 	padding: 0.4em;
 }
 
-#details,
-#details-show {
-	animation: 0.5s fade-in ease-in-out;
-}
-
 #details-title {
 	font-size: 1.5em;
 }
 
 #details-wrapper {
 	flex: 1;
+}
+
+#card-info {
+	padding-top: 10px;
 }
 
 #card-img {
@@ -258,6 +247,10 @@ select:focus {
 #card-name {
 	font-size: 1.2em;
 	font-weight: bold;
+}
+
+#details-hide {
+	margin-top: 0.4em;
 }
 
 #modal {
@@ -273,16 +266,20 @@ select:focus {
 #modal > img {
 	height: 100%;
 	width: 100%;
-	animation: 0.5s zoom;
+	animation: 0.5s zoom-in;
 	object-fit: contain;
 }
 
-#card-info {
-	padding-top: 10px;
+#decor,
+#details,
+#details-show,
+.deck-img,
+.slot > img {
+	animation: 0.5s fade-in ease-in-out;
 }
 
 .animated-card,
-.deck-elem,
+.deck-img,
 #details,
 #modal {
 	z-index: 1;
@@ -318,35 +315,35 @@ select:focus {
 
 .cross #s1 {top: 50%; left: 37%}
 .cross #s2 {top: 52%; left: 37%; transform: translate(-50%, -50%) rotate(90deg)}
-.cross #s3 {top: 28%; left: 37%}
-.cross #s4 {top: 72%; left: 37%}
+.cross #s3 {top: 20%; left: 37%}
+.cross #s4 {top: 80%; left: 37%}
 .cross #s5 {top: 50%; left: 14%}
 .cross #s6 {top: 50%; left: 60%}
-.cross #s7 {top: 83%; left: 83%}
-.cross #s8 {top: 61%; left: 83%}
-.cross #s9 {top: 39%; left: 83%}
-.cross #s10 {top: 17%; left: 83%}
+.cross #s7 {top: 86%; left: 83%}
+.cross #s8 {top: 62%; left: 83%}
+.cross #s9 {top: 38%; left: 83%}
+.cross #s10 {top: 14%; left: 83%}
 .faust #s1, .disorder #s2, .marry #s4 {top: 65%; left: 20%}
 .faust #s2, .disorder #s1, .marry #s1 {top: 20%; left: 50%}
 .faust #s3, .disorder #s3, .marry #s5 {top: 65%; left: 80%}
 .faust #s4, .disorder #s4, .marry #s2 {top: 35%; left: 20%}
 .faust #s5, .disorder #s6, .marry #s6 {top: 80%; left: 50%}
 .faust #s6, .disorder #s5, .marry #s3 {top: 35%; left: 80%}
-.faust #s7, .disorder #s7, .one #s1, .swing #s11, .solution #s1, .station #s1 {top: 50%; left: 50%}
-.problem #s1 {top: 35%; left: 50%}
-.problem #s2 {top: 60%; left: 25%}
-.problem #s3 {top: 60%; left: 50%}
-.problem #s4 {top: 60%; left: 75%}
+.faust #s7, .disorder #s7, .one #s1, .swing #s11, .solution #s1, .station #s1 {top: 50%}
+.problem #s1 {top: 30%; left: 50%}
+.problem #s2 {top: 65%; left: 25%}
+.problem #s3 {top: 65%; left: 50%}
+.problem #s4 {top: 65%; left: 75%}
 .progress #s1 {top: 50%; left: 20%}
 .progress #s2 {top: 50%; left: 40%}
 .progress #s3 {top: 50%; left: 60%}
-.progress #s4 {top: 25%; left: 20%}
-.progress #s5 {top: 25%; left: 40%}
-.progress #s6 {top: 25%; left: 60%}
-.progress #s7 {top: 75%; left: 45%}
-.progress #s8 {top: 75%; left: 65%}
-.progress #s9 {top: 75%; left: 85%}
-.progress #s10 {top: 75%; left: 20%}
+.progress #s4 {top: 20%; left: 20%}
+.progress #s5 {top: 20%; left: 40%}
+.progress #s6 {top: 20%; left: 60%}
+.progress #s7 {top: 80%; left: 45%}
+.progress #s8 {top: 80%; left: 65%}
+.progress #s9 {top: 80%; left: 85%}
+.progress #s10 {top: 80%; left: 20%}
 .solution #s2, .station #s7 {top: 25%; left: 30%}
 .solution #s3, .station #s2 {top: 25%; left: 70%}
 .solution #s4, .station #s6 {top: 50%; left: 30%}
@@ -364,9 +361,9 @@ select:focus {
 .swing #s9 {top: 65%; left: 80%}
 .swing #s10 {top: 80%; left: 75%}
 .choice #s1 {top: 50%; left: 20%}
-.choice #s2 {top: 35%; left: 40%}
-.choice #s3 {top: 35%; left: 60%}
-.choice #s4 {top: 35%; left: 80%}
-.choice #s5 {top: 65%; left: 40%}
-.choice #s6 {top: 65%; left: 60%}
-.choice #s7 {top: 65%; left: 80%}
+.choice #s2 {top: 30%; left: 40%}
+.choice #s3 {top: 30%; left: 60%}
+.choice #s4 {top: 30%; left: 80%}
+.choice #s5 {top: 70%; left: 40%}
+.choice #s6 {top: 70%; left: 60%}
+.choice #s7 {top: 70%; left: 80%}
