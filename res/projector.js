@@ -1,7 +1,6 @@
 "use strict";
 {
 let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suitNames, rankNames, titles, meanings, readings, extraMajorNames, altRankNames, altSuitNames;
-
 const
 getById = document.getElementById.bind(document),
 hide = el => el.classList.add("hidden"),
@@ -127,13 +126,11 @@ function resetDescription() {
 
 function showDescription() {
 	show(detailsMenu);
-	fadeOut(showButton, fadeDuration);
 	detailsWrapper.scrollTop = 0;
 }
 
 function hideDescription() {
 	fadeOut(detailsMenu, fadeDuration);
-	show(showButton);
 	deselect();
 }
 
@@ -259,7 +256,7 @@ hideButton.addEventListener("click", hideDescription);
 detailsImg.addEventListener("click", () => show(modal));
 modal.addEventListener("click", () => fadeOut(modal, fadeDuration));
 
-fetch("res/text.json?v=1")
+fetch("res/text.json?v=2")
 .then(response => response.json())
 .then(data => {
 	function setStartButtonState() {
@@ -317,6 +314,7 @@ fetch("res/text.json?v=1")
 		slideUp(getById("header"), openingDuration);
 		slideUp(getById("intro"), openingDuration).finished.then(() => {
 			showDescription();
+			show(showButton);
 			deckElement.addEventListener("click", drawCard);
 		});
 
