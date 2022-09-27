@@ -57,15 +57,12 @@ function getOffset(el) {
 }
 
 function fadeOut(el, time) {
-	const
-	style = getComputedStyle(el),
-	animation = el.animate(
-		{ opacity: [ style.opacity, 0 ] },
+	const animation = el.animate(
+		{ opacity: [ getComputedStyle(el).opacity, 0 ] },
 		{ duration: time, easing: "ease-in-out" }
 	);
 
 	animation.finished.then(() => hide(el));
-
 	return animation;
 }
 
@@ -79,7 +76,6 @@ function slideUp(el, time) {
 	);
 
 	animation.finished.then(() => hide(el));
-
 	return animation;
 }
 
@@ -97,7 +93,7 @@ function resetTable() {
 		fadeOut(el, fadeDuration).finished.then(() => el.remove());
 	}
 	cardImgs.forEach(el => {
-		el.onload = fadeOut(el, fadeDuration);
+		el.onload = void fadeOut(el, fadeDuration);
 		el.parentNode.style.zIndex = "";
 	});
 
@@ -193,7 +189,8 @@ function drawCard() {
 		}
 	)).finished.then(() => {
 		slotImg.onload = () => {
-			fadeOut(animatedCardInstance, fadeDuration).finished.then(() => animatedCardInstance.remove());
+			fadeOut(animatedCardInstance, fadeDuration)
+				.finished.then(() => animatedCardInstance.remove());
 			currentSlot.style.zIndex = 1;
 			show(slotImg);
 		};
@@ -214,7 +211,7 @@ function deselect() {
 		selected.id = "";
 }
 
-// ios specific fixes
+// ios fixes
 if ("standalone" in navigator) {
 	// prevent double-tap to zoom
 	app.addEventListener("click", () => {});
@@ -309,22 +306,7 @@ fetch("res/text.json?v=2")
 			hide(deckLoading);
 		});
 
-		startButton.remove();
-
-		slideUp(getById("header"), openingDuration);
-		slideUp(getById("intro"), openingDuration).finished.then(() => {
-			showDescription();
-			show(showButton);
-			deckElement.addEventListener("click", drawCard);
-		});
-
-		app.removeEventListener("change", setStartButtonState);
-		app.addEventListener("change", resetTable);
-		for (let elem of selectElems)
-			elem.dispatchEvent(new Event("change"));
-		resetTable();
-
-		getById("main-column").addEventListener("click", e => {
+		getById("main").addEventListener("click", e => {
 			const
 			target = e.target,
 			slot = cardImgs.indexOf(target);
@@ -338,6 +320,21 @@ fetch("res/text.json?v=2")
 			} else
 				resetDescription();
 		});
+
+		slideUp(getById("header"), openingDuration);
+		slideUp(getById("intro"), openingDuration).finished.then(() => {
+			showDescription();
+			show(showButton);
+			deckElement.addEventListener("click", drawCard);
+		});
+
+		app.removeEventListener("change", setStartButtonState);
+		app.addEventListener("change", resetTable);
+		for (let elem of selectElems)
+			elem.dispatchEvent(new Event("change"));
+
+		startButton.remove();
+		resetTable();
 	});
 });
 }
