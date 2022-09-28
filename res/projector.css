@@ -26,6 +26,11 @@
 	}
 }
 
+a {
+	color: unset;
+	flex: 1;
+}
+
 h1 {
 	font: 3em "Edo", sans-serif;
 	margin: 0;
@@ -118,14 +123,7 @@ button {
 }
 
 #button-wrapper {
-	display: grid;
-	cursor: pointer;
-	grid-auto-flow: column;
-	text-decoration: underline;
-}
-
-#site-link {
-	color: unset;
+	display: flex;
 }
 
 #spread-select {
