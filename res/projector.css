@@ -86,21 +86,21 @@ button {
 }
 
 #main {
-	display: grid;
+	display: flex;
 	position: relative;
-	grid-auto-rows: 1fr auto;
+	flex-direction: column;
 	margin: 0.2em;
 }
 
 #main-column {
 	display: flex;
+	flex: 1 0 50%;
 	flex-direction: column;
 	justify-content: space-between;
 }
 
 #main-column,
 #intro {
-	min-width: 50vw;
 	max-width: 100vh;
 }
 
@@ -306,7 +306,7 @@ select:focus {
 		}
 
 		#main {
-			grid-auto-flow: column;
+			flex-direction: row;
 		}
 	}
 }
