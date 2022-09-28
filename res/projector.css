@@ -34,10 +34,9 @@ h1 {
 select,
 button {
 	all: unset;
-	border-radius: 0.5em;
+	border-radius: 9em;
 	cursor: pointer;
 	font-size: 1.2em;
-	line-height: 1.2;
 	transition: color 0.5s, border-color 0.5s, box-shadow 0.5s;
 }
 
@@ -45,8 +44,8 @@ select {
 	width: 100%;
 	background: url(/img/arrow.svg) no-repeat right 0.5em top 50% / 0.65em auto;
 	box-shadow: 0 1px 0;
-	margin: 0.3em 0;
-	padding: 0.2em 1.5em 0.2em 0.2em;
+	margin: 0.1em 0;
+	padding: 0.2em 1.2em 0.2em 0.5em;
 	text-align-last: center; /* for webkit */
 
 	/* firefox can't wrap text in select, so we cut it short */
@@ -91,7 +90,6 @@ button {
 	position: relative;
 	grid-auto-rows: 1fr auto;
 	margin: 0.2em;
-	overflow-y: clip;
 }
 
 #main-column {
@@ -222,7 +220,7 @@ select:focus {
 	background: rgba(0, 0, 0, 0.7);
 	flex: 0 0 40%;
 	flex-direction: column;
-	padding: 0.4em;
+	padding: 0.2em;
 }
 
 #details-title {
@@ -250,7 +248,7 @@ select:focus {
 }
 
 #details-hide {
-	margin-top: 0.4em;
+	margin-top: 0.2em;
 }
 
 #modal {
