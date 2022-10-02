@@ -1,44 +1,36 @@
 "use strict";
 {
-let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suitNames, rankNames, titles, meanings, readings, extraMajorNames, altRankNames, altSuitNames;
+let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, animatedCard;
 const
 getById = document.getElementById.bind(document),
 hide = el => el.classList.add("hidden"),
 show = el => el.classList.remove("hidden"),
-randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min,
 
 openingDuration = 3000,
-cardFlyDuration = 1000,
+cardDrawDuration = 1000,
 fadeDuration = 500,
 imgPath = "img/",
+animationOptions = { fill: "forwards", easing: "ease-in-out" },
 
 app = getById("app"),
-decor = getById("decor"),
 selectElems = app.getElementsByTagName("select"),
+table = getById("table"),
 [ spreadSelect, subjectSelect, deckSelect ] = selectElems,
+[ deckElement, restartButton, deckLoading ] = table.getElementsByClassName("deck-img"),
+cardImgs = table.querySelectorAll(".slot > img"),
+decor = getById("decor"),
 startButton = getById("start"),
+detailsMenu = getById("details"),
 showButton = getById("details-show"),
 hideButton = getById("details-hide"),
-table = getById("table"),
-deckElement = getById("deck"),
-restartButton = getById("restart"),
-deckLoading = getById("deck-loading"),
-detailsMenu = getById("details"),
 detailsWrapper = getById("details-wrapper"),
 spreadInfo = getById("spread-info"),
 spreadDetails = getById("spread-details"),
 positionWrapper = getById("position-wrapper"),
 positionList = getById("position-list"),
 cardInfo = getById("card-info"),
-modal = getById("modal"),
-modalImg = modal.firstChild,
 detailsImg = getById("card-img"),
-
-cardImgs = [].slice.call(table.getElementsByClassName("slot"))
-	.map(slot => slot.lastChild),
-animatedCard = Object.assign(document.createElement("img"), { className: "animated-card" }),
-animatedCardInstances = table.getElementsByClassName("animated-card"),
-
+modal = getById("modal"),
 textElems = [
 	getById("details-title"),
 	getById("position-name"),
@@ -49,60 +41,58 @@ textElems = [
 ],
 detailsTitle = textElems[0],
 positionName = textElems[1],
-spreadReading = textElems[5].parentNode;
+spreadReading = textElems[5].parentNode,
+animatedCardInstances = table.getElementsByClassName("animated-card");
+(animatedCard = document.createElement("img")).className = "animated-card";
 
 function getOffset(el) {
 	const rect = el.getBoundingClientRect();
 	return { left: rect.x + "px", top: rect.y + "px" };
 }
 
-function fadeOut(el, time) {
-	const animation = el.animate(
+function fadeOut(el, time, remove) {
+	const anim = el.animate(
 		{ opacity: [ getComputedStyle(el).opacity, 0 ] },
-		{ duration: time, easing: "ease-in-out" }
+		{ duration: time, ...animationOptions }
 	);
-
-	animation.finished.then(() => hide(el));
-	return animation;
+	anim.onfinish = () => {
+		anim.cancel();
+		remove ? el.remove() : hide(el);
+	};
 }
 
-function slideUp(el, time) {
+function slideUp(el, time, callback = () => {}) {
 	el.style.overflow = "hidden";
 	el.style.padding = 0;
-
-	const animation = el.animate(
+	el.animate(
 		{ height: [ el.offsetHeight + "px", 0 ] },
-		{ duration: time, easing: "ease-in-out" }
-	);
-
-	animation.finished.then(() => hide(el));
-	return animation;
+		{ duration: time, ...animationOptions }
+	).onfinish = () => { hide(el); callback() };
 }
 
 function resetTable() {
 	nextSlotId = 0;
-	deckSize = 77 + extraMajorNames.length;
+	deckSize = 77 + extraMajors.length;
 	deckArray = [];
 	descriptions = [];
 
 	hide(restartButton);
 	deckElement.src = animatedCard.src = imgPath + deckSelect.value + "/back.jpg";
+	detailsTitle.textContent = "Жмите на колоду, чтобы заполнить расклад";
 
 	for (let el of animatedCardInstances) {
-		el.anim.pause();
-		fadeOut(el, fadeDuration).finished.then(() => el.remove());
+		el.dispatchEvent(new Event("reset"));
+		fadeOut(el, fadeDuration, true);
 	}
 	cardImgs.forEach(el => {
-		el.onload = void fadeOut(el, fadeDuration);
-		el.parentNode.style.zIndex = "";
+		el.dispatchEvent(new Event("load"));
+		fadeOut(el, fadeDuration);
+		el.parentNode.style = "";
 	});
-
-	detailsTitle.textContent = "Жмите на колоду, чтобы заполнить расклад";
 }
 
 function updateDescription(slot) {
 	descriptions[slot].forEach((str, i) => textElems[i].textContent = str);
-
 	if (subjectSelect.value)
 		show(spreadReading);
 	show(cardInfo);
@@ -114,7 +104,6 @@ function resetDescription() {
 	if (nextSlotId > 0)
 		detailsTitle.textContent = "Нажмите на карту, чтобы увидеть её значение";
 	positionName.textContent = "";
-
 	hide(spreadReading);
 	hide(cardInfo);
 	show(spreadInfo);
@@ -131,7 +120,7 @@ function hideDescription() {
 }
 
 function drawCard() {
-	let id = randomInt(0, deckSize),
+	let id = Math.floor(Math.random() * (deckSize + 1)),
 		name = "",
 		altName = "";
 
@@ -145,19 +134,19 @@ function drawCard() {
 		rank = id - 22 - 14 * suit;
 
 		if (suit < 4) {
-			if (rank > 9 && altRankNames) {
-				name += altRankNames[rank - 10] + " ";
-				altName += rankNames[rank] + " ";
+			if (altRanks && rank > 9) {
+				name += altRanks[rank - 10] + " ";
+				altName += ranks[rank] + " ";
 			} else
-				name += rankNames[rank] + " ";
+				name += ranks[rank] + " ";
 
-			if (altSuitNames) {
-				name += altSuitNames[suit];
-				altName += suitNames[suit];
+			if (altSuits) {
+				name += altSuits[suit];
+				altName += suits[suit];
 			} else
-				name += suitNames[suit];
+				name += suits[suit];
 		} else
-			name = extraMajorNames[rank];
+			name = extraMajors[rank];
 //	} else if (altMajors[deck]) {
 //		altName = major[id];
 //		name = roman[id] + " " + altMajors[deck][id];
@@ -176,28 +165,22 @@ function drawCard() {
 	const
 	slotImg = cardImgs[nextSlotId],
 	currentSlot = slotImg.parentNode,
-	animatedCardInstance = table.appendChild(animatedCard.cloneNode());
+	animatedCardInstance = table.appendChild(animatedCard.cloneNode()),
+	animation = animatedCardInstance.animate(
+		[ getOffset(deckElement), getOffset(currentSlot) ],
+		{ duration: cardDrawDuration, ...animationOptions }
+	),
+	onCardLoad = () => {
+		show(slotImg);
+		currentSlot.style.zIndex = 1;
+		fadeOut(animatedCardInstance, fadeDuration, true);
+	};
 
 	slotImg.src = imgPath + deckSelect.value + "/" + id + ".jpg";
-
-	(animatedCardInstance.anim = animatedCardInstance.animate(
-		[ getOffset(deckElement), getOffset(currentSlot) ],
-		{
-			duration: cardFlyDuration,
-			fill: "forwards",
-			easing: "ease-in-out"
-		}
-	)).finished.then(() => {
-		slotImg.onload = () => {
-			fadeOut(animatedCardInstance, fadeDuration)
-				.finished.then(() => animatedCardInstance.remove());
-			currentSlot.style.zIndex = 1;
-			show(slotImg);
-		};
-
-		if (slotImg.complete)
-			slotImg.onload();
-	});
+	animation.onfinish = () => slotImg.complete ?
+		onCardLoad() :
+		slotImg.addEventListener("load", onCardLoad, { once: true });
+	animatedCardInstance.addEventListener("reset", () => animation.pause());
 
 	if (++nextSlotId == slotCount) {
 		show(restartButton);
@@ -211,26 +194,14 @@ function deselect() {
 		selected.id = "";
 }
 
-// ios fixes
-if ("standalone" in navigator) {
-	// prevent double-tap to zoom
-	app.addEventListener("click", () => {});
-
-	// fix scrolling bug
-	for (let elem of app.getElementsByClassName("scrollable")) {
-		elem.addEventListener("touchstart", function(e) {
-			elem.atTop = (elem.scrollTop <= 0);
-			elem.atBottom = (elem.scrollTop >= elem.scrollHeight - elem.clientHeight);
-			elem.lastY = e.touches[0].clientY;
-		});
-		elem.addEventListener("touchmove", function(e) {
-			const up = (e.touches[0].clientY > elem.lastY);
-
-			if ((up && elem.atTop) || (!up && elem.atBottom))
-				e.preventDefault();
-		});
-	}
+function setStartButtonState() {
+	if (spreadSelect.selectedIndex && deckSelect.selectedIndex)
+		startButton.disabled = !(subjectSelect.selectedIndex || subjectSelect.disabled);
 }
+
+decor.complete ?
+	show(decor) :
+	decor.addEventListener("load", () => show(decor));
 
 spreadSelect.addEventListener("change", () => {
 	const theme = spreadSelect.selectedOptions[0].getAttribute("theme");
@@ -241,32 +212,21 @@ spreadSelect.addEventListener("change", () => {
 	}
 });
 
-if (!decor.complete) {
-	hide(decor);
-	decor.addEventListener("load", () => show(decor));
-}
-
 restartButton.addEventListener("click", resetTable);
 showButton.addEventListener("click", showDescription);
 hideButton.addEventListener("click", hideDescription);
-
 detailsImg.addEventListener("click", () => show(modal));
 modal.addEventListener("click", () => fadeOut(modal, fadeDuration));
 
-fetch("res/text.json?v=2")
+fetch("res/data.json")
 .then(response => response.json())
 .then(data => {
-	function setStartButtonState() {
-		if (spreadSelect.selectedIndex && deckSelect.selectedIndex)
-			startButton.disabled = !(subjectSelect.selectedIndex || subjectSelect.disabled);
-	}
-
 	setStartButtonState();
 	app.addEventListener("change", setStartButtonState);
-
 	startButton.textContent = "НАЧАТЬ";
+
 	startButton.addEventListener("click", () => {
-		({ roman, major, suitNames, rankNames } = data);
+		({ roman, major, suits, ranks } = data);
 
 		spreadSelect.addEventListener("change", () => {
 			const spread = spreadSelect.value;
@@ -286,8 +246,6 @@ fetch("res/text.json?v=2")
 		);
 
 		deckSelect.addEventListener("change", () => {
-			const deck = deckSelect.value;
-
 			hide(deckElement);
 			show(deckLoading);
 
@@ -295,10 +253,11 @@ fetch("res/text.json?v=2")
 				{8: "XI", 11: "VIII"} :
 				{8: "VIII", 11: "XI"});
 
+			const deck = deckSelect.value;
 			meanings = data.meanings[deck] || data.meanings.normal;
-			extraMajorNames = data.extraMajors[deck] || [];
-			altSuitNames = data.altSuits[deck];
-			altRankNames = data.altRanks[deck];
+			extraMajors = data.extraMajors[deck] || [];
+			altSuits = data.altSuits[deck];
+			altRanks = data.altRanks[deck];
 		});
 
 		deckElement.addEventListener("load", () => {
@@ -309,20 +268,20 @@ fetch("res/text.json?v=2")
 		getById("main").addEventListener("click", e => {
 			const
 			target = e.target,
-			slot = cardImgs.indexOf(target);
+			slot = [].indexOf.call(cardImgs, target);
 
 			deselect();
 
 			if (slot >= 0) {
 				target.id = "selected";
-				detailsImg.src = modalImg.src = target.src;
+				detailsImg.src = modal.firstChild.src = target.src;
 				updateDescription(slot);
 			} else
 				resetDescription();
 		});
 
 		slideUp(getById("header"), openingDuration);
-		slideUp(getById("intro"), openingDuration).finished.then(() => {
+		slideUp(getById("intro"), openingDuration, () => {
 			showDescription();
 			show(showButton);
 			deckElement.addEventListener("click", drawCard);
@@ -337,4 +296,23 @@ fetch("res/text.json?v=2")
 		resetTable();
 	});
 });
+
+// ios fixes
+if ("standalone" in navigator) {
+	// prevent double-tap to zoom
+	app.addEventListener("click", () => {});
+	// fix scrolling bug
+	for (let elem of app.getElementsByClassName("scrollable")) {
+		elem.addEventListener("touchstart", function(e) {
+			elem.atTop = (elem.scrollTop <= 0);
+			elem.atBottom = (elem.scrollTop >= elem.scrollHeight - elem.clientHeight);
+			elem.lastY = e.touches[0].clientY;
+		});
+		elem.addEventListener("touchmove", function(e) {
+			const up = (e.touches[0].clientY > elem.lastY);
+			if ((up && elem.atTop) || (!up && elem.atBottom))
+				e.preventDefault();
+		});
+	}
+}
 }

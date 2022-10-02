@@ -13,11 +13,11 @@
 <meta name="description" content="Астральный Проектор — это онлайн-симулятор Таро. С его помощью Вы можете работать с любой из 50 самых популярных колод карт Таро. Вы можете выбирать из 10 различных схем расклада по самым актуальным сферам жизни.">
 <link rel="stylesheet" href="/common/common.css">
 <link rel="stylesheet" href="res/projector.css?v=7">
-<script src="res/projector.min.js?v=4" async></script>
+<script src="res/projector.min.js?v=5" async></script>
 
 <div id="app">
 	<div id="main">
-		<img id="decor" srcset="img/cards_720.png 240w, img/cards.png 360w" sizes="(max-height: 720px) 240px, 360px" src="img/cards.png" alt>
+		<img id="decor" class="hidden" srcset="img/cards_720.png 240w, img/cards.png 360w" sizes="(max-height: 720px) 240px, 360px" src="img/cards.png" alt>
 		<div id="main-column">
 			<div id="header">
 				<h1>Астральный Проектор</h1>
@@ -62,7 +62,7 @@
 				<div class="slot" id="s9"><span>9</span><img alt></div>
 				<div class="slot" id="s10"><span>10</span><img alt></div>
 				<div class="slot" id="s11"><span>11</span><img alt></div>
-				<img class="deck-img hidden" id="deck" title="Вытащить карту" alt>
+				<img class="deck-img hidden" title="Вытащить карту" alt>
 				<img class="deck-img hidden" id="restart" src="img/restart.svg" title="Начать заново" alt>
 				<img class="deck-img" id="deck-loading" src="img/deck_loading.svg" title="Колода загружается" alt>
 			</div>
