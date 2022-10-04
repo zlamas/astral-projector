@@ -1,8 +1,9 @@
 "use strict";
 {
-let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, animatedCard;
+let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits;
 const
 getById = document.getElementById.bind(document),
+extend = Object.assign,
 hide = el => el.classList.add("hidden"),
 show = el => el.classList.remove("hidden"),
 
@@ -42,8 +43,9 @@ textElems = [
 detailsTitle = textElems[0],
 positionName = textElems[1],
 spreadReading = textElems[5].parentNode,
+animatedCard = document.createElement("img"),
 animatedCardInstances = table.getElementsByClassName("animated-card");
-(animatedCard = document.createElement("img")).className = "animated-card";
+animatedCard.className = "animated-card";
 
 function getOffset(el) {
 	const rect = el.getBoundingClientRect();
@@ -53,12 +55,9 @@ function getOffset(el) {
 function fadeOut(el, time, remove) {
 	const anim = el.animate(
 		{ opacity: [ getComputedStyle(el).opacity, 0 ] },
-		{ duration: time, ...animationOptions }
+		extend({ duration: time }, animationOptions)
 	);
-	anim.onfinish = () => {
-		anim.cancel();
-		remove ? el.remove() : hide(el);
-	};
+	anim.onfinish = () => remove ? el.remove() : ( anim.cancel(), hide(el) );
 }
 
 function slideUp(el, time, callback = () => {}) {
@@ -66,7 +65,7 @@ function slideUp(el, time, callback = () => {}) {
 	el.style.padding = 0;
 	el.animate(
 		{ height: [ el.offsetHeight + "px", 0 ] },
-		{ duration: time, ...animationOptions }
+		extend({ duration: time }, animationOptions)
 	).onfinish = () => { hide(el); callback() };
 }
 
@@ -168,7 +167,7 @@ function drawCard() {
 	animatedCardInstance = table.appendChild(animatedCard.cloneNode()),
 	animation = animatedCardInstance.animate(
 		[ getOffset(deckElement), getOffset(currentSlot) ],
-		{ duration: cardDrawDuration, ...animationOptions }
+		extend({ duration: cardDrawDuration }, animationOptions)
 	),
 	onCardLoad = () => {
 		show(slotImg);
@@ -249,7 +248,7 @@ fetch("res/data.json")
 			hide(deckElement);
 			show(deckLoading);
 
-			Object.assign(roman, deckSelect.selectedOptions[0].hasAttribute("classic") ?
+			extend(roman, deckSelect.selectedOptions[0].hasAttribute("classic") ?
 				{8: "XI", 11: "VIII"} :
 				{8: "VIII", 11: "XI"});
 
