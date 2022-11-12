@@ -1,6 +1,5 @@
-"use strict";
-{
-let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits;
+"use strict";{
+let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath;
 const
 getById = document.getElementById.bind(document),
 extend = Object.assign,
@@ -11,7 +10,6 @@ getOffset = el => ({ left: el.offsetLeft + "px", top: el.offsetTop + "px" }),
 openingDuration = 3000,
 cardDrawDuration = 1000,
 fadeDuration = 500,
-imgPath = "img/",
 animationOptions = { fill: "forwards", easing: "ease-in-out" },
 
 app = getById("app"),
@@ -19,7 +17,7 @@ selectElems = app.getElementsByTagName("select"),
 table = getById("table"),
 [ spreadSelect, subjectSelect, deckSelect ] = selectElems,
 [ deckElement, restartButton, deckLoading ] = table.getElementsByClassName("deck-img"),
-cardImgs = table.querySelectorAll(".slot > img"),
+cardImgs = table.querySelectorAll(".slot>img"),
 decor = getById("decor"),
 startButton = getById("start"),
 detailsMenu = getById("details"),
@@ -39,8 +37,7 @@ textElems = [
 	getById("card-name"),
 	getById("card-alt-name"),
 	getById("general-reading"),
-	getById("spread-reading")
-],
+	getById("spread-reading")],
 detailsTitle = textElems[0],
 positionName = textElems[1],
 spreadReading = textElems[5].parentNode,
@@ -50,8 +47,7 @@ animatedCardInstances = table.getElementsByClassName(animatedCard.className = "a
 function fadeOut(el, time, remove) {
 	const anim = el.animate(
 		{ opacity: [ getComputedStyle(el).opacity, 0 ] },
-		extend({ duration: time }, animationOptions)
-	);
+		extend({ duration: time }, animationOptions));
 	anim.onfinish = () => remove ? el.remove() : ( anim.cancel(), hide(el) );
 }
 
@@ -60,8 +56,8 @@ function slideUp(el, time, callback = () => {}) {
 	el.style.padding = 0;
 	el.animate(
 		{ height: [ el.offsetHeight + "px", 0 ] },
-		extend({ duration: time }, animationOptions)
-	).onfinish = () => { hide(el); callback() };
+		extend({ duration: time }, animationOptions))
+	.onfinish = () => { hide(el); callback() };
 }
 
 function resetTable() {
@@ -71,7 +67,7 @@ function resetTable() {
 	descriptions = [];
 
 	hide(restartButton);
-	deckElement.src = animatedCard.src = imgPath + deckSelect.value + "/back.jpg";
+	deckElement.src = animatedCard.src = deckPath + "back.jpg";
 	detailsTitle.textContent = "Жмите на колоду, чтобы заполнить расклад";
 
 	for (let el of animatedCardInstances) {
@@ -108,7 +104,7 @@ function showDescription() {
 }
 
 function hideDescription() {
-	fadeOut(detailsMenu, fadeDuration);
+	hide(detailsMenu);
 	deselect();
 }
 
@@ -121,9 +117,8 @@ function drawCard() {
 	deckArray[id] = deckSize--;
 
 	if (id > 21) {
-		const
-		suit = Math.floor((id - 22) / 14),
-		rank = id - 22 - 14 * suit;
+		const suit = Math.floor((id - 22) / 14);
+		const rank = id - 22 - 14 * suit;
 
 		if (suit < 4) {
 			let rankName = ranks[rank];
@@ -148,23 +143,19 @@ function drawCard() {
 		altName || name,
 		altName ? name : "",
 		meanings[id],
-		readings ? readings[id] : ""
-	];
+		readings ? readings[id] : ""];
 
-	const
-	slotImg = cardImgs[nextSlotId],
-	currentSlot = slotImg.parentNode,
-	animatedCardInstance = table.appendChild(animatedCard.cloneNode()),
-	animation = animatedCardInstance.animate(
-		[ getOffset(deckElement), getOffset(currentSlot) ],
-		extend({ duration: cardDrawDuration }, animationOptions)
-	),
-	onCardLoad = () => {
+	const slotImg = cardImgs[nextSlotId];
+	const animatedCardInstance = table.appendChild(animatedCard.cloneNode());
+	const animation = animatedCardInstance.animate(
+		[ getOffset(deckElement), getOffset(slotImg.parentNode) ],
+		extend({ duration: cardDrawDuration }, animationOptions));
+	const onCardLoad = () => {
 		show(slotImg);
 		fadeOut(animatedCardInstance, fadeDuration, true);
 	};
 
-	slotImg.src = imgPath + deckSelect.value + "/" + id + ".jpg";
+	slotImg.src = deckPath + id + ".jpg";
 	animation.onfinish = () => slotImg.complete ?
 		onCardLoad() :
 		slotImg.addEventListener("load", onCardLoad, { once: true });
@@ -204,7 +195,7 @@ restartButton.addEventListener("click", resetTable);
 showButton.addEventListener("click", showDescription);
 hideButton.addEventListener("click", hideDescription);
 detailsImg.addEventListener("click", () => show(modal));
-modal.addEventListener("click", () => fadeOut(modal, fadeDuration));
+modal.addEventListener("click", () => hide(modal));
 
 fetch("res/data.json")
 .then(response => response.json())
@@ -225,15 +216,16 @@ fetch("res/data.json")
 			if ((slotCount = titles.length) > 1) {
 				show(positionWrapper);
 				positionList.textContent = data.positions[spread];
-			} else
+			} else {
 				hide(positionWrapper);
+			}
 		});
 
 		subjectSelect.addEventListener("change", () =>
-			readings = data.readings[subjectSelect.value]
-		);
+			readings = data.readings[subjectSelect.value]);
 
 		deckSelect.addEventListener("change", () => {
+			const deck = deckSelect.value;
 			hide(deckElement);
 			show(deckLoading);
 
@@ -241,7 +233,7 @@ fetch("res/data.json")
 				{8: "XI", 11: "VIII"} :
 				{8: "VIII", 11: "XI"});
 
-			const deck = deckSelect.value;
+			deckPath = "img/" + deck + "/";
 			meanings = data.meanings[deck] || data.meanings.normal;
 			extraMajors = data.extraMajors[deck] || [];
 			altSuits = data.altSuits[deck];
@@ -254,9 +246,8 @@ fetch("res/data.json")
 		});
 
 		getById("main").addEventListener("click", e => {
-			const
-			target = e.target,
-			slot = [].indexOf.call(cardImgs, target);
+			const target = e.target;
+			const slot = [].indexOf.call(cardImgs, target);
 
 			deselect();
 
@@ -264,8 +255,9 @@ fetch("res/data.json")
 				target.id = "selected";
 				detailsImg.src = modal.firstChild.src = target.src;
 				updateDescription(slot);
-			} else
+			} else {
 				resetDescription();
+			}
 		});
 
 		slideUp(getById("header"), openingDuration);
@@ -291,12 +283,12 @@ if ("standalone" in navigator) {
 	app.addEventListener("click", () => {});
 	// fix scrolling bug
 	for (let elem of app.getElementsByClassName("scrollable")) {
-		elem.addEventListener("touchstart", function(e) {
+		elem.addEventListener("touchstart", e => {
 			elem.atTop = (elem.scrollTop <= 0);
 			elem.atBottom = (elem.scrollTop >= elem.scrollHeight - elem.clientHeight);
 			elem.lastY = e.touches[0].clientY;
 		});
-		elem.addEventListener("touchmove", function(e) {
+		elem.addEventListener("touchmove", e => {
 			const up = (e.touches[0].clientY > elem.lastY);
 			if ((up && elem.atTop) || (!up && elem.atBottom))
 				e.preventDefault();
