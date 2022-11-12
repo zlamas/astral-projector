@@ -6,6 +6,7 @@ getById = document.getElementById.bind(document),
 extend = Object.assign,
 hide = el => el.classList.add("hidden"),
 show = el => el.classList.remove("hidden"),
+getOffset = el => ({ left: el.offsetLeft + "px", top: el.offsetTop + "px" }),
 
 openingDuration = 3000,
 cardDrawDuration = 1000,
@@ -44,13 +45,7 @@ detailsTitle = textElems[0],
 positionName = textElems[1],
 spreadReading = textElems[5].parentNode,
 animatedCard = document.createElement("img"),
-animatedCardInstances = table.getElementsByClassName("animated-card");
-animatedCard.className = "animated-card";
-
-function getOffset(el) {
-	const rect = el.getBoundingClientRect();
-	return { left: rect.x + "px", top: rect.y + "px" };
-}
+animatedCardInstances = table.getElementsByClassName(animatedCard.className = "animated-card");
 
 function fadeOut(el, time, remove) {
 	const anim = el.animate(
@@ -83,11 +78,10 @@ function resetTable() {
 		el.dispatchEvent(new Event("reset"));
 		fadeOut(el, fadeDuration, true);
 	}
-	cardImgs.forEach(el => {
+	for (let el of cardImgs) {
 		el.dispatchEvent(new Event("load"));
 		fadeOut(el, fadeDuration);
-		el.parentNode.style = "";
-	});
+	}
 }
 
 function updateDescription(slot) {
@@ -171,7 +165,6 @@ function drawCard() {
 	),
 	onCardLoad = () => {
 		show(slotImg);
-		currentSlot.style.zIndex = 1;
 		fadeOut(animatedCardInstance, fadeDuration, true);
 	};
 

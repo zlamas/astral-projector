@@ -136,31 +136,34 @@ button {
 	flex: 1;
 }
 
+#table,
+.slot {
+	transform-style: preserve-3d;
+}
+
 .slot,
 .deck-img,
 .animated-card {
+	position: absolute;
 	height: 5em;
 	border-radius: 0.3em;
 }
 
 .slot {
-	position: absolute;
 	top: -50vh;
 	left: 50%;
 	min-width: 2.7em;
 	box-shadow: 0 0 0.8em inset;
-	transform: translate(-50%, -50%) scaleZ(2);
+	margin: -2.5em 0 0 -1.35em;
+	transform: translateZ(-1px);
 	transition: top 1s, left 1s;
-}
-
-.animated-card {
-	position: fixed;
 }
 
 .slot > img {
 	height: 100%;
 	border-radius: inherit;
 	cursor: pointer;
+	transform: translateZ(1px);
 	transition: box-shadow 0.5s;
 }
 
@@ -181,7 +184,6 @@ select:focus {
 }
 
 .deck-img {
-	position: absolute;
 	bottom: 1em;
 	left: 1em;
 	box-shadow:
@@ -274,13 +276,6 @@ select:focus {
 	animation: 0.5s fade-in ease-in-out;
 }
 
-.animated-card,
-.deck-img,
-#details,
-#modal {
-	z-index: 1;
-}
-
 #intro,
 #spread-details,
 #position-list,
@@ -310,7 +305,7 @@ select:focus {
 }
 
 .cross #s1 {top: 50%; left: 37%}
-.cross #s2 {top: 52%; left: 37%; transform: translate(-50%, -50%) rotate(90deg)}
+.cross #s2 {top: 52%; left: 37%; transform: translateZ(-1px) rotate(90deg)}
 .cross #s3 {top: 20%; left: 37%}
 .cross #s4 {top: 80%; left: 37%}
 .cross #s5 {top: 50%; left: 14%}
