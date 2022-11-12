@@ -113,9 +113,8 @@ function hideDescription() {
 }
 
 function drawCard() {
-	let id = Math.floor(Math.random() * (deckSize + 1)),
-		name = "",
-		altName = "";
+	let id = Math.floor(Math.random() * (deckSize + 1));
+	let name, altName;
 
 	while (deckArray[id])
 		id = deckArray[id];
@@ -127,30 +126,27 @@ function drawCard() {
 		rank = id - 22 - 14 * suit;
 
 		if (suit < 4) {
-			if (altRanks && rank > 9) {
-				name += altRanks[rank - 10] + " ";
-				altName += ranks[rank] + " ";
-			} else
-				name += ranks[rank] + " ";
+			let rankName = ranks[rank];
+			let suitName = suits[suit];
+			name = rankName + " " + suitName;
 
-			if (altSuits) {
-				name += altSuits[suit];
-				altName += suits[suit];
-			} else
-				name += suits[suit];
-		} else
+			if (altRanks && rank > 9)
+				rankName = altRanks[rank - 10];
+			if (altSuits)
+				suitName = altSuits[suit];
+			altName = (rankName + " " + suitName).replace(name, "");
+		} else {
 			name = extraMajors[rank];
-//	} else if (altMajors[deck]) {
-//		altName = major[id];
-//		name = roman[id] + " " + altMajors[deck][id];
-	} else
+		}
+	} else {
 		name = roman[id] + " " + major[id];
+	}
 
 	descriptions[nextSlotId] = [
 		slotCount > 1 ? "Позиция " + (nextSlotId + 1) : "",
 		titles[nextSlotId],
-		name,
-		altName ? " / " + altName : "",
+		altName || name,
+		altName ? name : "",
 		meanings[id],
 		readings ? readings[id] : ""
 	];
