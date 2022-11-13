@@ -132,7 +132,7 @@ button {
 
 #table {
 	position: relative;
-	animation: fade-in 3s ease-in-out;
+	animation: 3s fade-in ease-in-out;
 	flex: 1;
 }
 
@@ -252,7 +252,6 @@ select:focus {
 	position: fixed;
 	height: 100%;
 	width: 100%;
-	animation: 0.5s fade-in;
 	background: rgba(0, 0, 0, 0.7);
 	cursor: zoom-out;
 	padding: 1em;
@@ -268,6 +267,7 @@ select:focus {
 #decor,
 #details,
 #details-show,
+#modal,
 .deck-img,
 .slot > img {
 	animation: 0.5s fade-in ease-in-out;
