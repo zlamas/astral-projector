@@ -1,2 +1,2 @@
-# Астральный Проектор, frontend симулятор таро 
-https://blackcattarot.site/projector/
+# Астральный Проектор, frontend симулятор таро
+https://blackcattarot.ru/projector/
