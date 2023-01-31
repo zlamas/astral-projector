@@ -24,6 +24,7 @@ detailsMenu = getById("details"),
 showButton = getById("details-show"),
 hideButton = getById("details-hide"),
 detailsWrapper = getById("details-wrapper"),
+detailsTitle = getById("details-title"),
 spreadInfo = getById("spread-info"),
 spreadDetails = getById("spread-details"),
 positionWrapper = getById("position-wrapper"),
@@ -32,15 +33,13 @@ cardInfo = getById("card-info"),
 detailsImg = getById("card-img"),
 modal = getById("modal"),
 textElems = [
-	getById("details-title"),
 	getById("position-name"),
 	getById("card-name"),
 	getById("card-alt-name"),
 	getById("general-reading"),
-	getById("spread-reading")],
-detailsTitle = textElems[0],
-positionName = textElems[1],
-spreadReading = textElems[5].parentNode,
+	getById("spread-reading")
+],
+spreadReading = textElems[4].parentNode,
 animatedCard = document.createElement("img"),
 animatedCardInstances = table.getElementsByClassName(animatedCard.className = "animated-card");
 
@@ -62,7 +61,7 @@ function slideUp(el, time, callback = () => {}) {
 
 function resetTable() {
 	nextSlotId = 0;
-	deckSize = 77 + extraMajors.length;
+	deckSize = 78 + extraMajors.length;
 	deckArray = [];
 	descriptions = [];
 
@@ -82,6 +81,7 @@ function resetTable() {
 
 function updateDescription(slot) {
 	descriptions[slot].forEach((str, i) => textElems[i].textContent = str);
+	detailsTitle.textContent = "Позиция " + (slot + 1);
 	if (subjectSelect.value)
 		show(spreadReading);
 	show(cardInfo);
@@ -92,7 +92,7 @@ function updateDescription(slot) {
 function resetDescription() {
 	if (nextSlotId > 0)
 		detailsTitle.textContent = "Нажмите на карту, чтобы увидеть её значение";
-	positionName.textContent = "";
+	textElems[0].textContent = "";
 	hide(spreadReading);
 	hide(cardInfo);
 	show(spreadInfo);
@@ -109,7 +109,7 @@ function hideDescription() {
 }
 
 function drawCard() {
-	let id = Math.floor(Math.random() * (deckSize + 1));
+	let id = Math.floor(Math.random() * deckSize);
 	let name, altName;
 
 	while (deckArray[id])
@@ -138,18 +138,19 @@ function drawCard() {
 	}
 
 	descriptions[nextSlotId] = [
-		slotCount > 1 ? "Позиция " + (nextSlotId + 1) : "",
 		titles[nextSlotId],
 		altName || name,
 		altName ? name : "",
 		meanings[id],
-		readings ? readings[id] : ""];
+		readings ? readings[id] : ""
+	];
 
 	const slotImg = cardImgs[nextSlotId];
 	const animatedCardInstance = table.appendChild(animatedCard.cloneNode());
 	const animation = animatedCardInstance.animate(
 		[ getOffset(deckElement), getOffset(slotImg.parentNode) ],
-		extend({ duration: cardDrawDuration }, animationOptions));
+		extend({ duration: cardDrawDuration }, animationOptions)
+	);
 	const onCardLoad = () => {
 		show(slotImg);
 		fadeOut(animatedCardInstance, fadeDuration, true);
