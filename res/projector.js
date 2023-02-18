@@ -114,7 +114,7 @@ function drawCard() {
 
 	while (deckArray[id])
 		id = deckArray[id];
-	deckArray[id] = deckSize--;
+	deckArray[id] = --deckSize;
 
 	if (id > 21) {
 		const suit = Math.floor((id - 22) / 14);
