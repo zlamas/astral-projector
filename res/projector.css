@@ -130,8 +130,29 @@ select:first-of-type {
 
 .button-wrapper {
 	display: flex;
+	position: relative;
 	font-size: 0.7em;
 	justify-content: space-around;
+}
+
+.help {
+	cursor: help;
+}
+
+.tooltip {
+	display: none;
+	position: absolute;
+	top: 120%;
+	animation: fade-in 0.5s;
+	background: rgba(0, 0, 0, 0.9);
+	border-radius: 10px;
+	font-size: 1.5em;
+	padding: 10px;
+	z-index: 1;
+}
+
+.help:hover ~ .tooltip {
+	display: block;
 }
 
 .table {

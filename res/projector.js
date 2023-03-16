@@ -17,6 +17,7 @@ selectElems = app.getElementsByTagName("select"),
 [ deckElement, restartButton, deckLoading, ...cardImgs ] = table.getElementsByTagName("img"),
 decor = app.querySelector(".decor"),
 startButton = app.querySelector(".start"),
+helpButton = app.querySelector(".help"),
 detailsMenu = app.querySelector(".details"),
 showButton = app.querySelector(".details-show"),
 hideButton = detailsMenu.querySelector(".details-hide"),
@@ -266,6 +267,7 @@ fetch("res/data.json")
 		slideUp(app.querySelector(".intro"), openingDuration, () => {
 			show(detailsMenu);
 			show(showButton);
+			show(helpButton);
 			deckElement.addEventListener("click", drawCard);
 		});
 
