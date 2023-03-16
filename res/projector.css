@@ -1,9 +1,13 @@
-#app {
+body {
+	background: #643;
+}
+
+.app {
 	display: flex;
 	position: fixed;
 	height: 100%;
 	width: 100%;
-	background: url(../img/bg_portrait.jpg) #643 0 / cover;
+	background: url(../img/bg_portrait.jpg) 0 / cover;
 	color: white;
 	font: 2.5vh "Open Sans", sans-serif;
 	justify-content: center;
@@ -14,35 +18,29 @@
 	user-select: none;
 }
 
-@keyframes zoom-in {
-	0% {
-		transform: scale(0.5);
-	}
-}
-
-@keyframes fade-in {
-	0% {
-		opacity: 0;
-	}
-}
-
-a {
-	color: unset;
-	flex: 1;
-}
-
-h1 {
-	font: 3em "Edo", sans-serif;
-	margin: 0;
-}
-
-select,
-button {
+button,
+select {
 	all: unset;
 	border-radius: 9em;
 	cursor: pointer;
 	font-size: 1.2em;
 	transition: color 0.5s, border-color 0.5s, box-shadow 0.5s;
+}
+
+button {
+	align-self: center;
+	border: 1px solid;
+	font-weight: bold;
+	padding: 0.1em 0.5em;
+}
+
+h1 {
+	font: 3.5em "Edo", sans-serif;
+	margin: 0;
+}
+
+option {
+	background: black;
 }
 
 select {
@@ -58,15 +56,8 @@ select {
 	text-overflow: ellipsis;
 }
 
-option {
-	background: black;
-}
-
-button {
-	align-self: center;
-	border: 2px solid;
+select:first-of-type {
 	font-weight: bold;
-	padding: 0.1em 0.5em;
 }
 
 :disabled {
@@ -74,12 +65,21 @@ button {
 	color: grey;
 }
 
-#app .hidden {
-	display: none;
+.hidden {
+	display: none !important;
 }
 
+.deck-element,
+.decor,
+.details,
+.modal,
+.slot > img {
+	animation: 0.5s fade-in ease-in-out;
+}
+
+.slot > span,
 .title {
-	font: 1.3em "Edo", sans-serif;
+	font: 1.5em "Edo", sans-serif;
 }
 
 .scrollable {
@@ -90,60 +90,64 @@ button {
 	touch-action: pan-y;
 }
 
-#main {
+.text-container {
+	text-align: justify;
+	white-space: pre-line;
+}
+
+.main {
 	display: flex;
 	position: relative;
 	flex-direction: column;
 	margin: 0.2em;
 }
 
-#main-column {
+.decor {
+	position: absolute;
+	height: 100%;
+	right: 0;
+	opacity: 0.4;
+	transform: translateX(50%);
+	z-index: -1;
+}
+
+.main-column {
 	display: flex;
 	flex: 1 0 50%;
 	flex-direction: column;
 	justify-content: space-between;
 }
 
-#main-column,
-#intro {
+.intro,
+.main-column {
 	max-width: 100vh;
 }
 
-#decor {
-	position: absolute;
-	height: 100%;
-	right: 0;
-	opacity: 0.5;
-	transform: translateX(50%);
-	z-index: -1;
-}
-
-#copyright {
+.header {
 	font-size: 0.85em;
+	margin-bottom: 0.2em;
 }
 
-#button-wrapper {
+.button-wrapper {
 	display: flex;
+	font-size: 0.7em;
+	justify-content: space-around;
 }
 
-#spread-select {
-	font-weight: bold;
-}
-
-#table {
+.table {
 	position: relative;
 	animation: 3s fade-in ease-in-out;
 	flex: 1;
 }
 
-#table,
-.slot {
+.slot,
+.table {
 	transform-style: preserve-3d;
 }
 
-.slot,
-.deck-img,
-.animated-card {
+.animated-card,
+.deck-element,
+.slot {
 	position: absolute;
 	height: 5em;
 	border-radius: 0.3em;
@@ -167,23 +171,23 @@ button {
 	transition: box-shadow 0.5s;
 }
 
-.slot > span {
-	position: absolute;
-	left: 110%;
-	font: 1.5em / 0 "Edo", sans-serif;
-}
-
-.slot > img,
-.animated-card {
+.animated-card,
+.slot > img {
 	box-shadow: 0 0 0.5em currentcolor;
 }
 
-#selected,
-select:focus {
+select:focus,
+#selected {
 	box-shadow: 0 0 0.6em 0.3em red;
 }
 
-.deck-img {
+.slot > span {
+	position: absolute;
+	left: 110%;
+	line-height: 0;
+}
+
+.deck-element {
 	bottom: 1em;
 	left: 1em;
 	box-shadow:
@@ -194,44 +198,41 @@ select:focus {
 	transition: box-shadow 0.5s;
 }
 
-.deck-img:hover {
+.deck-element:hover {
 	box-shadow:
 		0.15em 0.15em 0 0.1em #333,
 		0.3em 0.3em 0 0.1em #333,
 		0.15em 0.15em 0.5em 0.3em red;
 }
 
-#restart {
+.restart {
 	height: 3em;
 }
 
-#deck-loading {
+.deck-loading {
 	cursor: not-allowed;
 }
 
-#start {
+.start {
 	margin: 0.5em 0;
 }
 
-#details {
+.details {
 	display: flex;
 	position: fixed;
 	height: 100%;
-	background: rgba(0, 0, 0, 0.7);
+	background: rgba(0, 0, 0, 0.8);
 	flex: 0 0 40%;
 	flex-direction: column;
 	padding: 0.2em;
 }
 
-#details-title {
-	font-size: 1.5em;
-}
-
-#details-wrapper {
+.details-wrapper {
 	flex: 1;
+	margin-bottom: 0.2em;
 }
 
-#card-img {
+.card-img {
 	height: 15em;
 	border-radius: 0.5em;
 	box-shadow: 0 0 10px;
@@ -239,16 +240,12 @@ select:focus {
 	margin-top: 10px;
 }
 
-#card-name {
+.card-name {
 	font-size: 1.2em;
 	font-weight: bold;
 }
 
-#details-hide {
-	margin-top: 0.2em;
-}
-
-#modal {
+.modal {
 	position: fixed;
 	height: 100%;
 	width: 100%;
@@ -257,101 +254,96 @@ select:focus {
 	padding: 1em;
 }
 
-#modal > img {
+.modal > img {
 	height: 100%;
 	width: 100%;
 	animation: 0.5s zoom-in;
 	object-fit: contain;
 }
 
-#decor,
-#details,
-#details-show,
-#modal,
-.deck-img,
-.slot > img {
-	animation: 0.5s fade-in ease-in-out;
+@keyframes fade-in {
+	0% {
+		opacity: 0;
+	}
 }
 
-#intro,
-#spread-details,
-#position-list,
-.card-reading {
-	text-align: justify;
-	white-space: pre-line;
+@keyframes zoom-in {
+	0% {
+		transform: scale(0.5);
+	}
 }
 
 @media screen and (orientation: landscape) {
-	#app {
+	.app {
 		background-image: url(../img/bg.jpg);
 	}
 
-	#details {
+	.details {
 		position: unset;
 	}
 
 	@media (max-height: 600px) {
-		#app {
+		.app {
 			font-size: 3.5vh;
 		}
 
-		#main {
+		.main {
 			flex-direction: row;
 		}
 	}
 }
 
-.cross #s1 {top: 50%; left: 37%}
-.cross #s2 {top: 52%; left: 37%; transform: translateZ(-1px) rotate(90deg)}
-.cross #s3 {top: 20%; left: 37%}
-.cross #s4 {top: 80%; left: 37%}
-.cross #s5 {top: 50%; left: 14%}
-.cross #s6 {top: 50%; left: 60%}
-.cross #s7 {top: 86%; left: 83%}
-.cross #s8 {top: 62%; left: 83%}
-.cross #s9 {top: 38%; left: 83%}
-.cross #s10 {top: 14%; left: 83%}
-.faust #s1, .disorder #s2, .marry #s4 {top: 65%; left: 20%}
-.faust #s2, .disorder #s1, .marry #s1 {top: 20%; left: 50%}
-.faust #s3, .disorder #s3, .marry #s5 {top: 65%; left: 80%}
-.faust #s4, .disorder #s4, .marry #s2 {top: 35%; left: 20%}
-.faust #s5, .disorder #s6, .marry #s6 {top: 80%; left: 50%}
-.faust #s6, .disorder #s5, .marry #s3 {top: 35%; left: 80%}
-.faust #s7, .disorder #s7, .one #s1, .swing #s11, .solution #s1, .station #s1 {top: 50%}
-.problem #s1 {top: 30%; left: 50%}
-.problem #s2 {top: 65%; left: 25%}
-.problem #s3 {top: 65%; left: 50%}
-.problem #s4 {top: 65%; left: 75%}
-.progress #s1 {top: 50%; left: 20%}
-.progress #s2 {top: 50%; left: 40%}
-.progress #s3 {top: 50%; left: 60%}
-.progress #s4 {top: 20%; left: 20%}
-.progress #s5 {top: 20%; left: 40%}
-.progress #s6 {top: 20%; left: 60%}
-.progress #s7 {top: 80%; left: 45%}
-.progress #s8 {top: 80%; left: 65%}
-.progress #s9 {top: 80%; left: 85%}
-.progress #s10 {top: 80%; left: 20%}
-.solution #s2, .station #s7 {top: 25%; left: 30%}
-.solution #s3, .station #s2 {top: 25%; left: 70%}
-.solution #s4, .station #s6 {top: 50%; left: 30%}
-.solution #s5, .station #s3 {top: 50%; left: 70%}
-.solution #s6, .station #s5 {top: 75%; left: 30%}
-.solution #s7, .station #s4 {top: 75%; left: 70%}
-.swing #s1 {top: 20%; left: 25%}
-.swing #s2 {top: 35%; left: 20%}
-.swing #s3 {top: 50%; left: 25%}
-.swing #s4 {top: 65%; left: 20%}
-.swing #s5 {top: 80%; left: 25%}
-.swing #s6 {top: 20%; left: 75%}
-.swing #s7 {top: 35%; left: 80%}
-.swing #s8 {top: 50%; left: 75%}
-.swing #s9 {top: 65%; left: 80%}
-.swing #s10 {top: 80%; left: 75%}
-.choice #s1 {top: 50%; left: 20%}
-.choice #s2 {top: 30%; left: 40%}
-.choice #s3 {top: 30%; left: 60%}
-.choice #s4 {top: 30%; left: 80%}
-.choice #s5 {top: 70%; left: 40%}
-.choice #s6 {top: 70%; left: 60%}
-.choice #s7 {top: 70%; left: 80%}
+#cross > #s1, #cross > #s2 {top: 50%; left: 37%}
+#cross > #s2 {transform: translateZ(-1px) rotate(90deg); transform-origin: 50% 70%}
+#cross > #s3 {top: 20%; left: 37%}
+#cross > #s4 {top: 80%; left: 37%}
+#cross > #s5 {top: 50%; left: 14%}
+#cross > #s6 {top: 50%; left: 60%}
+#cross > #s7 {top: 86%; left: 83%}
+#cross > #s8 {top: 62%; left: 83%}
+#cross > #s9 {top: 38%; left: 83%}
+#cross > #s10 {top: 14%; left: 83%}
+#faust > #s1, #disorder > #s2, #marriage > #s4 {top: 65%; left: 20%}
+#faust > #s2, #disorder > #s1, #marriage > #s1 {top: 20%; left: 50%}
+#faust > #s3, #disorder > #s3, #marriage > #s5 {top: 65%; left: 80%}
+#faust > #s4, #disorder > #s4, #marriage > #s2 {top: 35%; left: 20%}
+#faust > #s5, #disorder > #s6, #marriage > #s6 {top: 80%; left: 50%}
+#faust > #s6, #disorder > #s5, #marriage > #s3 {top: 35%; left: 80%}
+#faust > #s7, #disorder > #s7, #one > #s1, #swing > #s11, #solution > #s1, #station > #s1 {top: 50%}
+#problem > #s1 {top: 30%; left: 50%}
+#problem > #s2 {top: 65%; left: 25%}
+#problem > #s3 {top: 65%; left: 50%}
+#problem > #s4 {top: 65%; left: 75%}
+#progress > #s1 {top: 50%; left: 20%}
+#progress > #s2 {top: 50%; left: 40%}
+#progress > #s3 {top: 50%; left: 60%}
+#progress > #s4 {top: 20%; left: 20%}
+#progress > #s5 {top: 20%; left: 40%}
+#progress > #s6 {top: 20%; left: 60%}
+#progress > #s7 {top: 80%; left: 45%}
+#progress > #s8 {top: 80%; left: 65%}
+#progress > #s9 {top: 80%; left: 85%}
+#progress > #s10 {top: 80%; left: 20%}
+#solution > #s2, #station > #s7 {top: 25%; left: 30%}
+#solution > #s3, #station > #s2 {top: 25%; left: 70%}
+#solution > #s4, #station > #s6 {top: 50%; left: 30%}
+#solution > #s5, #station > #s3 {top: 50%; left: 70%}
+#solution > #s6, #station > #s5 {top: 75%; left: 30%}
+#solution > #s7, #station > #s4 {top: 75%; left: 70%}
+#swing > #s1 {top: 20%; left: 25%}
+#swing > #s2 {top: 35%; left: 20%}
+#swing > #s3 {top: 50%; left: 25%}
+#swing > #s4 {top: 65%; left: 20%}
+#swing > #s5 {top: 80%; left: 25%}
+#swing > #s6 {top: 20%; left: 75%}
+#swing > #s7 {top: 35%; left: 80%}
+#swing > #s8 {top: 50%; left: 75%}
+#swing > #s9 {top: 65%; left: 80%}
+#swing > #s10 {top: 80%; left: 75%}
+#choice > #s1 {top: 50%; left: 20%}
+#choice > #s2 {top: 30%; left: 40%}
+#choice > #s3 {top: 30%; left: 60%}
+#choice > #s4 {top: 30%; left: 80%}
+#choice > #s5 {top: 70%; left: 40%}
+#choice > #s6 {top: 70%; left: 60%}
+#choice > #s7 {top: 70%; left: 80%}
