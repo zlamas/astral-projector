@@ -147,7 +147,7 @@ function showCardInfo(slot) {
 }
 
 function showSpreadInfo() {
-	textElems[0].textContent = option.text.replace(/ \(.*/, "");
+	textElems[0].textContent = spreadSelect.dataset.displayName;
 	show(spreadInfo);
 	hide(cardInfo);
 }
@@ -179,8 +179,9 @@ decor.complete ?
 
 spreadSelect.addEventListener("change", () => {
 	let option = spreadSelect.selectedOptions[0];
-	let theme = option.getAttribute("theme");
+	let theme = option.dataset.theme;
 
+	spreadSelect.dataset.displayName = option.text.replace(/ \(.*/, "");
 	if (themeSelect.disabled = theme) {
 		themeSelect.value = theme;
 		themeSelect.dispatchEvent(new Event("change"));
@@ -231,7 +232,8 @@ fetch("res/data.json")
 			hide(deckElement);
 			show(deckLoading);
 
-			extend(roman, deckSelect.selectedOptions[0].hasAttribute("classic") ?
+			Object.assign(roman,
+				"classic" in deckSelect.selectedOptions[0].dataset ?
 				{8: "XI", 11: "VIII"} :
 				{8: "VIII", 11: "XI"});
 
