@@ -1,5 +1,5 @@
 "use strict";{
-let nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath;
+let deckSize, drawnCards, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath;
 const
 hide = el => el.classList.add("hidden"),
 show = el => el.classList.remove("hidden"),
@@ -21,6 +21,7 @@ helpButton = app.querySelector(".help"),
 detailsMenu = app.querySelector(".details"),
 showButton = app.querySelector(".details-show"),
 hideButton = detailsMenu.querySelector(".details-hide"),
+detailsTitle = detailsMenu.querySelector(".details-title"),
 detailsWrapper = detailsMenu.querySelector(".details-wrapper"),
 spreadInfo = detailsMenu.querySelector(".spread-info"),
 spreadDetails = spreadInfo.querySelector(".spread-details"),
@@ -29,14 +30,13 @@ positionList = positionWrapper.querySelector(".position-list"),
 cardInfo = detailsMenu.querySelector(".card-info"),
 detailsImg = cardInfo.querySelector(".card-img"),
 modal = app.querySelector(".modal"),
-textElems = [
-	detailsMenu.querySelector(".details-title"),
+cardInfoElems = [
 	cardInfo.querySelector(".card-name"),
 	cardInfo.querySelector(".card-alt-name"),
 	cardInfo.querySelector(".general-reading"),
 	cardInfo.querySelector(".spread-reading")
 ],
-spreadReading = textElems[4].parentNode,
+spreadReading = cardInfoElems[3].parentNode,
 animatedCard = document.createElement("img"),
 animatedCardInstances = table.getElementsByClassName(animatedCard.className = "animated-card");
 
@@ -59,13 +59,10 @@ function slideUp(el, duration, callback) {
 }
 
 function resetTable() {
-	nextSlotId = 0;
-	deckSize = 78 + extraMajors.length;
-	deckArray = [];
+	drawnCards = [];
 	descriptions = [];
-
-	hide(restartButton);
 	deckElement.src = animatedCard.src = deckPath + "back.jpg";
+	hide(restartButton);
 
 	for (let el of animatedCardInstances) {
 		el.dispatchEvent(new Event("reset"));
@@ -78,12 +75,11 @@ function resetTable() {
 }
 
 function drawCard() {
-	let id = Math.floor(Math.random() * deckSize);
-	let name, altName;
+	let id, slot, name, altName;
 
-	while (deckArray[id])
-		id = deckArray[id];
-	deckArray[id] = --deckSize;
+	do id = Math.floor(Math.random() * deckSize)
+	while (drawnCards.indexOf(id) >= 0);
+	slot = drawnCards.push(id) - 1;
 
 	if (id > 21) {
 		let suit = Math.floor((id - 22) / 14);
@@ -109,15 +105,14 @@ function drawCard() {
 		name = roman[id] + " " + major[id];
 	}
 
-	descriptions[nextSlotId] = [
-		titles[nextSlotId],
+	descriptions.push([
 		name,
 		altName,
 		meanings[id],
 		readings ? readings[id] : ""
-	];
+	]);
 
-	let slotImg = cardImgs[nextSlotId];
+	let slotImg = cardImgs[slot];
 	let animatedCardInstance = table.appendChild(animatedCard.cloneNode());
 	let animation = animatedCardInstance.animate(
 		[ getOffset(deckElement), getOffset(slotImg.parentNode) ],
@@ -134,21 +129,22 @@ function drawCard() {
 		slotImg.addEventListener("load", onCardLoad, { once: true });
 	animatedCardInstance.addEventListener("reset", () => animation.pause());
 
-	if (++nextSlotId == slotCount) {
+	if (slot == titles.length - 1) {
 		show(restartButton);
 		hide(deckElement);
 	}
 }
 
 function showCardInfo(slot) {
-	descriptions[slot].forEach((text, i) => textElems[i].textContent = text);
+	detailsTitle.textContent = titles[slot];
+	descriptions[slot].forEach((text, i) => cardInfoElems[i].textContent = text);
 	detailsImg.src = modal.firstChild.src = cardImgs[slot].src;
 	hide(spreadInfo);
 	show(cardInfo);
 }
 
 function showSpreadInfo() {
-	textElems[0].textContent = spreadSelect.dataset.displayName;
+	detailsTitle.textContent = spreadSelect.dataset.displayName;
 	show(spreadInfo);
 	hide(cardInfo);
 }
@@ -215,10 +211,10 @@ fetch("res/data.json")
 			spreadDetails.textContent = data.details[spread];
 			positionList.textContent = data.positions[spread];
 
-			if ((slotCount = titles.length) > 1)
-				show(positionWrapper);
-			else
+			if (spread == "one")
 				hide(positionWrapper);
+			else
+				show(positionWrapper);
 		});
 
 		themeSelect.addEventListener("change", () => {
@@ -238,11 +234,12 @@ fetch("res/data.json")
 				{8: "XI", 11: "VIII"} :
 				{8: "VIII", 11: "XI"});
 
-			deckPath = "img/" + deck + "/";
 			meanings = data.meanings[deck] || data.meanings.normal;
-			extraMajors = data.extraMajors[deck] || [];
 			altSuits = data.altSuits[deck];
 			altRanks = data.altRanks[deck];
+			extraMajors = data.extraMajors[deck] || [];
+			deckPath = "img/" + deck + "/";
+			deckSize = 78 + extraMajors.length;
 		});
 
 		app.querySelector(".main").addEventListener("click", e => {
