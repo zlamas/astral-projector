@@ -1,5 +1,5 @@
 "use strict";{
-let deckSize, drawnCards, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath;
+let deckSize, drawnCards, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath, isClassic;
 const
 hide = el => el.classList.add("hidden"),
 show = el => el.classList.remove("hidden"),
@@ -75,7 +75,7 @@ function resetTable() {
 }
 
 function drawCard() {
-	let id, slot, name, altName;
+	let id, classicId, slot, name, altName;
 
 	do id = Math.floor(Math.random() * deckSize)
 	while (drawnCards.indexOf(id) >= 0);
@@ -102,7 +102,9 @@ function drawCard() {
 			name = extraMajors[rank];
 		}
 	} else {
-		name = roman[id] + " " + major[id];
+		if ((id == 8 || id == 11) && isClassic)
+			classicId = 19 - id;
+		name = roman[classicId || id] + " " + major[id];
 	}
 
 	descriptions.push([
@@ -123,7 +125,7 @@ function drawCard() {
 		fadeOut(animatedCardInstance, fadeDuration, true);
 	};
 
-	slotImg.src = deckPath + id + ".jpg";
+	slotImg.src = deckPath + (classicId || id) + ".jpg";
 	animation.onfinish = () => slotImg.complete ?
 		onCardLoad() :
 		slotImg.addEventListener("load", onCardLoad, { once: true });
@@ -195,7 +197,7 @@ deckElement.addEventListener("load", () => {
 	hide(deckLoading);
 });
 
-fetch("res/data.json")
+fetch("res/data.json?1")
 .then(response => response.json())
 .then(data => {
 	({ roman, major, suits, ranks } = data);
@@ -228,12 +230,7 @@ fetch("res/data.json")
 			let deck = deckSelect.value;
 			hide(deckElement);
 			show(deckLoading);
-
-			Object.assign(roman,
-				"classic" in deckSelect.selectedOptions[0].dataset ?
-				{8: "XI", 11: "VIII"} :
-				{8: "VIII", 11: "XI"});
-
+			isClassic = ~data.classicOrder.indexOf(deck);
 			meanings = data.meanings[deck] || data.meanings.normal;
 			altSuits = data.altSuits[deck];
 			altRanks = data.altRanks[deck];

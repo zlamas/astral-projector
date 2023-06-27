@@ -49,11 +49,7 @@ select {
 	box-shadow: 0 2px 0 -1px currentcolor;
 	margin: 0.1em 0;
 	padding: 0.2em 1.2em 0.2em 0.5em;
-	text-align-last: center; /* webkit */
-
-	/* firefox can't wrap text in select, so we cut it short */
-	overflow: hidden;
-	text-overflow: ellipsis;
+	text-align-last: center;
 }
 
 select:first-of-type {
@@ -314,57 +310,57 @@ select:focus,
 	}
 }
 
-#cross > #s1, #cross > #s2 {top: 50%; left: 37%}
-#cross > #s2 {transform: translateZ(-1px) rotate(90deg); transform-origin: 50% 70%}
-#cross > #s3 {top: 20%; left: 37%}
-#cross > #s4 {top: 80%; left: 37%}
-#cross > #s5 {top: 50%; left: 14%}
-#cross > #s6 {top: 50%; left: 60%}
-#cross > #s7 {top: 86%; left: 83%}
-#cross > #s8 {top: 62%; left: 83%}
-#cross > #s9 {top: 38%; left: 83%}
-#cross > #s10 {top: 14%; left: 83%}
-#faust > #s1, #disorder > #s2, #marriage > #s4 {top: 65%; left: 20%}
-#faust > #s2, #disorder > #s1, #marriage > #s1 {top: 20%; left: 50%}
-#faust > #s3, #disorder > #s3, #marriage > #s5 {top: 65%; left: 80%}
-#faust > #s4, #disorder > #s4, #marriage > #s2 {top: 35%; left: 20%}
-#faust > #s5, #disorder > #s6, #marriage > #s6 {top: 80%; left: 50%}
-#faust > #s6, #disorder > #s5, #marriage > #s3 {top: 35%; left: 80%}
-#faust > #s7, #disorder > #s7, #one > #s1, #swing > #s11, #solution > #s1, #station > #s1 {top: 50%}
-#problem > #s1 {top: 30%; left: 50%}
-#problem > #s2 {top: 65%; left: 25%}
-#problem > #s3 {top: 65%; left: 50%}
-#problem > #s4 {top: 65%; left: 75%}
-#progress > #s1 {top: 50%; left: 20%}
-#progress > #s2 {top: 50%; left: 40%}
-#progress > #s3 {top: 50%; left: 60%}
-#progress > #s4 {top: 20%; left: 20%}
-#progress > #s5 {top: 20%; left: 40%}
-#progress > #s6 {top: 20%; left: 60%}
-#progress > #s7 {top: 80%; left: 45%}
-#progress > #s8 {top: 80%; left: 65%}
-#progress > #s9 {top: 80%; left: 85%}
-#progress > #s10 {top: 80%; left: 20%}
-#solution > #s2, #station > #s7 {top: 25%; left: 30%}
-#solution > #s3, #station > #s2 {top: 25%; left: 70%}
-#solution > #s4, #station > #s6 {top: 50%; left: 30%}
-#solution > #s5, #station > #s3 {top: 50%; left: 70%}
-#solution > #s6, #station > #s5 {top: 75%; left: 30%}
-#solution > #s7, #station > #s4 {top: 75%; left: 70%}
-#swing > #s1 {top: 20%; left: 25%}
-#swing > #s2 {top: 35%; left: 20%}
-#swing > #s3 {top: 50%; left: 25%}
-#swing > #s4 {top: 65%; left: 20%}
-#swing > #s5 {top: 80%; left: 25%}
-#swing > #s6 {top: 20%; left: 75%}
-#swing > #s7 {top: 35%; left: 80%}
-#swing > #s8 {top: 50%; left: 75%}
-#swing > #s9 {top: 65%; left: 80%}
-#swing > #s10 {top: 80%; left: 75%}
-#choice > #s1 {top: 50%; left: 20%}
-#choice > #s2 {top: 30%; left: 40%}
-#choice > #s3 {top: 30%; left: 60%}
-#choice > #s4 {top: 30%; left: 80%}
-#choice > #s5 {top: 70%; left: 40%}
-#choice > #s6 {top: 70%; left: 60%}
-#choice > #s7 {top: 70%; left: 80%}
+#cross #s1, #cross #s2 {top: 50%; left: 37%}
+#cross #s2 {transform: translateZ(-1px) rotate(90deg); transform-origin: 50% 70%}
+#cross #s3 {top: 20%; left: 37%}
+#cross #s4 {top: 80%; left: 37%}
+#cross #s5 {top: 50%; left: 14%}
+#cross #s6 {top: 50%; left: 60%}
+#cross #s7 {top: 86%; left: 83%}
+#cross #s8 {top: 62%; left: 83%}
+#cross #s9 {top: 38%; left: 83%}
+#cross #s10 {top: 14%; left: 83%}
+#faust #s1, #disorder #s2, #marriage #s4 {top: 65%; left: 20%}
+#faust #s2, #disorder #s1, #marriage #s1 {top: 20%; left: 50%}
+#faust #s3, #disorder #s3, #marriage #s5 {top: 65%; left: 80%}
+#faust #s4, #disorder #s4, #marriage #s2 {top: 35%; left: 20%}
+#faust #s5, #disorder #s6, #marriage #s6 {top: 80%; left: 50%}
+#faust #s6, #disorder #s5, #marriage #s3 {top: 35%; left: 80%}
+#faust #s7, #disorder #s7, #one #s1, #swing #s11, #solution #s1, #station #s1 {top: 50%}
+#problem #s1 {top: 30%; left: 50%}
+#problem #s2 {top: 65%; left: 25%}
+#problem #s3 {top: 65%; left: 50%}
+#problem #s4 {top: 65%; left: 75%}
+#progress #s1 {top: 50%; left: 20%}
+#progress #s2 {top: 50%; left: 40%}
+#progress #s3 {top: 50%; left: 60%}
+#progress #s4 {top: 20%; left: 20%}
+#progress #s5 {top: 20%; left: 40%}
+#progress #s6 {top: 20%; left: 60%}
+#progress #s7 {top: 80%; left: 45%}
+#progress #s8 {top: 80%; left: 65%}
+#progress #s9 {top: 80%; left: 85%}
+#progress #s10 {top: 80%; left: 20%}
+#solution #s2, #station #s7 {top: 25%; left: 30%}
+#solution #s3, #station #s2 {top: 25%; left: 70%}
+#solution #s4, #station #s6 {top: 50%; left: 30%}
+#solution #s5, #station #s3 {top: 50%; left: 70%}
+#solution #s6, #station #s5 {top: 75%; left: 30%}
+#solution #s7, #station #s4 {top: 75%; left: 70%}
+#swing #s1 {top: 20%; left: 25%}
+#swing #s2 {top: 35%; left: 20%}
+#swing #s3 {top: 50%; left: 25%}
+#swing #s4 {top: 65%; left: 20%}
+#swing #s5 {top: 80%; left: 25%}
+#swing #s6 {top: 20%; left: 75%}
+#swing #s7 {top: 35%; left: 80%}
+#swing #s8 {top: 50%; left: 75%}
+#swing #s9 {top: 65%; left: 80%}
+#swing #s10 {top: 80%; left: 75%}
+#choice #s1 {top: 50%; left: 20%}
+#choice #s2 {top: 30%; left: 40%}
+#choice #s3 {top: 30%; left: 60%}
+#choice #s4 {top: 30%; left: 80%}
+#choice #s5 {top: 70%; left: 40%}
+#choice #s6 {top: 70%; left: 60%}
+#choice #s7 {top: 70%; left: 80%}
