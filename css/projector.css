@@ -20,15 +20,25 @@ body {
 
 button,
 select {
-	all: unset;
 	border-radius: 9em;
+	color: inherit;
 	cursor: pointer;
+	font-family: inherit;
 	font-size: 1.2em;
+	outline: 0;
+	text-shadow: inherit;
 	transition: color 0.5s, border-color 0.5s, box-shadow 0.5s;
+}
+
+button:focus,
+select:focus,
+#selected {
+	box-shadow: 0 0 0.6em 0.3em red;
 }
 
 button {
 	align-self: center;
+	background: none;
 	border: 1px solid;
 	font-weight: bold;
 	padding: 0.1em 0.5em;
@@ -45,10 +55,15 @@ option {
 
 select {
 	width: 100%;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
 	background: url(/img/arrow.svg) no-repeat right 0.5em top 50% / 0.65em auto;
+	border: 0;
 	box-shadow: 0 2px 0 -1px currentcolor;
 	margin: 0.1em 0;
 	padding: 0.2em 1.2em 0.2em 0.5em;
+	text-align: center;
 	text-align-last: center;
 }
 
@@ -191,11 +206,6 @@ select:first-of-type {
 .animated-card,
 .slot > img {
 	box-shadow: 0 0 0.5em currentcolor;
-}
-
-select:focus,
-#selected {
-	box-shadow: 0 0 0.6em 0.3em red;
 }
 
 .slot > span {
