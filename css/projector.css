@@ -9,7 +9,7 @@ body {
 	width: 100%;
 	background: url(../img/bg_portrait.jpg) 0 / cover;
 	color: white;
-	font: 2.5vh "Open Sans", sans-serif;
+	font: 2.5vh Open Sans, sans-serif;
 	justify-content: center;
 	text-align: center;
 	text-shadow: 2px 2px black;
@@ -25,15 +25,14 @@ select {
 	cursor: pointer;
 	font-family: inherit;
 	font-size: 1.2em;
-	outline: 0;
 	text-shadow: inherit;
-	transition: color 0.5s, border-color 0.5s, box-shadow 0.5s;
+	transition: border-color 0.5s, box-shadow 0.5s, color 0.5s;
 }
 
 button:focus,
-select:focus,
-#selected {
+select:focus {
 	box-shadow: 0 0 0.6em 0.3em red;
+	outline: 0;
 }
 
 button {
@@ -45,7 +44,7 @@ button {
 }
 
 h1 {
-	font: 3.5em "Edo", sans-serif;
+	font: 3.5em Edo, sans-serif;
 	margin: 0;
 }
 
@@ -76,67 +75,12 @@ select:first-of-type {
 	color: grey;
 }
 
-.hidden {
-	display: none !important;
+.button-help {
+	cursor: help;
 }
 
-.deck-element,
-.decor,
-.details,
-.modal,
-.slot > img {
-	animation: 0.5s fade-in ease-in-out;
-}
-
-.slot > span,
-.title {
-	font: 1.5em "Edo", sans-serif;
-}
-
-.scrollable {
-	border-radius: 0.5em;
-	box-shadow: 0 -1.2em 0.8em -1em inset;
-	overflow: auto;
-	padding: 0 0.2em 0.5em;
-	touch-action: pan-y;
-}
-
-.text-container {
-	text-align: justify;
-	white-space: pre-line;
-}
-
-.main {
-	display: flex;
-	position: relative;
-	flex-direction: column;
-	margin: 0.2em;
-}
-
-.decor {
-	position: absolute;
-	height: 100%;
-	right: 0;
-	opacity: 0.4;
-	transform: translateX(50%);
-	z-index: -1;
-}
-
-.main-column {
-	display: flex;
-	flex: 1 0 50%;
-	flex-direction: column;
-	justify-content: space-between;
-}
-
-.intro,
-.main-column {
-	max-width: 100vh;
-}
-
-.header {
-	font-size: 0.85em;
-	margin-bottom: 0.2em;
+.button-start {
+	margin: 0.5em 0;
 }
 
 .button-wrapper {
@@ -146,56 +90,15 @@ select:first-of-type {
 	justify-content: space-around;
 }
 
-.help {
-	cursor: help;
+.card,
+.decor,
+.details,
+.modal,
+.table-button {
+	animation: 0.5s fade-in ease-in-out;
 }
 
-.tooltip {
-	display: none;
-	position: absolute;
-	top: 120%;
-	animation: fade-in 0.5s;
-	background: rgba(0, 0, 0, 0.9);
-	border-radius: 10px;
-	font-size: 1.5em;
-	padding: 10px;
-	z-index: 1;
-}
-
-.help:hover ~ .tooltip {
-	display: block;
-}
-
-.table {
-	position: relative;
-	animation: 3s fade-in ease-in-out;
-	flex: 1;
-}
-
-.slot,
-.table {
-	transform-style: preserve-3d;
-}
-
-.animated-card,
-.deck-element,
-.slot {
-	position: absolute;
-	height: 5em;
-	border-radius: 0.3em;
-}
-
-.slot {
-	top: -50vh;
-	left: 50%;
-	min-width: 2.7em;
-	box-shadow: 0 0 0.8em inset;
-	margin: -2.5em 0 0 -1.35em;
-	transform: translateZ(-1px);
-	transition: top 1s, left 1s;
-}
-
-.slot > img {
+.card {
 	height: 100%;
 	border-radius: inherit;
 	cursor: pointer;
@@ -203,45 +106,47 @@ select:first-of-type {
 	transition: box-shadow 0.5s;
 }
 
-.animated-card,
-.slot > img {
+.card,
+.card-animated {
 	box-shadow: 0 0 0.5em currentcolor;
 }
 
-.slot > span {
+.card-animated,
+.slot,
+.table-button {
 	position: absolute;
-	left: 110%;
-	line-height: 0;
+	height: 5em;
+	border-radius: 0.3em;
 }
 
-.deck-element {
-	bottom: 1em;
-	left: 1em;
-	box-shadow:
-		0.15em 0.15em 0 0.1em #333,
-		0.3em 0.3em 0 0.1em #333,
-		0.15em 0.15em 0.5em 0.3em currentcolor;
-	cursor: pointer;
-	transition: box-shadow 0.5s;
+.card-selected {
+	box-shadow: 0 0 0.6em 0.3em red;
 }
 
-.deck-element:hover {
-	box-shadow:
-		0.15em 0.15em 0 0.1em #333,
-		0.3em 0.3em 0 0.1em #333,
-		0.15em 0.15em 0.5em 0.3em red;
+.card-image {
+	height: 15em;
+	border-radius: 0.5em;
+	box-shadow: 0 0 10px;
+	cursor: zoom-in;
+	margin-top: 10px;
 }
 
-.restart {
-	height: 3em;
+.card-name {
+	font-size: 1.2em;
+	font-weight: bold;
 }
 
 .deck-loading {
 	cursor: not-allowed;
 }
 
-.start {
-	margin: 0.5em 0;
+.decor {
+	position: absolute;
+	height: 100%;
+	right: 0;
+	opacity: 0.4;
+	transform: translateX(50%);
+	z-index: -1;
 }
 
 .details {
@@ -259,17 +164,28 @@ select:first-of-type {
 	margin-bottom: 0.2em;
 }
 
-.card-img {
-	height: 15em;
-	border-radius: 0.5em;
-	box-shadow: 0 0 10px;
-	cursor: zoom-in;
-	margin-top: 10px;
+.header {
+	font-size: 0.85em;
+	margin-bottom: 0.2em;
 }
 
-.card-name {
-	font-size: 1.2em;
-	font-weight: bold;
+.intro,
+.main-column {
+	max-width: 100vh;
+}
+
+.main {
+	display: flex;
+	position: relative;
+	flex-direction: column;
+	margin: 0.2em;
+}
+
+.main-column {
+	display: flex;
+	flex: 1 0 50%;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .modal {
@@ -281,11 +197,92 @@ select:first-of-type {
 	padding: 1em;
 }
 
-.modal > img {
+.modal-image {
 	height: 100%;
 	width: 100%;
 	animation: 0.5s zoom-in;
 	object-fit: contain;
+}
+
+.scrollable {
+	border-radius: 0.5em;
+	box-shadow: 0 -1.2em 0.8em -1em inset;
+	overflow: auto;
+	padding: 0 0.2em 0.5em;
+	touch-action: pan-y;
+}
+
+.slot,
+.table {
+	transform-style: preserve-3d;
+}
+
+.slot {
+	top: -50vh;
+	left: 50%;
+	min-width: 2.7em;
+	box-shadow: 0 0 0.8em inset;
+	counter-increment: slot;
+	margin: -2.5em 0 0 -1.35em;
+	transform: translateZ(-1px);
+	transition: top 1s, left 1s;
+}
+
+.slot::before {
+	content: counter(slot);
+	position: absolute;
+	left: 110%;
+	font: 1.5em / 0 Edo, sans-serif;
+}
+
+.table {
+	position: relative;
+	animation: 3s fade-in ease-in-out;
+	flex: 1;
+}
+
+.table-button {
+	bottom: 1em;
+	left: 1em;
+	box-shadow:
+		0.15em 0.15em 0 0.1em #333,
+		0.3em 0.3em 0 0.1em #333,
+		0.15em 0.15em 0.5em 0.3em currentcolor;
+	cursor: pointer;
+	transition: box-shadow 0.5s, color 0.5s;
+}
+
+.table-button:hover {
+	color: red;
+}
+
+.table-reset {
+	height: 3em;
+}
+
+.text-container {
+	text-align: justify;
+	white-space: pre-line;
+}
+
+.title {
+	font: 1.5em Edo, sans-serif;
+}
+
+.tooltip {
+	display: none;
+	position: absolute;
+	top: 120%;
+	animation: fade-in 0.5s;
+	background: rgba(0, 0, 0, 0.9);
+	border-radius: 10px;
+	font-size: 1.5em;
+	padding: 10px;
+	z-index: 1;
+}
+
+.button-help:hover ~ .tooltip {
+	display: block;
 }
 
 @keyframes fade-in {
@@ -306,7 +303,7 @@ select:first-of-type {
 	}
 
 	.details {
-		position: unset;
+		position: static;
 	}
 
 	@media (max-height: 600px) {
@@ -320,57 +317,60 @@ select:first-of-type {
 	}
 }
 
-#cross #s1, #cross #s2 {top: 50%; left: 37%}
-#cross #s2 {transform: translateZ(-1px) rotate(90deg); transform-origin: 50% 70%}
-#cross #s3 {top: 20%; left: 37%}
-#cross #s4 {top: 80%; left: 37%}
-#cross #s5 {top: 50%; left: 14%}
-#cross #s6 {top: 50%; left: 60%}
-#cross #s7 {top: 86%; left: 83%}
-#cross #s8 {top: 62%; left: 83%}
-#cross #s9 {top: 38%; left: 83%}
-#cross #s10 {top: 14%; left: 83%}
-#faust #s1, #disorder #s2, #marriage #s4 {top: 65%; left: 20%}
-#faust #s2, #disorder #s1, #marriage #s1 {top: 20%; left: 50%}
-#faust #s3, #disorder #s3, #marriage #s5 {top: 65%; left: 80%}
-#faust #s4, #disorder #s4, #marriage #s2 {top: 35%; left: 20%}
-#faust #s5, #disorder #s6, #marriage #s6 {top: 80%; left: 50%}
-#faust #s6, #disorder #s5, #marriage #s3 {top: 35%; left: 80%}
-#faust #s7, #disorder #s7, #one #s1, #swing #s11, #solution #s1, #station #s1 {top: 50%}
-#problem #s1 {top: 30%; left: 50%}
-#problem #s2 {top: 65%; left: 25%}
-#problem #s3 {top: 65%; left: 50%}
-#problem #s4 {top: 65%; left: 75%}
-#progress #s1 {top: 50%; left: 20%}
-#progress #s2 {top: 50%; left: 40%}
-#progress #s3 {top: 50%; left: 60%}
-#progress #s4 {top: 20%; left: 20%}
-#progress #s5 {top: 20%; left: 40%}
-#progress #s6 {top: 20%; left: 60%}
-#progress #s7 {top: 80%; left: 45%}
-#progress #s8 {top: 80%; left: 65%}
-#progress #s9 {top: 80%; left: 85%}
-#progress #s10 {top: 80%; left: 20%}
-#solution #s2, #station #s7 {top: 25%; left: 30%}
-#solution #s3, #station #s2 {top: 25%; left: 70%}
-#solution #s4, #station #s6 {top: 50%; left: 30%}
-#solution #s5, #station #s3 {top: 50%; left: 70%}
-#solution #s6, #station #s5 {top: 75%; left: 30%}
-#solution #s7, #station #s4 {top: 75%; left: 70%}
-#swing #s1 {top: 20%; left: 25%}
-#swing #s2 {top: 35%; left: 20%}
-#swing #s3 {top: 50%; left: 25%}
-#swing #s4 {top: 65%; left: 20%}
-#swing #s5 {top: 80%; left: 25%}
-#swing #s6 {top: 20%; left: 75%}
-#swing #s7 {top: 35%; left: 80%}
-#swing #s8 {top: 50%; left: 75%}
-#swing #s9 {top: 65%; left: 80%}
-#swing #s10 {top: 80%; left: 75%}
-#choice #s1 {top: 50%; left: 20%}
-#choice #s2 {top: 30%; left: 40%}
-#choice #s3 {top: 30%; left: 60%}
-#choice #s4 {top: 30%; left: 80%}
-#choice #s5 {top: 70%; left: 40%}
-#choice #s6 {top: 70%; left: 60%}
-#choice #s7 {top: 70%; left: 80%}
+.sp-cross .s1, .sp-cross .s2 {top: 50%; left: 37%}
+.sp-cross .s2 {transform: translateZ(-1px) rotate(90deg); transform-origin: 50% 70%}
+.sp-cross .s3 {top: 20%; left: 37%}
+.sp-cross .s4 {top: 80%; left: 37%}
+.sp-cross .s5 {top: 50%; left: 14%}
+.sp-cross .s6 {top: 50%; left: 60%}
+.sp-cross .s7 {top: 86%; left: 83%}
+.sp-cross .s8 {top: 62%; left: 83%}
+.sp-cross .s9 {top: 38%; left: 83%}
+.sp-cross .s10 {top: 14%; left: 83%}
+.sp-faust .s1, .sp-disorder .s2, .sp-marriage .s4 {top: 65%; left: 20%}
+.sp-faust .s2, .sp-disorder .s1, .sp-marriage .s1 {top: 20%}
+.sp-faust .s3, .sp-disorder .s3, .sp-marriage .s5 {top: 65%; left: 80%}
+.sp-faust .s4, .sp-disorder .s4, .sp-marriage .s2 {top: 35%; left: 20%}
+.sp-faust .s5, .sp-disorder .s6, .sp-marriage .s6 {top: 80%}
+.sp-faust .s6, .sp-disorder .s5, .sp-marriage .s3 {top: 35%; left: 80%}
+.sp-faust .s7, .sp-disorder .s7 {top: 50%}
+.sp-problem .s1 {top: 30%}
+.sp-problem .s2 {top: 65%; left: 25%}
+.sp-problem .s3 {top: 65%}
+.sp-problem .s4 {top: 65%; left: 75%}
+.sp-progress .s1 {top: 50%; left: 20%}
+.sp-progress .s2 {top: 50%; left: 40%}
+.sp-progress .s3 {top: 50%; left: 60%}
+.sp-progress .s4 {top: 20%; left: 20%}
+.sp-progress .s5 {top: 20%; left: 40%}
+.sp-progress .s6 {top: 20%; left: 60%}
+.sp-progress .s7 {top: 80%; left: 45%}
+.sp-progress .s8 {top: 80%; left: 65%}
+.sp-progress .s9 {top: 80%; left: 85%}
+.sp-progress .s10 {top: 80%; left: 20%}
+.sp-solution .s1, .sp-station .s1 {top: 50%}
+.sp-solution .s2, .sp-station .s7 {top: 25%; left: 30%}
+.sp-solution .s3, .sp-station .s2 {top: 25%; left: 70%}
+.sp-solution .s4, .sp-station .s6 {top: 50%; left: 30%}
+.sp-solution .s5, .sp-station .s3 {top: 50%; left: 70%}
+.sp-solution .s6, .sp-station .s5 {top: 75%; left: 30%}
+.sp-solution .s7, .sp-station .s4 {top: 75%; left: 70%}
+.sp-swing .s1 {top: 20%; left: 25%}
+.sp-swing .s2 {top: 35%; left: 20%}
+.sp-swing .s3 {top: 50%; left: 25%}
+.sp-swing .s4 {top: 65%; left: 20%}
+.sp-swing .s5 {top: 80%; left: 25%}
+.sp-swing .s6 {top: 20%; left: 75%}
+.sp-swing .s7 {top: 35%; left: 80%}
+.sp-swing .s8 {top: 50%; left: 75%}
+.sp-swing .s9 {top: 65%; left: 80%}
+.sp-swing .s10 {top: 80%; left: 75%}
+.sp-swing .s11 {top: 50%}
+.sp-choice .s1 {top: 50%; left: 20%}
+.sp-choice .s2 {top: 30%; left: 40%}
+.sp-choice .s3 {top: 30%; left: 60%}
+.sp-choice .s4 {top: 30%; left: 80%}
+.sp-choice .s5 {top: 70%; left: 40%}
+.sp-choice .s6 {top: 70%; left: 60%}
+.sp-choice .s7 {top: 70%; left: 80%}
+.sp-one .s1 {top: 50%}

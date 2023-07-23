@@ -3,7 +3,7 @@
 <title>Астральный Проектор - виртуальный помощник таролога</title>
 <meta charset="utf-8">
 <meta name="description" content="Астральный Проектор — это онлайн-симулятор Таро. С его помощью Вы можете работать с любой из 50 самых популярных колод карт Таро. Вы можете выбирать из 10 различных схем расклада по самым актуальным сферам жизни.">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -12,8 +12,8 @@
 <meta name="msapplication-TileColor" content="#643">
 <meta name="theme-color" content="#643">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="css/projector.css?1">
-<script src="js/projector.min.js" defer></script>
+<link rel="stylesheet" href="css/projector.css?2">
+<script src="js/projector.min.js?1" defer></script>
 
 <div class="app">
 	<div class="main">
@@ -26,8 +26,8 @@
 			</div>
 			<form class="button-wrapper">
 				<button formaction="/">← К сайту</button>
-				<button type="button" class="details-show hidden">О раскладе</button>
-				<button type="button" class="help hidden">Помощь</button>
+				<button type="button" class="button-show-details hidden">О раскладе</button>
+				<button type="button" class="button-help hidden">Помощь</button>
 				<div class="tooltip">Жмите на колоду внизу, чтобы заполнить расклад; затем нажмите на карту на столе, чтобы увидеть её значение.</div>
 			</form>
 			<select name="spread-select" autocomplete="off">
@@ -52,21 +52,21 @@
 				<option value="money">Деньги и карьера: что важно сегодня</option>
 				<option value="lifegoal">Цель жизни: что важно сегодня</option>
 			</select>
-			<div class="table hidden">
-				<img class="deck-element hidden" title="Вытащить карту" alt>
-				<img class="deck-element restart hidden" src="img/restart.svg" title="Начать заново" alt>
-				<img class="deck-element deck-loading" src="img/deck_loading.svg" title="Колода загружается" alt>
-				<div class="slot" id="s1"><span>1</span><img alt></div>
-				<div class="slot" id="s2"><span>2</span><img alt></div>
-				<div class="slot" id="s3"><span>3</span><img alt></div>
-				<div class="slot" id="s4"><span>4</span><img alt></div>
-				<div class="slot" id="s5"><span>5</span><img alt></div>
-				<div class="slot" id="s6"><span>6</span><img alt></div>
-				<div class="slot" id="s7"><span>7</span><img alt></div>
-				<div class="slot" id="s8"><span>8</span><img alt></div>
-				<div class="slot" id="s9"><span>9</span><img alt></div>
-				<div class="slot" id="s10"><span>10</span><img alt></div>
-				<div class="slot" id="s11"><span>11</span><img alt></div>
+			<div class="table hidden sp-" data-spread>
+				<img class="table-button deck hidden" title="Вытащить карту" alt>
+				<img class="table-button table-reset hidden" src="img/restart.svg" title="Начать заново" alt>
+				<img class="table-button deck-loading" src="img/deck_loading.svg" title="Колода загружается" alt>
+				<div class="slot s1"><img class="card" alt></div>
+				<div class="slot s2"><img class="card" alt></div>
+				<div class="slot s3"><img class="card" alt></div>
+				<div class="slot s4"><img class="card" alt></div>
+				<div class="slot s5"><img class="card" alt></div>
+				<div class="slot s6"><img class="card" alt></div>
+				<div class="slot s7"><img class="card" alt></div>
+				<div class="slot s8"><img class="card" alt></div>
+				<div class="slot s9"><img class="card" alt></div>
+				<div class="slot s10"><img class="card" alt></div>
+				<div class="slot s11"><img class="card" alt></div>
 			</div>
 			<select name="deck-select" autocomplete="off">
 				<option disabled selected>Выберите колоду:</option>
@@ -86,7 +86,7 @@
 				<option value="waite">Таро Уэйта</option>
 				<option value="pagancat">Таро Языческих Кошек</option>
 			</select>
-			<button class="start" autocomplete="off" disabled>Загрузка…</button>
+			<button class="button-start" autocomplete="off" disabled>Загрузка…</button>
 		</div>
 		<div class="intro scrollable text-container">Дорогой друг!
 
@@ -100,24 +100,24 @@
 таролог Екатерина Нагорная и команда Black Cat Tarot</div>
 	</div>
 	<div class="details hidden">
-		<div class="details-title title"></div>
-		<div class="details-wrapper scrollable">
+		<div class="title details-title"></div>
+		<div class="scrollable details-wrapper">
 			<div class="spread-info">
-				<div class="spread-details text-container"></div>
+				<div class="text-container spread-details"></div>
 				<div class="position-wrapper">
 					<div class="title">Позиции расклада</div>
-					<div class="position-list text-container"></div>
+					<div class="text-container position-list"></div>
 				</div>
 			</div>
 			<div class="card-info hidden">
-				<img class="card-img" alt>
+				<img class="card-image" alt>
 				<div class="card-name"></div>
 				<div class="card-alt-name"></div>
-				<div class="text-container"><b>Общее значение карты: </b><span class="general-reading"></span></div>
-				<div class="text-container"><b>Значение карты в этом раскладе: </b><span class="spread-reading"></span></div>
+				<div class="text-container general-reading"><b>Общее значение карты: </b><span></span></div>
+				<div class="text-container spread-reading"><b>Значение карты в этом раскладе: </b><span></span></div>
 			</div>
 		</div>
-		<button class="details-hide">Скрыть</button>
+		<button class="button-hide-details">Скрыть</button>
 	</div>
-	<div class="modal hidden"><img alt></div>
+	<div class="modal hidden"><img class="modal-image" alt></div>
 </div>
