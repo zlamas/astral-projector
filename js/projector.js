@@ -204,8 +204,7 @@ fetch("res/data.json?1")
 	startButton.addEventListener("click", () => {
 		spreadSelect.addEventListener("change", () => {
 			let spreadName = spreadSelect.value;
-			table.classList.replace("sp-" + table.dataset.spread, "sp-" + spreadName);
-			table.dataset.spread = spreadName;
+			table.className = table.className.replace(/sp-\w*/, "sp-" + spreadName);
 			titles = data.titles[spreadName];
 			spreadDetails.textContent = data.details[spreadName];
 			positionList.textContent = data.positions[spreadName];
