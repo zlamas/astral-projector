@@ -1,15 +1,15 @@
-body {
-	background: #643;
+html {
+	height: 100%;
+	background: #643 url(../img/bg_portrait.jpg) center / cover;
 }
 
-.app {
+body {
 	display: flex;
 	position: fixed;
 	height: 100%;
 	width: 100%;
-	background: url(../img/bg_portrait.jpg) 0 / cover;
 	color: white;
-	font: 2.5vh Open Sans, sans-serif;
+	font: 2.5vh "Open Sans", sans-serif;
 	justify-content: center;
 	text-align: center;
 	text-shadow: 2px 2px black;
@@ -298,7 +298,7 @@ select:first-of-type {
 }
 
 @media screen and (orientation: landscape) {
-	.app {
+	html {
 		background-image: url(../img/bg.jpg);
 	}
 
@@ -307,7 +307,7 @@ select:first-of-type {
 	}
 
 	@media (max-height: 600px) {
-		.app {
+		body {
 			font-size: 3.5vh;
 		}
 

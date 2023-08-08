@@ -1,5 +1,5 @@
+(app => {
 "use strict";
-{
 let deckSize, drawnCards, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath, isClassic,
 hide = el => el.style.display = "none",
 show = el => el.style.display = "",
@@ -10,7 +10,6 @@ cardDrawDuration = 1000,
 fadeDuration = 500,
 animationOptions = { fill: "forwards", easing: "ease-in-out" },
 
-app = document.querySelector(".app"),
 table = app.querySelector(".table"),
 [ deck, resetButton, deckLoadingIcon ] = table.getElementsByClassName("table-button"),
 [ spreadSelect, themeSelect, deckSelect ] = app.getElementsByTagName("select"),
@@ -285,4 +284,4 @@ if ("standalone" in navigator) {
 		});
 	}
 }
-}
+})(document.body)
