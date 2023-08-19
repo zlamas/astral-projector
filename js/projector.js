@@ -175,7 +175,8 @@ spreadSelect.addEventListener("change", () => {
 	let option = spreadSelect.selectedOptions[0];
 	let theme = option.dataset.theme;
 
-	spreadSelect.dataset.displayName = option.text.replace(/ \(.*/, "");
+	detailsTitle.textContent = spreadSelect.dataset.displayName =
+		option.text.replace(/ \(.*/, "");
 	if (themeSelect.disabled = theme) {
 		themeSelect.value = theme;
 		themeSelect.dispatchEvent(new Event("change"));
