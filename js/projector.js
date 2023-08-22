@@ -12,13 +12,13 @@ animationOptions = { fill: "forwards", easing: "ease-in-out" },
 
 table = app.querySelector(".table"),
 [ deck, resetButton, deckLoadingIcon ] = table.getElementsByClassName("table-button"),
-[ spreadSelect, themeSelect, deckSelect ] = app.getElementsByTagName("select"),
+[ spreadSelect, themeSelect, deckSelect ] = app.getElementsByClassName("dropdown"),
 cards = table.getElementsByClassName("card"),
 selectedCards = table.getElementsByClassName("card-selected"),
 animatedCardBase = document.createElement("img"),
 animatedCards = table.getElementsByClassName(animatedCardBase.className = "card-animated"),
 decor = app.querySelector(".decor"),
-startButton = app.querySelector(".button-start"),
+startButton = app.querySelector("#btn-start"),
 detailsMenu = app.querySelector(".details"),
 detailsTitle = detailsMenu.querySelector(".details-title"),
 detailsWrapper = detailsMenu.querySelector(".details-wrapper"),
@@ -159,11 +159,6 @@ function deselect() {
 		el.classList.remove("card-selected");
 }
 
-function setStartButtonState() {
-	if (spreadSelect.selectedIndex && deckSelect.selectedIndex)
-		startButton.disabled = !(themeSelect.selectedIndex || themeSelect.disabled);
-}
-
 for (let el of app.getElementsByClassName("hidden"))
 	hide(el);
 
@@ -184,8 +179,8 @@ spreadSelect.addEventListener("change", () => {
 });
 
 resetButton.addEventListener("click", resetTable);
-app.querySelector(".button-show-details").addEventListener("click", showDetails);
-app.querySelector(".button-hide-details").addEventListener("click", hideDetails);
+app.querySelector("#btn-show-details").addEventListener("click", showDetails);
+app.querySelector("#btn-hide-details").addEventListener("click", hideDetails);
 detailsImage.addEventListener("click", () => show(modal));
 modal.addEventListener("click", () => hide(modal));
 deck.addEventListener("load", () => {
@@ -197,11 +192,12 @@ fetch("res/data.json?1")
 .then(response => response.json())
 .then(data => {
 	({ roman, major, suits, ranks } = data);
-	setStartButtonState();
-	app.addEventListener("change", setStartButtonState);
+	startButton.disabled = false;
 	startButton.textContent = "НАЧАТЬ";
 
-	startButton.addEventListener("click", () => {
+	document.forms.selection.addEventListener("submit", e => {
+		e.preventDefault();
+
 		spreadSelect.addEventListener("change", () => {
 			let spreadName = spreadSelect.value;
 			table.className = table.className.replace(/sp-\w*/, "sp-" + spreadName);
@@ -248,16 +244,15 @@ fetch("res/data.json?1")
 			}
 		});
 
-		app.removeEventListener("change", setStartButtonState);
 		app.addEventListener("change", resetTable);
-		[spreadSelect, themeSelect, deckSelect].forEach(
+		[ spreadSelect, themeSelect, deckSelect ].forEach(
 			el => el.dispatchEvent(new Event("change"))
 		);
 
 		slideUp(app.querySelector(".header"), openingDuration);
 		slideUp(app.querySelector(".intro"), openingDuration, () => {
-			show(detailsMenu);
-			app.querySelectorAll(".button-wrapper>button").forEach(el => show(el));
+			showDetails();
+			app.querySelectorAll(".button-bar>.button").forEach(show);
 			deck.addEventListener("click", drawCard);
 		});
 

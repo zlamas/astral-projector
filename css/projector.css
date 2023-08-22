@@ -18,33 +18,8 @@ body {
 	user-select: none;
 }
 
-button,
-select {
-	border-radius: 9em;
-	color: inherit;
-	cursor: pointer;
-	font-family: inherit;
-	font-size: 1.2em;
-	text-shadow: inherit;
-	transition: border-color 0.5s, box-shadow 0.5s, color 0.5s;
-}
-
-button:focus,
-select:focus {
-	box-shadow: 0 0 0.6em 0.3em red;
-	outline: 0;
-}
-
-button {
-	align-self: center;
-	background: none;
-	border: 1px solid;
-	font-weight: bold;
-	padding: 0.1em 0.5em;
-}
-
 h1 {
-	font: 3.5em Edo, sans-serif;
+	font: 3.8em Edo, sans-serif;
 	margin: 0;
 }
 
@@ -52,42 +27,55 @@ option {
 	background: black;
 }
 
-select {
-	width: 100%;
-	-moz-appearance: none;
-	-webkit-appearance: none;
-	appearance: none;
-	background: url(../img/arrow.svg) no-repeat right 0.2em center / 1em;
-	border: 0;
-	box-shadow: 0 2px 0 -1px currentcolor;
-	margin: 0.1em 0;
-	padding: 0.2em 1.2em 0.2em 0.5em;
-	text-align: center;
-	text-align-last: center;
+:disabled {
+	opacity: 0.5;
 }
 
-select:first-of-type {
+.bold {
 	font-weight: bold;
 }
 
-:disabled {
-	border-color: grey;
-	color: grey;
+.button {
+	align-self: center;
+	background: none;
+	border: 1px solid;
+	font-weight: bold;
+	margin: 0;
+	padding: 0.1em 0.5em;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.button,
+.dropdown {
+	border-radius: 9em;
+	color: inherit;
+	cursor: pointer;
+	font-family: inherit;
+	font-size: 1.2em;
+	text-shadow: inherit;
+	transition: box-shadow 0.5s, opacity 0.5s;
+}
+
+.button:focus,
+.dropdown:focus {
+	box-shadow: 0 0 0.6em 0.3em red;
+	outline: 0;
+}
+
+.button-bar {
+	display: flex;
+	position: relative;
+	justify-content: space-around;
+	margin: 0.5em 0;
+}
+
+.button-margin {
+	margin: 0.3em 0;
 }
 
 .button-help {
 	cursor: help;
-}
-
-.button-start {
-	margin: 0.5em 0;
-}
-
-.button-wrapper {
-	display: flex;
-	position: relative;
-	font-size: 0.7em;
-	justify-content: space-around;
 }
 
 .card,
@@ -119,10 +107,6 @@ select:first-of-type {
 	border-radius: 0.3em;
 }
 
-.card-selected {
-	box-shadow: 0 0 0.6em 0.3em red;
-}
-
 .card-image {
 	height: 15em;
 	border-radius: 0.5em;
@@ -134,6 +118,10 @@ select:first-of-type {
 .card-name {
 	font-size: 1.2em;
 	font-weight: bold;
+}
+
+.card-selected {
+	box-shadow: 0 0 0.6em 0.3em red;
 }
 
 .deck-loading {
@@ -156,17 +144,24 @@ select:first-of-type {
 	background: rgba(0, 0, 0, 0.8);
 	flex: 0 0 40%;
 	flex-direction: column;
-	padding: 0.2em;
+	padding: 0.5em 0.5em 0;
 }
 
 .details-wrapper {
 	flex: 1;
-	margin-bottom: 0.2em;
 }
 
-.header {
-	font-size: 0.85em;
-	margin-bottom: 0.2em;
+.dropdown {
+	width: 100%;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	appearance: none;
+	background: rgba(0, 0, 0, 0.5) url(../img/arrow.svg) no-repeat right 0.3em center / 1em;
+	border: 0;
+	margin: 0.1em 0;
+	padding: 0.2em 1.2em 0.2em 0.6em;
+	text-align: center;
+	white-space: normal;
 }
 
 .intro,
@@ -265,8 +260,20 @@ select:first-of-type {
 	white-space: pre-line;
 }
 
+.text-small {
+	font-size: 0.8em;
+}
+
+.text-medium {
+	font-size: 1.2em;
+}
+
+.text-large {
+	font-size: 1.5em;
+}
+
 .title {
-	font: 1.5em Edo, sans-serif;
+	font: 1.8em Edo, sans-serif;
 }
 
 .tooltip {
@@ -276,7 +283,6 @@ select:first-of-type {
 	animation: fade-in 0.5s;
 	background: rgba(0, 0, 0, 0.9);
 	border-radius: 10px;
-	font-size: 1.5em;
 	padding: 10px;
 	z-index: 1;
 }
