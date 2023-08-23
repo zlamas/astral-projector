@@ -253,6 +253,8 @@ option {
 
 .table-reset {
 	height: 3em;
+	border-radius: 9em;
+	box-shadow: 0 0 0.5em currentcolor;
 }
 
 .text-container {
