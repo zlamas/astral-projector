@@ -23,6 +23,14 @@ h1 {
 	margin: 0;
 }
 
+p {
+	text-align: justify;
+}
+
+p:first-child {
+	margin-top: 0;
+}
+
 option {
 	background: black;
 }
@@ -124,6 +132,10 @@ option {
 	box-shadow: 0 0 0.6em 0.3em red;
 }
 
+.column {
+	max-width: 100vh;
+}
+
 .deck-loading {
 	cursor: not-allowed;
 }
@@ -164,11 +176,6 @@ option {
 	white-space: normal;
 }
 
-.intro,
-.main-column {
-	max-width: 100vh;
-}
-
 .main {
 	display: flex;
 	position: relative;
@@ -200,10 +207,9 @@ option {
 }
 
 .scrollable {
-	border-radius: 0.5em;
+	border-radius: 0 0 0.5em 0.5em;
 	box-shadow: 0 -1.2em 0.8em -1em inset;
 	overflow: auto;
-	padding: 0 0.2em 0.5em;
 	touch-action: pan-y;
 }
 
@@ -223,7 +229,7 @@ option {
 	transition: top 1s, left 1s;
 }
 
-.slot::before {
+.slot::after {
 	content: counter(slot);
 	position: absolute;
 	left: 110%;
