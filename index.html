@@ -12,13 +12,13 @@
 <meta name="msapplication-TileColor" content="#643">
 <meta name="theme-color" content="#643">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="css/projector.css?5">
+<link rel="stylesheet" href="css/projector.css?6">
 
 <div class="main">
 	<img class="decor hidden" srcset="img/cards_720.png 240w, img/cards.png 360w" sizes="(max-height: 720px) 240px, 360px" src="img/cards.png" alt>
 	<form id="selection" class="column main-column">
 		<div class="header text-small">
-			<h1>Астральный Проектор</h1>
+			<h1 class="app-title">Астральный Проектор</h1>
 			<div class="title">Виртуальный помощник таролога</div>
 			<div>© 2023 Black Cat Tarot (Версия beta.3)</div>
 		</div>
@@ -26,7 +26,7 @@
 			<a class="button" href="/">К сайту</a>
 			<button type="button" id="btn-show-details" class="button hidden">О раскладе</button>
 			<button type="button" class="button button-help hidden">Помощь</button>
-			<div class="tooltip text-large">Жмите на колоду внизу, чтобы заполнить расклад; затем нажмите на карту на столе, чтобы увидеть её значение.</div>
+			<div class="tooltip">Жмите на колоду внизу, чтобы заполнить расклад; затем нажмите на карту на столе, чтобы увидеть её значение.</div>
 		</div>
 		<select class="dropdown bold" autocomplete="off" required>
 			<option value disabled selected>Выберите расклад:</option>
@@ -62,9 +62,9 @@
 			<div class="slot s9"><img class="card" alt></div>
 			<div class="slot s10"><img class="card" alt></div>
 			<div class="slot s11"><img class="card" alt></div>
-			<img class="table-button deck hidden" title="Вытащить карту" alt>
+			<img class="table-button hidden" title="Вытащить карту" alt>
 			<img class="table-button table-reset" src="img/restart.svg" title="Начать заново" alt>
-			<img class="table-button deck-loading" src="img/deck_loading.svg" title="Колода загружается" alt>
+			<img class="table-button not-allowed" src="img/deck_loading.svg" title="Колода загружается" alt>
 		</div>
 		<select class="dropdown" autocomplete="off" required>
 			<option value disabled selected>Выберите колоду:</option>
@@ -98,18 +98,18 @@
 	<div class="title details-title"></div>
 	<div class="scrollable details-wrapper">
 		<div class="spread-info">
-			<div class="text-container spread-details"></div>
-			<div class="position-wrapper">
-				<div class="title">Позиции расклада</div>
-				<div class="text-container position-list"></div>
-			</div>
+			<p class="spread-details"></p>
+			<div class="position-wrapper title">Позиции расклада</div>
+			<p class="position-list"></p>
 		</div>
 		<div class="card-info hidden">
-			<img class="card-image" alt>
+			<img class="card-image" title="Нажмите, чтобы увеличить" alt>
 			<div class="card-name"></div>
 			<div class="card-alt-name"></div>
-			<div class="text-container general-reading"><b>Общее значение карты: </b><span></span></div>
-			<div class="text-container spread-reading"><b>Значение карты в этом раскладе: </b><span></span></div>
+			<div><b>Общее значение карты:</b></div>
+			<p class="text-container"><span></span></p>
+			<div class="spread-reading"><b>Значение карты в этом раскладе:</b></div>
+			<p class="text-container"><span></span></p>
 		</div>
 	</div>
 	<button id="btn-hide-details" class="button button-margin">Скрыть</button>
