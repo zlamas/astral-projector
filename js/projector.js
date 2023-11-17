@@ -1,64 +1,96 @@
 (app => {
 "use strict";
-let deckSize, drawnCards, descriptions, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath, isClassic,
-hide = el => el.style.display = "none",
-show = el => el.style.display = "",
-getOffset = el => ({ left: el.offsetLeft + "px", top: el.offsetTop + "px" }),
+let deckSize, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath, isClassic, spreadName;
+let drawnCards = [];
+let descriptions = [];
 
-openingDuration = 3000,
-cardDrawDuration = 1000,
-fadeDuration = 500,
-animationOptions = { fill: "forwards", easing: "ease-in-out" },
+let openingDuration = 3000;
+let cardDrawDuration = 1000;
+let fadeDuration = 500;
+let animationOptions = { fill: "forwards", easing: "ease-in-out" };
 
-table = app.querySelector(".table"),
-[ deck, resetButton, deckLoadingIcon ] = table.getElementsByClassName("table-button"),
-[ spreadSelect, themeSelect, deckSelect ] = app.getElementsByClassName("dropdown"),
-cards = table.getElementsByClassName("card"),
-selectedCards = table.getElementsByClassName("card-selected"),
-animatedCardBase = document.createElement("img"),
-animatedCards = table.getElementsByClassName(animatedCardBase.className = "card-animated"),
-decor = app.querySelector(".decor"),
-startButton = app.querySelector("#btn-start"),
-detailsMenu = app.querySelector(".details"),
-detailsTitle = detailsMenu.querySelector(".details-title"),
-detailsWrapper = detailsMenu.querySelector(".details-wrapper"),
-spreadInfo = detailsMenu.querySelector(".spread-info"),
-spreadDetails = detailsMenu.querySelector(".spread-details"),
-positionWrapper = detailsMenu.querySelector(".position-wrapper"),
-positionList = detailsMenu.querySelector(".position-list"),
-cardInfo = detailsMenu.querySelector(".card-info"),
-detailsImage = detailsMenu.querySelector(".card-image"),
-cardInfoElements = detailsMenu.querySelectorAll(".card-name, .card-alt-name, .text-container>span"),
-spreadReading = detailsMenu.querySelector(".spread-reading"),
-modal = app.querySelector(".modal"),
-modalImage = modal.querySelector(".modal-image");
+let decor = app.querySelector("#decor");
+let spreadSelect = app.querySelector("#spread-select");
+let themeSelect = app.querySelector("#theme-select");
+let deckSelect = app.querySelector("#deck-select");
+let startButton = app.querySelector("#btn-start");
+let table = app.querySelector("#table");
+let cards = table.getElementsByClassName("card");
+let selectedCards = table.getElementsByClassName("card-selected");
+let animatedCards = table.getElementsByClassName("card-animated");
+let animatedCardBase = table.removeChild(animatedCards[0]);
+let deck = table.querySelector("#btn-deck");
+let resetButton = table.querySelector("#btn-table-reset");
+let deckLoadingIcon = table.querySelector("#deck-loading");
+let detailsMenu = app.querySelector("#details");
+let detailsTitle = detailsMenu.querySelector("#details-title");
+let detailsContent = detailsMenu.querySelector("#details-content");
+let spreadInfo = detailsMenu.querySelector("#spread-info");
+let spreadDetails = detailsMenu.querySelector("#spread-details");
+let positionListTitle = detailsMenu.querySelector("#position-list-title");
+let positionList = detailsMenu.querySelector("#position-list");
+let cardInfo = detailsMenu.querySelector("#card-info");
+let detailsImage = detailsMenu.querySelector("#details-card-image");
+let themeReadingTitle = detailsMenu.querySelector("#theme-reading-title");
+let cardInfoElements = detailsMenu.querySelectorAll("#card-name, #card-alt-name, #general-reading, #theme-reading");
+let cardModal = app.querySelector("#card-modal");
+let cardModalImage = cardModal.querySelector("#card-modal-image");
+
+let hide = el => el.style.display = "none";
+let show = el => el.style.display = "";
+let getOffset = el => ({ left: el.offsetLeft + "px", top: el.offsetTop + "px" });
 
 function fadeOut(el, duration, remove) {
 	el.animate(
 		{ opacity: [ getComputedStyle(el).opacity, 0 ] },
 		Object.assign({ duration }, animationOptions)
-	).onfinish = remove ?
+	)
+	.addEventListener("finish", remove ?
 		() => el.remove() :
-		e => { e.target.cancel(); hide(el); };
+		event => { event.target.cancel(); hide(el); }
+	);
 }
 
-function slideUp(el, duration, callback) {
-	el.style.overflow = "hidden";
-	el.style.padding = 0;
-	el.animate(
-		{ height: [ el.offsetHeight + "px", 0 ] },
+function slideUp(query, duration, callback) {
+	let animation;
+	app.querySelectorAll(query).forEach(el => {
+		el.style.overflow = "hidden";
+		animation = el.animate(
+			{ height: [ el.offsetHeight + "px", 0 ] },
+			Object.assign({ duration }, animationOptions)
+		);
+		animation.addEventListener("finish", () => hide(el));
+	});
+	animation.addEventListener("finish", callback);
+}
+
+function moveTo(el, target, duration, callback) {
+	let animation = el.animate(
+		[ getOffset(el), getOffset(target) ],
 		Object.assign({ duration }, animationOptions)
-	).onfinish = () => { hide(el); if (callback) callback(); };
+	);
+	animation.addEventListener("finish", callback);
+	return animation;
 }
 
-function resetTable() {
+function onImageLoad(el, callback) {
+	el.complete ?
+	callback() :
+	el.addEventListener("load", callback, { once: true });
+}
+
+function resetTable(event) {
 	drawnCards = [];
 	descriptions = [];
-	deck.src = animatedCardBase.src = deckPath + "back.jpg";
+
+	if (event.target != deckSelect)
+		show(deck);
 	hide(resetButton);
+	showSpreadInfo();
+	deselect();
 
 	for (let el of animatedCards) {
-		el.dispatchEvent(new Event("reset"));
+		el.dispatchEvent(new Event("table-reset"));
 		fadeOut(el, fadeDuration, true);
 	}
 	for (let el of cards) {
@@ -68,11 +100,10 @@ function resetTable() {
 }
 
 function drawCard() {
-	let id, classicId, slot, name, altName;
+	let id, classicId, name, altName;
 
-	do id = Math.floor(Math.random() * deckSize)
+	do classicId = id = Math.floor(Math.random() * deckSize)
 	while (drawnCards.indexOf(id) >= 0);
-	slot = drawnCards.push(id) - 1;
 
 	if (id > 21) {
 		let suit = Math.floor((id - 22) / 14);
@@ -97,32 +128,31 @@ function drawCard() {
 	} else {
 		if ((id == 8 || id == 11) && isClassic)
 			classicId = 19 - id;
-		name = roman[classicId || id] + " " + major[id];
+		name = roman[classicId] + " " + major[id];
 	}
 
 	descriptions.push([
 		name,
 		altName,
 		meanings[id],
-		readings ? readings[id] : ""
+		readings[id]
 	]);
 
+	let slot = drawnCards.push(id) - 1;
 	let slotImg = cards[slot];
 	let animatedCardInstance = table.appendChild(animatedCardBase.cloneNode());
-	let animation = animatedCardInstance.animate(
-		[ getOffset(deck), getOffset(slotImg.parentNode) ],
-		Object.assign({ duration: cardDrawDuration }, animationOptions)
+	let animation = moveTo(
+		animatedCardInstance,
+		slotImg.parentNode,
+		cardDrawDuration,
+		() => onImageLoad(slotImg, () => {
+			show(slotImg);
+			fadeOut(animatedCardInstance, fadeDuration, true);
+		})
 	);
-	let onCardLoad = () => {
-		show(slotImg);
-		fadeOut(animatedCardInstance, fadeDuration, true);
-	};
 
-	slotImg.src = deckPath + (classicId || id) + ".jpg";
-	animation.onfinish = () => slotImg.complete ?
-		onCardLoad() :
-		slotImg.addEventListener("load", onCardLoad, { once: true });
-	animatedCardInstance.addEventListener("reset", () => animation.pause());
+	slotImg.src = deckPath + classicId + ".jpg";
+	animatedCardInstance.addEventListener("table-reset", () => animation.pause());
 
 	if (slot == titles.length - 1) {
 		show(resetButton);
@@ -132,21 +162,24 @@ function drawCard() {
 
 function showCardInfo(slot) {
 	detailsTitle.textContent = titles[slot];
-	descriptions[slot].forEach((text, i) => cardInfoElements[i].textContent = text);
-	detailsImage.src = modalImage.src = cards[slot].src;
+	descriptions[slot].forEach(
+		(text, i) => cardInfoElements[i].textContent = text
+	);
+	detailsImage.src = cardModalImage.src = cards[slot].src;
 	hide(spreadInfo);
 	show(cardInfo);
 }
 
 function showSpreadInfo() {
-	detailsTitle.textContent = spreadSelect.dataset.displayName;
+	detailsTitle.textContent = spreadName;
 	show(spreadInfo);
 	hide(cardInfo);
 }
 
-function showDetails() {
+function showDetails(slot) {
 	show(detailsMenu);
-	detailsWrapper.scrollTop = 0;
+	deselect();
+	slot >= 0 ? showCardInfo(slot) : showSpreadInfo();
 }
 
 function hideDetails() {
@@ -157,32 +190,40 @@ function hideDetails() {
 function deselect() {
 	for (let el of selectedCards)
 		el.classList.remove("card-selected");
+	detailsContent.scrollTop = 0;
 }
 
 for (let el of app.getElementsByClassName("hidden"))
 	hide(el);
 
-decor.complete ?
-	show(decor) :
-	decor.addEventListener("load", () => show(decor));
+onImageLoad(decor, () => show(decor));
 
 spreadSelect.addEventListener("change", () => {
 	let option = spreadSelect.selectedOptions[0];
 	let theme = option.dataset.theme;
 
-	detailsTitle.textContent = spreadSelect.dataset.displayName =
-		option.text.replace(/ \(.*/, "");
+	spreadName = option.text.split(" (")[0];
 	if (themeSelect.disabled = theme) {
 		themeSelect.value = theme;
 		themeSelect.dispatchEvent(new Event("change"));
 	}
 });
 
-resetButton.addEventListener("click", resetTable);
+table.addEventListener("click", event => {
+	let slot = [].indexOf.call(cards, event.target);
+	if (slot >= 0) {
+		showDetails(slot);
+		event.target.classList.add("card-selected");
+	}
+});
+
 app.querySelector("#btn-show-details").addEventListener("click", showDetails);
 app.querySelector("#btn-hide-details").addEventListener("click", hideDetails);
-detailsImage.addEventListener("click", () => show(modal));
-modal.addEventListener("click", () => hide(modal));
+resetButton.addEventListener("click", resetTable);
+
+detailsImage.addEventListener("click", () => show(cardModal));
+cardModal.addEventListener("click", () => hide(cardModal));
+
 deck.addEventListener("load", () => {
 	show(deck);
 	hide(deckLoadingIcon);
@@ -195,53 +236,42 @@ fetch("res/data.json?1")
 	startButton.disabled = false;
 	startButton.textContent = "НАЧАТЬ";
 
-	document.forms.selection.addEventListener("submit", e => {
-		e.preventDefault();
+	document.forms.selection.addEventListener("submit", event => {
+		event.preventDefault();
 
 		spreadSelect.addEventListener("change", () => {
-			let spreadName = spreadSelect.value;
-			table.className = table.className.replace(/sp-\w*/, "sp-" + spreadName);
-			titles = data.titles[spreadName];
-			spreadDetails.textContent = data.details[spreadName];
-			positionList.textContent = data.positions[spreadName];
+			let spreadId = spreadSelect.value;
+			table.className = table.className.replace(/sp-\w*/, "sp-" + spreadId);
+			titles = data.titles[spreadId];
+			spreadDetails.textContent = data.details[spreadId];
+			positionList.textContent = data.positions[spreadId];
 
-			if (spreadName == "one")
-				hide(positionWrapper);
+			if (spreadId == "one")
+				hide(positionListTitle);
 			else
-				show(positionWrapper);
+				show(positionListTitle);
 		});
 
 		themeSelect.addEventListener("change", () => {
-			if (readings = data.readings[themeSelect.value])
-				show(spreadReading);
+			readings = data.readings[themeSelect.value] || [];
+			if (readings.length)
+				show(themeReadingTitle);
 			else
-				hide(spreadReading);
+				hide(themeReadingTitle);
 		});
 
 		deckSelect.addEventListener("change", () => {
-			let deckName = deckSelect.value;
+			let deckId = deckSelect.value;
 			hide(deck);
 			show(deckLoadingIcon);
-			isClassic = data.classicOrder.indexOf(deckName) >= 0;
-			meanings = data.meanings[deckName] || data.meanings.normal;
-			altSuits = data.altSuits[deckName];
-			altRanks = data.altRanks[deckName];
-			extraMajors = data.extraMajors[deckName] || [];
-			deckPath = "img/" + deckName + "/";
+			isClassic = data.classicOrder.indexOf(deckId) >= 0;
+			meanings = data.meanings[deckId] || data.meanings.normal;
+			altSuits = data.altSuits[deckId];
+			altRanks = data.altRanks[deckId];
+			extraMajors = data.extraMajors[deckId] || [];
+			deckPath = "img/" + deckId + "/";
 			deckSize = 78 + extraMajors.length;
-		});
-
-		app.querySelector(".main").addEventListener("click", e => {
-			deselect();
-
-			let slot = [].indexOf.call(cards, e.target);
-			if (slot >= 0) {
-				e.target.classList.add("card-selected");
-				showCardInfo(slot);
-				showDetails();
-			} else {
-				showSpreadInfo();
-			}
+			deck.src = animatedCardBase.src = deckPath + "back.jpg";
 		});
 
 		app.addEventListener("change", resetTable);
@@ -249,16 +279,14 @@ fetch("res/data.json?1")
 			el => el.dispatchEvent(new Event("change"))
 		);
 
-		slideUp(app.querySelector(".header"), openingDuration);
-		slideUp(app.querySelector(".intro"), openingDuration, () => {
+		slideUp("#header, #intro", openingDuration, () => {
 			showDetails();
-			app.querySelectorAll(".button-bar>.button").forEach(show);
+			app.querySelectorAll(".button-bar .hidden").forEach(show);
 			deck.addEventListener("click", drawCard);
 		});
 
 		show(table);
 		hide(startButton);
-		resetTable();
 	});
 });
 
@@ -268,15 +296,15 @@ if ("standalone" in navigator) {
 	app.addEventListener("click", () => {});
 	// fix scrolling bug
 	for (let el of app.getElementsByClassName("scrollable")) {
-		el.addEventListener("touchstart", e => {
+		el.addEventListener("touchstart", event => {
 			el.atTop = (el.scrollTop <= 0);
 			el.atBottom = (el.scrollTop >= el.scrollHeight - el.clientHeight);
-			el.lastY = e.touches[0].clientY;
+			el.lastY = event.touches[0].clientY;
 		});
-		el.addEventListener("touchmove", e => {
-			let up = (e.touches[0].clientY > el.lastY);
+		el.addEventListener("touchmove", event => {
+			let up = (event.touches[0].clientY > el.lastY);
 			if ((up && el.atTop) || (!up && el.atBottom))
-				e.preventDefault();
+				event.preventDefault();
 		});
 	}
 }

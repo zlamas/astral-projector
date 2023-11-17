@@ -12,12 +12,12 @@
 <meta name="msapplication-TileColor" content="#643">
 <meta name="theme-color" content="#643">
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="css/projector.css?6">
+<link rel="stylesheet" href="css/projector.css?7">
 
 <div class="main">
-	<img class="decor hidden" srcset="img/cards_720.png 240w, img/cards.png 360w" sizes="(max-height: 720px) 240px, 360px" src="img/cards.png" alt>
+	<img id="decor" class="decor fade-in hidden" srcset="img/cards_720.png 240w, img/cards.png 360w" sizes="(max-height: 720px) 240px, 360px" src="img/cards.png" alt>
 	<form id="selection" class="column main-column">
-		<div class="header text-small">
+		<div id="header" class="text-small">
 			<h1 class="app-title">Астральный Проектор</h1>
 			<div class="title">Виртуальный помощник таролога</div>
 			<div>© 2023 Black Cat Tarot (Версия beta.3)</div>
@@ -26,9 +26,9 @@
 			<a class="button" href="/">К сайту</a>
 			<button type="button" id="btn-show-details" class="button hidden">О раскладе</button>
 			<button type="button" class="button button-help hidden">Помощь</button>
-			<div class="tooltip">Жмите на колоду внизу, чтобы заполнить расклад; затем нажмите на карту на столе, чтобы увидеть её значение.</div>
+			<div class="tooltip fade-in">Жмите на колоду внизу, чтобы заполнить расклад; затем нажмите на карту на столе, чтобы увидеть её значение.</div>
 		</div>
-		<select class="dropdown bold" autocomplete="off" required>
+		<select id="spread-select" class="dropdown bold" autocomplete="off" required>
 			<option value disabled selected>Выберите расклад:</option>
 			<option value="cross">Кельтский крест</option>
 			<option value="faust">Расклад доктора Фауста</option>
@@ -42,7 +42,7 @@
 			<option value="marriage" data-theme="love">Уж замуж невтерпёж (или на желание)</option>
 			<option value="one" data-theme="none">Одна карта</option>
 		</select>
-		<select class="dropdown" autocomplete="off" disabled>
+		<select id="theme-select" class="dropdown" autocomplete="off" disabled>
 			<option value="none" disabled selected>Выберите тему:</option>
 			<option value="work">Работа: что важно сегодня</option>
 			<option value="health">Здоровье: что важно сегодня</option>
@@ -50,23 +50,24 @@
 			<option value="money">Деньги и карьера: что важно сегодня</option>
 			<option value="lifegoal">Цель жизни: что важно сегодня</option>
 		</select>
-		<div class="table hidden sp-">
-			<div class="slot s1"><img class="card" alt></div>
-			<div class="slot s2"><img class="card" alt></div>
-			<div class="slot s3"><img class="card" alt></div>
-			<div class="slot s4"><img class="card" alt></div>
-			<div class="slot s5"><img class="card" alt></div>
-			<div class="slot s6"><img class="card" alt></div>
-			<div class="slot s7"><img class="card" alt></div>
-			<div class="slot s8"><img class="card" alt></div>
-			<div class="slot s9"><img class="card" alt></div>
-			<div class="slot s10"><img class="card" alt></div>
-			<div class="slot s11"><img class="card" alt></div>
-			<img class="table-button hidden" title="Вытащить карту" alt>
-			<img class="table-button table-reset" src="img/restart.svg" title="Начать заново" alt>
-			<img class="table-button not-allowed" src="img/deck_loading.svg" title="Колода загружается" alt>
+		<div id="table" class="table hidden sp-none">
+			<div class="slot s1"><img class="card hidden" alt></div>
+			<div class="slot s2"><img class="card hidden" alt></div>
+			<div class="slot s3"><img class="card hidden" alt></div>
+			<div class="slot s4"><img class="card hidden" alt></div>
+			<div class="slot s5"><img class="card hidden" alt></div>
+			<div class="slot s6"><img class="card hidden" alt></div>
+			<div class="slot s7"><img class="card hidden" alt></div>
+			<div class="slot s8"><img class="card hidden" alt></div>
+			<div class="slot s9"><img class="card hidden" alt></div>
+			<div class="slot s10"><img class="card hidden" alt></div>
+			<div class="slot s11"><img class="card hidden" alt></div>
+			<img id="btn-deck" class="button-deck table-element fade-in hidden" title="Вытащить карту" alt>
+			<img id="btn-table-reset" class="button-table-reset table-element fade-in hidden" src="img/restart.svg" title="Начать заново" alt>
+			<img id="deck-loading" class="loading-icon table-element" src="img/loading-circle.svg" title="Колода загружается" alt>
+			<img class="card-animated table-element" alt>
 		</div>
-		<select class="dropdown" autocomplete="off" required>
+		<select id="deck-select" class="dropdown" autocomplete="off" required>
 			<option value disabled selected>Выберите колоду:</option>
 			<option value="santamuerte">Santa Muerte Tarot</option>
 			<option value="alice">Wonderland Tarot</option>
@@ -86,7 +87,7 @@
 		</select>
 		<button id="btn-start" class="button button-margin" autocomplete="off" disabled>Загрузка…</button>
 	</form>
-	<div class="intro column scrollable">
+	<div id="intro" class="column scrollable">
 		<p><b>Дорогой друг!</b></p>
 		<p>Перед Вами виртуальный помощник таролога. С его помощью Вы можете работать с любой из 50 самых популярных колод карт Таро. Вы можете выбирать из 10 различных схем расклада по самым актуальным сферам жизни: работа, финансы, отношения, духовное развитие, здоровье, прогнозы и так далее.</p>
 		<p>Эта программа станет хорошим учителем для начинающих тарологов и прекрасным компаньоном для опытных мастеров. В любой точке мира, в транспорте, на даче, на морском побережье — где бы Вы ни были, Ваш Таро-помощник «Астральный Проектор» всегда с Вами!</p>
@@ -94,25 +95,27 @@
 		<p><i>С уважением,<br>таролог Екатерина Нагорная и команда Black Cat Tarot</i></p>
 	</div>
 </div>
-<div class="details hidden">
-	<div class="title details-title"></div>
-	<div class="scrollable details-wrapper">
-		<div class="spread-info">
-			<p class="spread-details"></p>
-			<div class="position-wrapper title">Позиции расклада</div>
-			<p class="position-list"></p>
+<div id="details" class="details modal hidden">
+	<div id="details-title" class="title"></div>
+	<div id="details-content" class="details-content scrollable">
+		<div id="spread-info">
+			<p id="spread-details"></p>
+			<div id="position-list-title" class="title">Позиции расклада</div>
+			<p id="position-list"></p>
 		</div>
-		<div class="card-info hidden">
-			<img class="card-image" title="Нажмите, чтобы увеличить" alt>
-			<div class="card-name"></div>
-			<div class="card-alt-name"></div>
+		<div id="card-info" class="hidden">
+			<img id="details-card-image" class="details-card-image" title="Нажмите, чтобы увеличить" alt>
+			<div id="card-name" class="card-name"></div>
+			<div id="card-alt-name" class="card-alt-name"></div>
 			<div><b>Общее значение карты:</b></div>
-			<p class="text-container"><span></span></p>
-			<div class="spread-reading"><b>Значение карты в этом раскладе:</b></div>
-			<p class="text-container"><span></span></p>
+			<p id="general-reading"></p>
+			<div id="theme-reading-title"><b>Значение карты в этом раскладе:</b></div>
+			<p id="theme-reading"></p>
 		</div>
 	</div>
 	<button id="btn-hide-details" class="button button-margin">Скрыть</button>
 </div>
-<div class="modal hidden"><img class="modal-image" alt></div>
-<script src="js/projector.min.js?3"></script>
+<div id="card-modal" class="modal-image modal hidden">
+	<img id="card-modal-image" class="modal-content" alt>
+</div>
+<script src="js/projector.min.js?4"></script>
