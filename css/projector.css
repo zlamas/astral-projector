@@ -22,18 +22,14 @@ img {
 	display: block;
 }
 
-p {
-	text-align: left;
-	white-space: pre-line;
-}
-
-p:first-child,
-:not(p) + p {
-	margin-top: 0;
-}
-
 option {
 	background: black;
+}
+
+p {
+	margin-top: 0;
+	text-align: left;
+	white-space: pre-line;
 }
 
 :disabled {
