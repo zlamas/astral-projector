@@ -1,6 +1,6 @@
 (app => {
 "use strict";
-let deckSize, roman, major, suits, ranks, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath, isClassic, spreadName;
+let data, deckSize, titles, meanings, readings, extraMajors, altRanks, altSuits, deckPath, isClassic, spreadName;
 let drawnCards = [];
 let descriptions = [];
 
@@ -79,6 +79,59 @@ function onImageLoad(el, callback) {
 	el.addEventListener("load", callback, { once: true });
 }
 
+function startApp(event) {
+	event.preventDefault();
+
+	spreadSelect.addEventListener("change", () => {
+		let spreadId = spreadSelect.value;
+		table.className = table.className.replace(/sp-\w*/, "sp-" + spreadId);
+		titles = data.titles[spreadId];
+		spreadDetails.textContent = data.details[spreadId];
+		positionList.textContent = data.positions[spreadId];
+
+		if (spreadId == "one")
+			hide(positionListTitle);
+		else
+			show(positionListTitle);
+	});
+
+	themeSelect.addEventListener("change", () => {
+		readings = data.readings[themeSelect.value] || [];
+		if (readings.length)
+			show(themeReadingTitle);
+		else
+			hide(themeReadingTitle);
+	});
+
+	deckSelect.addEventListener("change", () => {
+		let deckId = deckSelect.value;
+		hide(deck);
+		show(deckLoadingIcon);
+		isClassic = data.classicOrder.indexOf(deckId) >= 0;
+		meanings = data.meanings[deckId] || data.meanings.normal;
+		altSuits = data.altSuits[deckId];
+		altRanks = data.altRanks[deckId];
+		extraMajors = data.extraMajors[deckId] || [];
+		deckPath = "img/" + deckId + "/";
+		deckSize = 78 + extraMajors.length;
+		deck.src = animatedCardBase.src = deckPath + "back.jpg";
+	});
+
+	app.addEventListener("change", resetTable);
+	[ spreadSelect, themeSelect, deckSelect ].forEach(
+		el => el.dispatchEvent(new Event("change"))
+	);
+
+	slideUp("#header, #intro", openingDuration, () => {
+		showDetails();
+		app.querySelectorAll(".button-bar .hidden").forEach(show);
+		deck.addEventListener("click", drawCard);
+	});
+
+	show(table);
+	hide(startButton);
+}
+
 function resetTable(event) {
 	drawnCards = [];
 	descriptions = [];
@@ -110,8 +163,8 @@ function drawCard() {
 		let rank = id - 22 - 14 * suit;
 
 		if (suit < 4) {
-			let rankName = ranks[rank];
-			let suitName = suits[suit];
+			let rankName = data.ranks[rank];
+			let suitName = data.suits[suit];
 			altName = rankName + " " + suitName;
 
 			if (altRanks && rank > 9)
@@ -128,7 +181,7 @@ function drawCard() {
 	} else {
 		if ((id == 8 || id == 11) && isClassic)
 			classicId = 19 - id;
-		name = roman[classicId] + " " + major[id];
+		name = data.roman[classicId] + " " + data.major[id];
 	}
 
 	descriptions.push([
@@ -193,6 +246,14 @@ function deselect() {
 	detailsContent.scrollTop = 0;
 }
 
+fetch("res/data.json?1")
+.then(response => response.json())
+.then(json => {
+	data = json;
+	startButton.disabled = false;
+	startButton.textContent = "НАЧАТЬ";
+});
+
 for (let el of app.getElementsByClassName("hidden"))
 	hide(el);
 
@@ -217,6 +278,8 @@ table.addEventListener("click", event => {
 	}
 });
 
+document.forms.selection.addEventListener("submit", startApp);
+
 app.querySelector("#btn-show-details").addEventListener("click", showDetails);
 app.querySelector("#btn-hide-details").addEventListener("click", hideDetails);
 resetButton.addEventListener("click", resetTable);
@@ -227,67 +290,6 @@ cardModal.addEventListener("click", () => hide(cardModal));
 deck.addEventListener("load", () => {
 	show(deck);
 	hide(deckLoadingIcon);
-});
-
-fetch("res/data.json?1")
-.then(response => response.json())
-.then(data => {
-	({ roman, major, suits, ranks } = data);
-	startButton.disabled = false;
-	startButton.textContent = "НАЧАТЬ";
-
-	document.forms.selection.addEventListener("submit", event => {
-		event.preventDefault();
-
-		spreadSelect.addEventListener("change", () => {
-			let spreadId = spreadSelect.value;
-			table.className = table.className.replace(/sp-\w*/, "sp-" + spreadId);
-			titles = data.titles[spreadId];
-			spreadDetails.textContent = data.details[spreadId];
-			positionList.textContent = data.positions[spreadId];
-
-			if (spreadId == "one")
-				hide(positionListTitle);
-			else
-				show(positionListTitle);
-		});
-
-		themeSelect.addEventListener("change", () => {
-			readings = data.readings[themeSelect.value] || [];
-			if (readings.length)
-				show(themeReadingTitle);
-			else
-				hide(themeReadingTitle);
-		});
-
-		deckSelect.addEventListener("change", () => {
-			let deckId = deckSelect.value;
-			hide(deck);
-			show(deckLoadingIcon);
-			isClassic = data.classicOrder.indexOf(deckId) >= 0;
-			meanings = data.meanings[deckId] || data.meanings.normal;
-			altSuits = data.altSuits[deckId];
-			altRanks = data.altRanks[deckId];
-			extraMajors = data.extraMajors[deckId] || [];
-			deckPath = "img/" + deckId + "/";
-			deckSize = 78 + extraMajors.length;
-			deck.src = animatedCardBase.src = deckPath + "back.jpg";
-		});
-
-		app.addEventListener("change", resetTable);
-		[ spreadSelect, themeSelect, deckSelect ].forEach(
-			el => el.dispatchEvent(new Event("change"))
-		);
-
-		slideUp("#header, #intro", openingDuration, () => {
-			showDetails();
-			app.querySelectorAll(".button-bar .hidden").forEach(show);
-			deck.addEventListener("click", drawCard);
-		});
-
-		show(table);
-		hide(startButton);
-	});
 });
 
 // ios fixes
