@@ -9,32 +9,32 @@ let cardDrawDuration = 1000;
 let fadeDuration = 500;
 let animationOptions = { fill: "forwards", easing: "ease-in-out" };
 
-let decor = app.querySelector("#decor");
-let spreadSelect = app.querySelector("#spread-select");
-let themeSelect = app.querySelector("#theme-select");
-let deckSelect = app.querySelector("#deck-select");
-let startButton = app.querySelector("#btn-start");
-let table = app.querySelector("#table");
+let decor = document.getElementById("decor");
+let spreadSelect = document.getElementById("spread-select");
+let themeSelect = document.getElementById("theme-select");
+let deckSelect = document.getElementById("deck-select");
+let startButton = document.getElementById("btn-start");
+let table = document.getElementById("table");
 let cards = table.getElementsByClassName("card");
+let deck = document.getElementById("btn-deck");
+let resetButton = document.getElementById("btn-table-reset");
+let deckLoadingIcon = document.getElementById("deck-loading");
+let detailsMenu = document.getElementById("details");
+let detailsTitle = document.getElementById("details-title");
+let detailsContent = document.getElementById("details-content");
+let spreadInfo = document.getElementById("spread-info");
+let spreadDetails = document.getElementById("spread-details");
+let positionListTitle = document.getElementById("position-list-title");
+let positionList = document.getElementById("position-list");
+let cardInfo = document.getElementById("card-info");
+let detailsImage = document.getElementById("details-card-image");
+let themeReadingTitle = document.getElementById("theme-reading-title");
+let cardInfoElements = detailsMenu.querySelectorAll("#card-name, #card-alt-name, #general-reading, #theme-reading");
+let cardModal = document.getElementById("card-modal");
+let cardModalImage = document.getElementById("card-modal-image");
 let selectedCards = table.getElementsByClassName("card-selected");
 let animatedCards = table.getElementsByClassName("card-animated");
 let animatedCardBase = table.removeChild(animatedCards[0]);
-let deck = table.querySelector("#btn-deck");
-let resetButton = table.querySelector("#btn-table-reset");
-let deckLoadingIcon = table.querySelector("#deck-loading");
-let detailsMenu = app.querySelector("#details");
-let detailsTitle = detailsMenu.querySelector("#details-title");
-let detailsContent = detailsMenu.querySelector("#details-content");
-let spreadInfo = detailsMenu.querySelector("#spread-info");
-let spreadDetails = detailsMenu.querySelector("#spread-details");
-let positionListTitle = detailsMenu.querySelector("#position-list-title");
-let positionList = detailsMenu.querySelector("#position-list");
-let cardInfo = detailsMenu.querySelector("#card-info");
-let detailsImage = detailsMenu.querySelector("#details-card-image");
-let themeReadingTitle = detailsMenu.querySelector("#theme-reading-title");
-let cardInfoElements = detailsMenu.querySelectorAll("#card-name, #card-alt-name, #general-reading, #theme-reading");
-let cardModal = app.querySelector("#card-modal");
-let cardModalImage = cardModal.querySelector("#card-modal-image");
 
 let hide = el => el.style.display = "none";
 let show = el => el.style.display = "";
@@ -278,12 +278,10 @@ table.addEventListener("click", event => {
 	}
 });
 
-document.forms.selection.addEventListener("submit", startApp);
-
-app.querySelector("#btn-show-details").addEventListener("click", showDetails);
-app.querySelector("#btn-hide-details").addEventListener("click", hideDetails);
+document.getElementById("selection").addEventListener("submit", startApp);
+document.getElementById("btn-show-details").addEventListener("click", showDetails);
+document.getElementById("btn-hide-details").addEventListener("click", hideDetails);
 resetButton.addEventListener("click", resetTable);
-
 detailsImage.addEventListener("click", () => show(cardModal));
 cardModal.addEventListener("click", () => hide(cardModal));
 
