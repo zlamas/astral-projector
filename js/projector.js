@@ -294,16 +294,19 @@ deck.addEventListener("load", () => {
 if ("standalone" in navigator) {
 	// prevent double-tap to zoom
 	app.addEventListener("click", () => {});
+
 	// fix scrolling bug
+	let startY, isAtTop, isAtBottom;
+
 	for (let el of app.getElementsByClassName("scrollable")) {
 		el.addEventListener("touchstart", event => {
-			el.atTop = (el.scrollTop <= 0);
-			el.atBottom = (el.scrollTop >= el.scrollHeight - el.clientHeight);
-			el.lastY = event.touches[0].clientY;
+			startY = event.touches[0].clientY;
+			isAtTop = el.scrollTop == 0;
+			isAtBottom = el.scrollTop == el.scrollHeight - el.clientHeight;
 		});
 		el.addEventListener("touchmove", event => {
-			let up = (event.touches[0].clientY > el.lastY);
-			if ((up && el.atTop) || (!up && el.atBottom))
+			let up = event.touches[0].clientY > startY;
+			if (up && isAtTop || !up && isAtBottom)
 				event.preventDefault();
 		});
 	}
