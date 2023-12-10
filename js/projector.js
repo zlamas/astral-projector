@@ -47,19 +47,24 @@ function fadeOut(el, duration, remove) {
 	)
 	.addEventListener("finish", remove ?
 		() => el.remove() :
-		event => { event.target.cancel(); hide(el); }
+		function() { this.cancel(); hide(el); }
 	);
 }
 
 function slideUp(query, duration, callback) {
 	let animation;
 	app.querySelectorAll(query).forEach(el => {
+		let compStyle = getComputedStyle(el);
 		el.style.overflow = "hidden";
 		animation = el.animate(
-			{ height: [ el.offsetHeight + "px", 0 ] },
+			{
+				height: [ el.offsetHeight + "px", 0 ],
+				paddingTop: [ compStyle.paddingTop, 0 ],
+				paddingBottom: [ compStyle.paddingBottom, 0 ]
+			},
 			Object.assign({ duration }, animationOptions)
 		);
-		animation.addEventListener("finish", () => hide(el));
+		animation.addEventListener("finish", () => el.remove());
 	});
 	animation.addEventListener("finish", callback);
 }
@@ -107,7 +112,7 @@ function startApp(event) {
 		let deckId = deckSelect.value;
 		hide(deck);
 		show(deckLoadingIcon);
-		isClassic = data.classicOrder.indexOf(deckId) >= 0;
+		isClassic = deckSelect.selectedOptions[0].hasAttribute("data-classic");
 		meanings = data.meanings[deckId] || data.meanings.normal;
 		altSuits = data.altSuits[deckId];
 		altRanks = data.altRanks[deckId];
@@ -264,7 +269,9 @@ spreadSelect.addEventListener("change", () => {
 	let theme = option.dataset.theme;
 
 	spreadName = option.text.split(" (")[0];
-	if (themeSelect.disabled = theme) {
+	themeSelect.disabled = theme;
+
+	if (theme) {
 		themeSelect.value = theme;
 		themeSelect.dispatchEvent(new Event("change"));
 	}
@@ -278,7 +285,7 @@ table.addEventListener("click", event => {
 	}
 });
 
-document.getElementById("selection").addEventListener("submit", startApp);
+document.getElementById("selection").addEventListener("submit", startApp, { once: true });
 document.getElementById("btn-show-details").addEventListener("click", showDetails);
 document.getElementById("btn-hide-details").addEventListener("click", hideDetails);
 resetButton.addEventListener("click", resetTable);
