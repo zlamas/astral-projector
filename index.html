@@ -11,12 +11,13 @@
 <link rel="mask-icon" href="safari-pinned-tab.svg" color="#643">
 <meta name="msapplication-TileColor" content="#643">
 <meta name="theme-color" content="#643">
+<link rel="preload" href="img/bg.jpg?" as="image">
+<link rel="preload" href="/fonts/edo.woff2" as="font" crossorigin>
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="css/projector.css?9">
-<script src="js/projector.min.js?8" defer></script>
+<link rel="stylesheet" href="css/projector.css?10">
+<script src="js/projector.min.js?9" defer></script>
 
 <div class="main">
-	<img id="decor" class="decor fade-in hidden" srcset="img/cards_720.png 240w, img/cards.png 360w" sizes="(max-height: 720px) 240px, 360px" src="img/cards.png" alt>
 	<form id="selection" class="column main-column">
 		<div id="header" class="header">
 			<h1 class="app-title">Астральный Проектор</h1>
@@ -63,8 +64,8 @@
 			<div class="slot s9"><img class="card hidden" alt></div>
 			<div class="slot s10"><img class="card hidden" alt></div>
 			<div class="slot s11"><img class="card hidden" alt></div>
-			<img id="btn-deck" class="button-deck table-element fade-in hidden" title="Вытащить карту" alt>
-			<img id="btn-table-reset" class="button-table-reset table-element fade-in hidden" src="img/restart.svg" title="Начать заново" alt>
+			<img id="btn-deck" class="button-deck table-element hidden fade-in" title="Вытащить карту" alt>
+			<img id="btn-table-reset" class="button-table-reset table-element hidden fade-in" src="img/restart.svg" title="Начать заново" alt>
 			<img id="deck-loading" class="loading-icon table-element" src="img/loading-circle.svg" title="Колода загружается" alt>
 			<img class="card-animated table-element" alt>
 		</div>
@@ -95,6 +96,7 @@
 		<p>Приятного погружения в волшебный мир Таро!</p>
 		<p><i>С уважением,<br>таролог Екатерина Нагорная и команда Black Cat Tarot</i></p>
 	</div>
+	<img id="decor" class="decor hidden fade-in" src="img/cards.png?" alt>
 </div>
 <div id="details" class="details modal hidden">
 	<div id="details-title" class="title"></div>

@@ -1,6 +1,6 @@
 html {
 	height: 100%;
-	background: #643 url(../img/bg_portrait.jpg) center / cover;
+	background: #643 url(../img/bg.jpg?) center / auto 100%;
 }
 body {
 	display: flex;
@@ -126,7 +126,6 @@ p {
 	position: absolute;
 	height: 100%;
 	right: 0;
-	opacity: 0.4;
 	transform: translateX(50%);
 	z-index: -1;
 }
@@ -160,6 +159,9 @@ p {
 }
 .header {
 	font-size: 0.8em;
+}
+.hidden {
+	display: none;
 }
 .intro {
 	background: rgba(0, 0, 0, 0.5);
@@ -270,9 +272,6 @@ p {
 	}
 }
 @media screen and (orientation: landscape) {
-	html {
-		background-image: url(../img/bg.jpg);
-	}
 	.details {
 		position: static;
 	}

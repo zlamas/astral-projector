@@ -36,8 +36,8 @@ let selectedCards = table.getElementsByClassName("card-selected");
 let animatedCards = table.getElementsByClassName("card-animated");
 let animatedCardBase = table.removeChild(animatedCards[0]);
 
-let hide = el => el.style.display = "none";
-let show = el => el.style.display = "";
+let hide = el => el.classList.add("hidden");
+let show = el => el.classList.remove("hidden");
 let getOffset = el => ({ left: el.offsetLeft + "px", top: el.offsetTop + "px" });
 
 function fadeOut(el, duration, remove) {
@@ -129,7 +129,7 @@ function startApp(event) {
 
 	slideUp("#header, #intro", openingDuration, () => {
 		showDetails();
-		app.querySelectorAll(".button-bar .hidden").forEach(show);
+		app.querySelectorAll(".button-bar .button").forEach(show);
 		deck.addEventListener("click", drawCard);
 	});
 
@@ -258,9 +258,6 @@ fetch("res/data.json?1")
 	startButton.disabled = false;
 	startButton.textContent = "НАЧАТЬ";
 });
-
-for (let el of app.getElementsByClassName("hidden"))
-	hide(el);
 
 onImageLoad(decor, () => show(decor));
 
