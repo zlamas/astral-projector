@@ -15,7 +15,6 @@ let themeSelect = document.getElementById("theme-select");
 let deckSelect = document.getElementById("deck-select");
 let startButton = document.getElementById("btn-start");
 let table = document.getElementById("table");
-let cards = table.getElementsByClassName("card");
 let deck = document.getElementById("btn-deck");
 let resetButton = document.getElementById("btn-table-reset");
 let deckLoadingIcon = document.getElementById("deck-loading");
@@ -32,6 +31,7 @@ let themeReadingTitle = document.getElementById("theme-reading-title");
 let cardInfoElements = detailsMenu.querySelectorAll("#card-name, #card-alt-name, #general-reading, #theme-reading");
 let cardModal = document.getElementById("card-modal");
 let cardModalImage = document.getElementById("card-modal-image");
+let cards = Array.prototype.slice.call(table.getElementsByClassName("card"));
 let selectedCards = table.getElementsByClassName("card-selected");
 let animatedCards = table.getElementsByClassName("card-animated");
 let animatedCardBase = table.removeChild(animatedCards[0]);
@@ -89,7 +89,7 @@ function startApp(event) {
 
 	spreadSelect.addEventListener("change", () => {
 		let spreadId = spreadSelect.value;
-		table.className = table.className.replace(/sp-\w*/, "sp-" + spreadId);
+		app.className = "sp-" + spreadId;
 		titles = data.titles[spreadId];
 		spreadDetails.textContent = data.details[spreadId];
 		positionList.textContent = data.positions[spreadId];
@@ -147,14 +147,10 @@ function resetTable(event) {
 	showSpreadInfo();
 	deselect();
 
-	for (let el of animatedCards) {
+	for (let el of animatedCards)
 		el.dispatchEvent(new Event("table-reset"));
-		fadeOut(el, fadeDuration, true);
-	}
-	for (let el of cards) {
-		el.dispatchEvent(new Event("load"));
-		fadeOut(el, fadeDuration);
-	}
+
+	cards.forEach(el => fadeOut(el, fadeDuration));
 }
 
 function drawCard() {
@@ -189,28 +185,27 @@ function drawCard() {
 		name = data.roman[classicId] + " " + data.major[id];
 	}
 
-	descriptions.push([
-		name,
-		altName,
-		meanings[id],
-		readings[id]
-	]);
+	descriptions.push([ name, altName, meanings[id], readings[id] ]);
 
 	let slot = drawnCards.push(id) - 1;
 	let slotImg = cards[slot];
 	let animatedCardInstance = table.appendChild(animatedCardBase.cloneNode());
+
 	let animation = moveTo(
 		animatedCardInstance,
 		slotImg.parentNode,
 		cardDrawDuration,
-		() => onImageLoad(slotImg, () => {
-			show(slotImg);
-			fadeOut(animatedCardInstance, fadeDuration, true);
-		})
+		() => onImageLoad(slotImg, showCard)
 	);
+	let showCard = () => {
+		slotImg.removeEventListener("load", showCard);
+		show(slotImg);
+		animation.pause();
+		fadeOut(animatedCardInstance, fadeDuration, true);
+	};
 
 	slotImg.src = deckPath + classicId + ".jpg";
-	animatedCardInstance.addEventListener("table-reset", () => animation.pause());
+	animatedCardInstance.addEventListener("table-reset", showCard);
 
 	if (slot == titles.length - 1) {
 		show(resetButton);
@@ -259,6 +254,12 @@ fetch("res/data.json?1")
 	startButton.textContent = "НАЧАТЬ";
 });
 
+document.getElementById("selection").addEventListener("submit", startApp, { once: true });
+document.getElementById("btn-show-details").addEventListener("click", showDetails);
+document.getElementById("btn-hide-details").addEventListener("click", hideDetails);
+resetButton.addEventListener("click", resetTable);
+detailsImage.addEventListener("click", () => show(cardModal));
+cardModal.addEventListener("click", () => hide(cardModal));
 onImageLoad(decor, () => show(decor));
 
 spreadSelect.addEventListener("change", () => {
@@ -275,19 +276,12 @@ spreadSelect.addEventListener("change", () => {
 });
 
 table.addEventListener("click", event => {
-	let slot = [].indexOf.call(cards, event.target);
+	let slot = cards.indexOf(event.target);
 	if (slot >= 0) {
 		showDetails(slot);
 		event.target.classList.add("card-selected");
 	}
 });
-
-document.getElementById("selection").addEventListener("submit", startApp, { once: true });
-document.getElementById("btn-show-details").addEventListener("click", showDetails);
-document.getElementById("btn-hide-details").addEventListener("click", hideDetails);
-resetButton.addEventListener("click", resetTable);
-detailsImage.addEventListener("click", () => show(cardModal));
-cardModal.addEventListener("click", () => hide(cardModal));
 
 deck.addEventListener("load", () => {
 	show(deck);
