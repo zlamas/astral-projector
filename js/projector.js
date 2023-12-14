@@ -78,7 +78,7 @@ function moveTo(el, target, duration, callback) {
 	return animation;
 }
 
-function onImageLoad(el, callback) {
+function runOnLoad(el, callback) {
 	el.complete ?
 	callback() :
 	el.addEventListener("load", callback, { once: true });
@@ -195,7 +195,7 @@ function drawCard() {
 		animatedCardInstance,
 		slotImg.parentNode,
 		cardDrawDuration,
-		() => onImageLoad(slotImg, showCard)
+		() => runOnLoad(slotImg, showCard)
 	);
 	let showCard = () => {
 		slotImg.removeEventListener("load", showCard);
@@ -260,7 +260,7 @@ document.getElementById("btn-hide-details").addEventListener("click", hideDetail
 resetButton.addEventListener("click", resetTable);
 detailsImage.addEventListener("click", () => show(cardModal));
 cardModal.addEventListener("click", () => hide(cardModal));
-onImageLoad(decor, () => show(decor));
+runOnLoad(decor, () => show(decor));
 
 spreadSelect.addEventListener("change", () => {
 	let option = spreadSelect.selectedOptions[0];
