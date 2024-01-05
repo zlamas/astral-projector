@@ -6,13 +6,11 @@ body {
 	overflow: hidden;
 }
 html {
-	background: #643 url(../img/bg.jpg?) center / contain fixed;
+	background: #643 url(../img/bg.jpg?) center / auto 100% fixed;
 }
 body {
 	display: flex;
-	align-items: center;
 	color: white;
-	flex-direction: column;
 	font: 2.5vh "Open Sans", sans-serif;
 	justify-content: center;
 	text-align: center;
@@ -128,7 +126,6 @@ p {
 	box-shadow: 0 0 0.6em 0.3em red;
 }
 .column {
-	height: 100%;
 	max-width: 100vh;
 }
 .decor {
@@ -182,6 +179,10 @@ p {
 	cursor: wait;
 }
 .main {
+	display: flex;
+	flex-direction: column;
+}
+.main-column {
 	display: flex;
 	flex: 1 0 50%;
 	flex-direction: column;
@@ -281,8 +282,10 @@ p {
 	}
 	@media (max-height: 600px) {
 		body {
-			flex-direction: row;
 			font-size: 3.5vh;
+		}
+		.main {
+			flex-direction: row;
 		}
 	}
 }

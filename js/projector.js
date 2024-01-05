@@ -71,9 +71,9 @@ function fadeOut(el, duration, remove) {
 
 function slideUp(query, duration, callback) {
 	let animation;
-	app.querySelectorAll(query).forEach(el => {
+	let els = app.querySelectorAll(query);
+	els.forEach(el => {
 		let compStyle = getComputedStyle(el);
-		el.style.overflow = "hidden";
 		animation = el.animate(
 			{
 				height: [el.offsetHeight + "px", 0],
@@ -84,6 +84,7 @@ function slideUp(query, duration, callback) {
 		);
 		animation.addEventListener("finish", () => el.remove());
 	});
+	els.forEach(el => el.style.overflow = "hidden");
 	animation.addEventListener("finish", callback);
 }
 

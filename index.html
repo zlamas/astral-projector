@@ -14,88 +14,89 @@
 <link rel="preload" href="img/bg.jpg?" as="image">
 <link rel="preload" href="/fonts/edo.woff2" as="font" crossorigin>
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="css/projector.css?12">
-<script src="js/projector.min.js?12" defer></script>
+<link rel="stylesheet" href="css/projector.css?13">
+<script src="js/projector.min.js?13" defer></script>
 
-<form class="main column">
-	<div id="header" class="header">
-		<h1 class="app-title">Астральный Проектор</h1>
-		<div class="title">Виртуальный помощник таролога</div>
-		<div>© 2024 Black Cat Tarot (Версия beta.3)</div>
+<div class="main">
+	<form class="main-column column">
+		<div id="header" class="header">
+			<h1 class="app-title">Астральный Проектор</h1>
+			<div class="title">Виртуальный помощник таролога</div>
+			<div>© 2024 Black Cat Tarot (Версия beta.3)</div>
+		</div>
+		<div class="button-bar">
+			<a class="button" href="/">К сайту</a>
+			<button type="button" id="btn-show-details" class="button hidden">О раскладе</button>
+			<button type="button" class="button button-help hidden">Помощь</button>
+			<div class="tooltip fade-in">Жмите на колоду внизу, чтобы заполнить расклад; затем нажмите на карту на столе, чтобы увидеть её значение.</div>
+		</div>
+		<select id="spread-select" class="dropdown bold" autocomplete="off" required>
+			<option value disabled selected>Выберите расклад:</option>
+			<option value="cross">Кельтский крест</option>
+			<option value="faust">Расклад доктора Фауста</option>
+			<option value="problem">В чём проблема? Прояснение любой непонятной ситуации</option>
+			<option value="progress">Двигатель прогресса</option>
+			<option value="solution">Поиск решения</option>
+			<option value="disorder" data-theme="lifegoal">Разброд и шатание (куда я иду по жизни?)</option>
+			<option value="station" data-theme="love">Вокзал для двоих (отношения)</option>
+			<option value="swing" data-theme="love">Качели (партнёрский)</option>
+			<option value="choice" data-theme="none">Выбор</option>
+			<option value="marriage" data-theme="love">Уж замуж невтерпёж (или на желание)</option>
+			<option value="one" data-theme="none">Одна карта</option>
+		</select>
+		<select id="theme-select" class="dropdown" autocomplete="off" disabled>
+			<option value="none" disabled selected>Выберите тему:</option>
+			<option value="work">Работа: что важно сегодня</option>
+			<option value="health">Здоровье: что важно сегодня</option>
+			<option value="love">Отношения: что важно сегодня</option>
+			<option value="money">Деньги и карьера: что важно сегодня</option>
+			<option value="lifegoal">Цель жизни: что важно сегодня</option>
+		</select>
+		<div id="table" class="table hidden">
+			<div class="slot s1"><img class="card hidden" alt></div>
+			<div class="slot s2"><img class="card hidden" alt></div>
+			<div class="slot s3"><img class="card hidden" alt></div>
+			<div class="slot s4"><img class="card hidden" alt></div>
+			<div class="slot s5"><img class="card hidden" alt></div>
+			<div class="slot s6"><img class="card hidden" alt></div>
+			<div class="slot s7"><img class="card hidden" alt></div>
+			<div class="slot s8"><img class="card hidden" alt></div>
+			<div class="slot s9"><img class="card hidden" alt></div>
+			<div class="slot s10"><img class="card hidden" alt></div>
+			<div class="slot s11"><img class="card hidden" alt></div>
+			<img id="btn-deck" class="button-deck table-element hidden fade-in" title="Вытащить карту" alt>
+			<img id="btn-table-reset" class="button-table-reset table-element hidden fade-in" src="img/restart.svg" title="Начать заново" alt>
+			<img id="deck-loading" class="loading-icon table-element" src="img/loading-circle.svg" title="Колода загружается" alt>
+			<img class="card-animated table-element" alt>
+		</div>
+		<select id="deck-select" class="dropdown" autocomplete="off" required>
+			<option value disabled selected>Выберите колоду:</option>
+			<option value="santamuerte">Santa Muerte Tarot</option>
+			<option value="alice">Wonderland Tarot</option>
+			<option value="78doors" data-classic>Таро 78 Дверей</option>
+			<option value="vanessa">Таро Ванессы</option>
+			<option value="hermetic">Герметическое Таро</option>
+			<option value="wild" data-classic>Дикое Неизвестное Таро</option>
+			<option value="durer" data-classic>Таро Дюрера</option>
+			<option value="botticelli" data-classic>Золотое Таро Боттичелли</option>
+			<option value="klimt" data-classic>Золотое Таро Климта</option>
+			<option value="casanova" data-classic>Таро Казановы</option>
+			<option value="quantum">Квантовое Таро, версия 2.0</option>
+			<option value="cat">Таро Кошек</option>
+			<option value="prince">Таро Маленького Принца</option>
+			<option value="waite">Таро Уэйта</option>
+			<option value="pagancat">Таро Языческих Кошек</option>
+		</select>
+		<button id="btn-start" class="button button-margin" autocomplete="off" disabled>Загрузка…</button>
+	</form>
+	<div id="intro" class="intro column scrollable">
+		<p><b>Дорогой друг!</b></p>
+		<p>Перед Вами виртуальный помощник таролога. С его помощью Вы можете работать с любой из 50 самых популярных колод карт Таро. Вы можете выбирать из 10 различных схем расклада по самым актуальным сферам жизни: работа, финансы, отношения, духовное развитие, здоровье, прогнозы и так далее.</p>
+		<p>Эта программа станет хорошим учителем для начинающих тарологов и прекрасным компаньоном для опытных мастеров. В любой точке мира, в транспорте, на даче, на морском побережье — где бы Вы ни были, Ваш Таро-помощник «Астральный Проектор» всегда с Вами!</p>
+		<p>Приятного погружения в волшебный мир Таро!</p>
+		<p><i>С уважением,<br>таролог Екатерина Нагорная и команда Black Cat Tarot</i></p>
 	</div>
-	<div class="button-bar">
-		<a class="button" href="/">К сайту</a>
-		<button type="button" id="btn-show-details" class="button hidden">О раскладе</button>
-		<button type="button" class="button button-help hidden">Помощь</button>
-		<div class="tooltip fade-in">Жмите на колоду внизу, чтобы заполнить расклад; затем нажмите на карту на столе, чтобы увидеть её значение.</div>
-	</div>
-	<select id="spread-select" class="dropdown bold" autocomplete="off" required>
-		<option value disabled selected>Выберите расклад:</option>
-		<option value="cross">Кельтский крест</option>
-		<option value="faust">Расклад доктора Фауста</option>
-		<option value="problem">В чём проблема? Прояснение любой непонятной ситуации</option>
-		<option value="progress">Двигатель прогресса</option>
-		<option value="solution">Поиск решения</option>
-		<option value="disorder" data-theme="lifegoal">Разброд и шатание (куда я иду по жизни?)</option>
-		<option value="station" data-theme="love">Вокзал для двоих (отношения)</option>
-		<option value="swing" data-theme="love">Качели (партнёрский)</option>
-		<option value="choice" data-theme="none">Выбор</option>
-		<option value="marriage" data-theme="love">Уж замуж невтерпёж (или на желание)</option>
-		<option value="one" data-theme="none">Одна карта</option>
-	</select>
-	<select id="theme-select" class="dropdown" autocomplete="off" disabled>
-		<option value="none" disabled selected>Выберите тему:</option>
-		<option value="work">Работа: что важно сегодня</option>
-		<option value="health">Здоровье: что важно сегодня</option>
-		<option value="love">Отношения: что важно сегодня</option>
-		<option value="money">Деньги и карьера: что важно сегодня</option>
-		<option value="lifegoal">Цель жизни: что важно сегодня</option>
-	</select>
-	<div id="table" class="table hidden">
-		<div class="slot s1"><img class="card hidden" alt></div>
-		<div class="slot s2"><img class="card hidden" alt></div>
-		<div class="slot s3"><img class="card hidden" alt></div>
-		<div class="slot s4"><img class="card hidden" alt></div>
-		<div class="slot s5"><img class="card hidden" alt></div>
-		<div class="slot s6"><img class="card hidden" alt></div>
-		<div class="slot s7"><img class="card hidden" alt></div>
-		<div class="slot s8"><img class="card hidden" alt></div>
-		<div class="slot s9"><img class="card hidden" alt></div>
-		<div class="slot s10"><img class="card hidden" alt></div>
-		<div class="slot s11"><img class="card hidden" alt></div>
-		<img id="btn-deck" class="button-deck table-element hidden fade-in" title="Вытащить карту" alt>
-		<img id="btn-table-reset" class="button-table-reset table-element hidden fade-in" src="img/restart.svg" title="Начать заново" alt>
-		<img id="deck-loading" class="loading-icon table-element" src="img/loading-circle.svg" title="Колода загружается" alt>
-		<img class="card-animated table-element" alt>
-	</div>
-	<select id="deck-select" class="dropdown" autocomplete="off" required>
-		<option value disabled selected>Выберите колоду:</option>
-		<option value="santamuerte">Santa Muerte Tarot</option>
-		<option value="alice">Wonderland Tarot</option>
-		<option value="78doors" data-classic>Таро 78 Дверей</option>
-		<option value="vanessa">Таро Ванессы</option>
-		<option value="hermetic">Герметическое Таро</option>
-		<option value="wild" data-classic>Дикое Неизвестное Таро</option>
-		<option value="durer" data-classic>Таро Дюрера</option>
-		<option value="botticelli" data-classic>Золотое Таро Боттичелли</option>
-		<option value="klimt" data-classic>Золотое Таро Климта</option>
-		<option value="casanova" data-classic>Таро Казановы</option>
-		<option value="quantum">Квантовое Таро, версия 2.0</option>
-		<option value="cat">Таро Кошек</option>
-		<option value="prince">Таро Маленького Принца</option>
-		<option value="waite">Таро Уэйта</option>
-		<option value="pagancat">Таро Языческих Кошек</option>
-	</select>
-	<button id="btn-start" class="button button-margin" autocomplete="off" disabled>Загрузка…</button>
-</form>
-<div id="intro" class="intro column scrollable">
-	<p><b>Дорогой друг!</b></p>
-	<p>Перед Вами виртуальный помощник таролога. С его помощью Вы можете работать с любой из 50 самых популярных колод карт Таро. Вы можете выбирать из 10 различных схем расклада по самым актуальным сферам жизни: работа, финансы, отношения, духовное развитие, здоровье, прогнозы и так далее.</p>
-	<p>Эта программа станет хорошим учителем для начинающих тарологов и прекрасным компаньоном для опытных мастеров. В любой точке мира, в транспорте, на даче, на морском побережье — где бы Вы ни были, Ваш Таро-помощник «Астральный Проектор» всегда с Вами!</p>
-	<p>Приятного погружения в волшебный мир Таро!</p>
-	<p><i>С уважением,<br>таролог Екатерина Нагорная и команда Black Cat Tarot</i></p>
 </div>
-<img id="decor" class="decor hidden fade-in" src="img/cards.png?" alt>
 <div id="details" class="details modal hidden">
 	<div id="details-title" class="title"></div>
 	<div id="details-content" class="details-content scrollable">
@@ -119,3 +120,4 @@
 <div id="card-modal" class="modal-image modal hidden">
 	<img id="card-modal-image" class="modal-content" alt>
 </div>
+<img id="decor" class="decor hidden fade-in" src="img/cards.png?" alt>
