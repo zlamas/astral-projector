@@ -1,25 +1,25 @@
-(app => {
+((app) => {
 "use strict";
-let data,
-    deckSize,
-    titles,
-    meanings,
-    readings,
-    extraMajors,
-    altRanks,
-    altSuits,
-    deckPath,
-    isClassic,
-    spreadName,
-    drawnCards = [],
-    descriptions = [];
+let drawnCards = [];
+let descriptions = [];
+let data;
+let deckSize;
+let titles;
+let meanings;
+let readings;
+let extraMajors;
+let altRanks;
+let altSuits;
+let deckPath;
+let isClassic;
+let spreadName;
 
 let openingDuration = 3000;
 let cardDrawDuration = 1000;
 let fadeDuration = 500;
 let animationOptions = {
 	fill: "forwards",
-	easing: "ease-in-out"
+	easing: "ease-in-out",
 };
 
 let decor = document.getElementById("decor");
@@ -52,10 +52,10 @@ let selectedCards = table.getElementsByClassName("card-selected");
 let animatedCards = table.getElementsByClassName("card-animated");
 let animatedCardBase = table.removeChild(animatedCards[0]);
 
-let hide = el => el.classList.add("hidden");
-let show = el => el.classList.remove("hidden");
+let hide = (el) => el.classList.add("hidden");
+let show = (el) => el.classList.remove("hidden");
 let toggle = (el, condition) => el.classList.toggle("hidden", condition);
-let getOffset = el => ({ left: el.offsetLeft + "px", top: el.offsetTop + "px" });
+let getOffset = (el) => ({ left: el.offsetLeft + "px", top: el.offsetTop + "px" });
 let runOnLoad = (el, callback) =>
 	el.complete ? callback() : el.addEventListener("load", callback, { once: true });
 
@@ -65,15 +65,20 @@ function fadeOut(el, duration, remove) {
 		Object.assign({ duration }, animationOptions)
 	).addEventListener("finish", remove
 		? () => el.remove()
-		: function () { this.cancel(); hide(el); }
+		: function () {
+			this.cancel();
+			hide(el);
+		}
 	);
 }
 
 function slideUp(query, duration, callback) {
 	let animation;
 	let els = app.querySelectorAll(query);
-	els.forEach(el => {
+
+	els.forEach((el) => {
 		let compStyle = getComputedStyle(el);
+
 		animation = el.animate(
 			{
 				height: [el.offsetHeight + "px", 0],
@@ -84,7 +89,7 @@ function slideUp(query, duration, callback) {
 		);
 		animation.addEventListener("finish", () => el.remove());
 	});
-	els.forEach(el => el.style.overflow = "hidden");
+	els.forEach((el) => el.style.overflow = "hidden");
 	animation.addEventListener("finish", callback);
 }
 
@@ -93,6 +98,7 @@ function moveTo(el, target, duration, callback) {
 		[getOffset(el), getOffset(target)],
 		Object.assign({ duration }, animationOptions)
 	);
+
 	animation.addEventListener("finish", callback);
 	return animation;
 }
@@ -138,41 +144,39 @@ function handleSpreadChangeInitial() {
 
 	spreadName = option.text.split(" (")[0];
 	themeSelect.disabled = theme;
-
-	if (theme)
-		themeSelect.value = theme;
+	if (theme) themeSelect.value = theme;
 }
 
 function handleSpreadChange(event) {
 	let spreadId = spreadSelect.value;
 
-	toggle(positionListTitle, spreadId == "one");
+	if (themeSelect.disabled && event) handleThemeChange();
+
 	app.className = "sp-" + spreadId;
-
-	if (themeSelect.disabled && event)
-		handleThemeChange();
-
 	titles = data.titles[spreadId];
 	spreadDetails.textContent = data.details[spreadId];
 	positionList.textContent = data.positions[spreadId];
+	toggle(positionListTitle, !positionList.textContent);
 }
 
 function handleThemeChange() {
-	let themeId = themeSelect.value;
-	toggle(themeReadingTitle, themeId == "none");
-	readings = data.readings[themeId] || [];
+	readings = data.readings[themeSelect.value];
+	toggle(themeReadingTitle, !readings);
 }
 
 function handleDeckChange() {
 	let deckId = deckSelect.value;
+
 	hide(deck);
 	show(deckLoadingIcon);
 
 	meanings = data.meanings[deckId] || data.meanings.normal;
 	altSuits = data.altSuits[deckId];
 	altRanks = data.altRanks[deckId];
-	extraMajors = data.extraMajors[deckId] || [];
-	deckSize = 78 + extraMajors.length;
+	extraMajors = data.extraMajors[deckId];
+
+	deckSize = 78;
+	if (extraMajors) deckSize += extraMajors.length;
 
 	isClassic = deckSelect.selectedOptions[0].hasAttribute("data-classic");
 	deckPath = "img/" + deckId + "/";
@@ -181,6 +185,7 @@ function handleDeckChange() {
 
 function handleTableClick(event) {
 	let slot = cards.indexOf(event.target);
+
 	if (slot >= 0) {
 		showDetails(slot);
 		event.target.classList.add("card-selected");
@@ -191,22 +196,19 @@ function resetTable(event) {
 	drawnCards = [];
 	descriptions = [];
 
-	if (event.target != deckSelect)
-		show(deck);
+	if (event.target != deckSelect) show(deck);
 	hide(resetButton);
 	showSpreadInfo();
 	deselect();
 
-	for (let el of animatedCards)
-		el.dispatchEvent(new Event("table-reset"));
-
-	cards.forEach(el => fadeOut(el, fadeDuration));
+	for (const el of animatedCards) el.dispatchEvent(new Event("table-reset"));
+	cards.forEach((el) => fadeOut(el, fadeDuration));
 }
 
 function createDescription(id) {
-	let name,
-	    altName,
-	    adjustedId = id;
+	let adjustedId = id;
+	let name;
+	let altName;
 
 	if (id > 21) {
 		let suit = Math.floor((id - 22) / 14);
@@ -215,26 +217,23 @@ function createDescription(id) {
 		if (suit < 4) {
 			let rankName = data.ranks[rank];
 			let suitName = data.suits[suit];
+
 			altName = rankName + " " + suitName;
 
-			if (altRanks && rank > 9)
-				rankName = altRanks[rank - 10];
-			if (altSuits)
-				suitName = altSuits[suit];
-			name = rankName + " " + suitName;
+			if (altRanks && rank > 9) rankName = altRanks[rank - 10];
+			if (altSuits) suitName = altSuits[suit];
 
-			if (name == altName)
-				altName = "";
+			name = rankName + " " + suitName;
+			if (name == altName) altName = "";
 		} else {
 			name = extraMajors[rank];
 		}
 	} else {
-		if ((id == 8 || id == 11) && isClassic)
-			adjustedId = 19 - id;
+		if ((id == 8 || id == 11) && isClassic) adjustedId = 19 - id;
 		name = data.roman[adjustedId] + " " + data.major[id];
 	}
 
-	descriptions.push([name, altName, meanings[id], readings[id]]);
+	descriptions.push([name, altName, meanings[id], readings ? readings[id] : ""]);
 
 	return adjustedId;
 }
@@ -255,6 +254,7 @@ function drawCard() {
 		cardDrawDuration,
 		() => runOnLoad(slotImg, showCard)
 	);
+
 	let showCard = () => {
 		slotImg.removeEventListener("load", showCard);
 		show(slotImg);
@@ -274,9 +274,7 @@ function drawCard() {
 
 function showCardInfo(slot) {
 	detailsTitle.textContent = titles[slot];
-	descriptions[slot].forEach(
-		(text, i) => cardInfoElements[i].textContent = text
-	);
+	descriptions[slot].forEach((text, i) => cardInfoElements[i].textContent = text);
 	detailsImage.src = cardModalImage.src = cards[slot].src;
 	hide(spreadInfo);
 	show(cardInfo);
@@ -300,14 +298,13 @@ function hideDetails() {
 }
 
 function deselect() {
-	for (let el of selectedCards)
-		el.classList.remove("card-selected");
+	for (const el of selectedCards) el.classList.remove("card-selected");
 	detailsContent.scrollTop = 0;
 }
 
 fetch("res/data.json?1")
-.then(response => response.json())
-.then(json => {
+.then((response) => response.json())
+.then((json) => {
 	data = json;
 	startButton.disabled = false;
 	startButton.textContent = "НАЧАТЬ";
@@ -324,4 +321,4 @@ if ("standalone" in navigator) {
 	// fix scrolling bug
 	app.style.overflow = "auto";
 }
-})(document.body)
+})(document.body);
