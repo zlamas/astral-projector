@@ -1,7 +1,6 @@
-*.min.css
-*.min.js
-*.json
-*.png
-*.jpg
-*.ico
 fonts/
+*.ico
+*.jpg
+*.png
+*.json
+*.min.*
