@@ -11,7 +11,7 @@ html {
 body {
 	display: flex;
 	color: white;
-	font: 2.5vh "Open Sans", sans-serif;
+	font: 2.5vh 'Open Sans', sans-serif;
 	justify-content: center;
 	text-align: center;
 	text-shadow: 2px 2px black;

@@ -1,5 +1,5 @@
 ((app) => {
-"use strict";
+'use strict';
 let drawnCards = [];
 let descriptions = [];
 let data;
@@ -18,52 +18,52 @@ let openingDuration = 3000;
 let cardDrawDuration = 1000;
 let fadeDuration = 500;
 let animationOptions = {
-	fill: "forwards",
-	easing: "ease-in-out",
+	fill: 'forwards',
+	easing: 'ease-in-out',
 };
 
-let decor = document.getElementById("decor");
-let spreadSelect = document.getElementById("spread-select");
-let themeSelect = document.getElementById("theme-select");
-let deckSelect = document.getElementById("deck-select");
-let startButton = document.getElementById("btn-start");
-let table = document.getElementById("table");
-let deck = document.getElementById("btn-deck");
-let resetButton = document.getElementById("btn-table-reset");
-let deckLoadingIcon = document.getElementById("deck-loading");
-let detailsMenu = document.getElementById("details");
-let detailsTitle = document.getElementById("details-title");
-let detailsContent = document.getElementById("details-content");
-let spreadInfo = document.getElementById("spread-info");
-let spreadDetails = document.getElementById("spread-details");
-let positionListTitle = document.getElementById("position-list-title");
-let positionList = document.getElementById("position-list");
-let cardInfo = document.getElementById("card-info");
-let detailsImage = document.getElementById("details-card-image");
-let themeReadingTitle = document.getElementById("theme-reading-title");
-let cardModal = document.getElementById("card-modal");
-let cardModalImage = document.getElementById("card-modal-image");
+let decor = document.getElementById('decor');
+let spreadSelect = document.getElementById('spread-select');
+let themeSelect = document.getElementById('theme-select');
+let deckSelect = document.getElementById('deck-select');
+let startButton = document.getElementById('btn-start');
+let table = document.getElementById('table');
+let deck = document.getElementById('btn-deck');
+let resetButton = document.getElementById('btn-table-reset');
+let deckLoadingIcon = document.getElementById('deck-loading');
+let detailsMenu = document.getElementById('details');
+let detailsTitle = document.getElementById('details-title');
+let detailsContent = document.getElementById('details-content');
+let spreadInfo = document.getElementById('spread-info');
+let spreadDetails = document.getElementById('spread-details');
+let positionListTitle = document.getElementById('position-list-title');
+let positionList = document.getElementById('position-list');
+let cardInfo = document.getElementById('card-info');
+let detailsImage = document.getElementById('details-card-image');
+let themeReadingTitle = document.getElementById('theme-reading-title');
+let cardModal = document.getElementById('card-modal');
+let cardModalImage = document.getElementById('card-modal-image');
 let cardInfoElements = detailsMenu.querySelectorAll(
-	"#card-name, #card-alt-name, #general-reading, #theme-reading"
+	'#card-name, #card-alt-name, #general-reading, #theme-reading'
 );
 
-let cards = Array.prototype.slice.call(table.getElementsByClassName("card"));
-let selectedCards = table.getElementsByClassName("card-selected");
-let animatedCards = table.getElementsByClassName("card-animated");
+let cards = Array.prototype.slice.call(table.getElementsByClassName('card'));
+let selectedCards = table.getElementsByClassName('card-selected');
+let animatedCards = table.getElementsByClassName('card-animated');
 let animatedCardBase = table.removeChild(animatedCards[0]);
 
-let hide = (el) => el.classList.add("hidden");
-let show = (el) => el.classList.remove("hidden");
-let toggle = (el, condition) => el.classList.toggle("hidden", condition);
-let getOffset = (el) => ({ left: el.offsetLeft + "px", top: el.offsetTop + "px" });
+let hide = (el) => el.classList.add('hidden');
+let show = (el) => el.classList.remove('hidden');
+let toggle = (el, condition) => el.classList.toggle('hidden', condition);
+let getOffset = (el) => ({ left: el.offsetLeft + 'px', top: el.offsetTop + 'px' });
 let runOnLoad = (el, callback) =>
-	el.complete ? callback() : el.addEventListener("load", callback, { once: true });
+	el.complete ? callback() : el.addEventListener('load', callback, { once: true });
 
 function fadeOut(el, duration, remove) {
 	el.animate(
 		{ opacity: [getComputedStyle(el).opacity, 0] },
 		Object.assign({ duration }, animationOptions)
-	).addEventListener("finish", remove
+	).addEventListener('finish', remove
 		? () => el.remove()
 		: function () {
 			this.cancel();
@@ -81,16 +81,16 @@ function slideUp(query, duration, callback) {
 
 		animation = el.animate(
 			{
-				height: [el.offsetHeight + "px", 0],
+				height: [el.offsetHeight + 'px', 0],
 				paddingTop: [compStyle.paddingTop, 0],
 				paddingBottom: [compStyle.paddingBottom, 0]
 			},
 			Object.assign({ duration }, animationOptions)
 		);
-		animation.addEventListener("finish", () => el.remove());
+		animation.addEventListener('finish', () => el.remove());
 	});
-	els.forEach((el) => el.style.overflow = "hidden");
-	animation.addEventListener("finish", callback);
+	els.forEach((el) => el.style.overflow = 'hidden');
+	animation.addEventListener('finish', callback);
 }
 
 function moveTo(el, target, duration, callback) {
@@ -99,39 +99,39 @@ function moveTo(el, target, duration, callback) {
 		Object.assign({ duration }, animationOptions)
 	);
 
-	animation.addEventListener("finish", callback);
+	animation.addEventListener('finish', callback);
 	return animation;
 }
 
 function startApp(event) {
 	event.preventDefault();
 
-	document.getElementById("btn-show-details").addEventListener("click", showDetails);
-	document.getElementById("btn-hide-details").addEventListener("click", hideDetails);
+	document.getElementById('btn-show-details').addEventListener('click', showDetails);
+	document.getElementById('btn-hide-details').addEventListener('click', hideDetails);
 
-	table.addEventListener("click", handleTableClick);
-	resetButton.addEventListener("click", resetTable);
+	table.addEventListener('click', handleTableClick);
+	resetButton.addEventListener('click', resetTable);
 
-	detailsImage.addEventListener("click", () => show(cardModal));
-	cardModal.addEventListener("click", () => hide(cardModal));
+	detailsImage.addEventListener('click', () => show(cardModal));
+	cardModal.addEventListener('click', () => hide(cardModal));
 
-	deck.addEventListener("load", () => {
+	deck.addEventListener('load', () => {
 		show(deck);
 		hide(deckLoadingIcon);
 	});
 
-	app.addEventListener("change", resetTable);
-	spreadSelect.addEventListener("change", handleSpreadChange);
-	themeSelect.addEventListener("change", handleThemeChange);
-	deckSelect.addEventListener("change", handleDeckChange);
+	app.addEventListener('change', resetTable);
+	spreadSelect.addEventListener('change', handleSpreadChange);
+	themeSelect.addEventListener('change', handleThemeChange);
+	deckSelect.addEventListener('change', handleDeckChange);
 	handleSpreadChange();
 	handleThemeChange();
 	handleDeckChange();
 
-	slideUp("#header, #intro", openingDuration, () => {
+	slideUp('#header, #intro', openingDuration, () => {
 		showDetails();
-		app.querySelectorAll(".button-bar .button").forEach(show);
-		deck.addEventListener("click", drawCard);
+		app.querySelectorAll('.button-bar .button').forEach(show);
+		deck.addEventListener('click', drawCard);
 	});
 
 	show(table);
@@ -142,7 +142,7 @@ function handleSpreadChangeInitial() {
 	let option = spreadSelect.selectedOptions[0];
 	let theme = option.dataset.theme;
 
-	spreadName = option.text.split(" (")[0];
+	spreadName = option.text.split(' (')[0];
 	themeSelect.disabled = theme;
 	if (theme) themeSelect.value = theme;
 }
@@ -152,7 +152,7 @@ function handleSpreadChange(event) {
 
 	if (themeSelect.disabled && event) handleThemeChange();
 
-	app.className = "sp-" + spreadId;
+	app.className = 'sp-' + spreadId;
 	titles = data.titles[spreadId];
 	spreadDetails.textContent = data.details[spreadId];
 	positionList.textContent = data.positions[spreadId];
@@ -178,9 +178,9 @@ function handleDeckChange() {
 	deckSize = 78;
 	if (extraMajors) deckSize += extraMajors.length;
 
-	isClassic = deckSelect.selectedOptions[0].hasAttribute("data-classic");
-	deckPath = "img/" + deckId + "/";
-	deck.src = animatedCardBase.src = deckPath + "back.jpg";
+	isClassic = deckSelect.selectedOptions[0].hasAttribute('data-classic');
+	deckPath = 'img/' + deckId + '/';
+	deck.src = animatedCardBase.src = deckPath + 'back.jpg';
 }
 
 function handleTableClick(event) {
@@ -188,7 +188,7 @@ function handleTableClick(event) {
 
 	if (slot >= 0) {
 		showDetails(slot);
-		event.target.classList.add("card-selected");
+		event.target.classList.add('card-selected');
 	}
 }
 
@@ -201,7 +201,7 @@ function resetTable(event) {
 	showSpreadInfo();
 	deselect();
 
-	for (const el of animatedCards) el.dispatchEvent(new Event("table-reset"));
+	for (const el of animatedCards) el.dispatchEvent(new Event('table-reset'));
 	cards.forEach((el) => fadeOut(el, fadeDuration));
 }
 
@@ -218,22 +218,22 @@ function createDescription(id) {
 			let rankName = data.ranks[rank];
 			let suitName = data.suits[suit];
 
-			altName = rankName + " " + suitName;
+			altName = rankName + ' ' + suitName;
 
 			if (altRanks && rank > 9) rankName = altRanks[rank - 10];
 			if (altSuits) suitName = altSuits[suit];
 
-			name = rankName + " " + suitName;
-			if (name == altName) altName = "";
+			name = rankName + ' ' + suitName;
+			if (name == altName) altName = '';
 		} else {
 			name = extraMajors[rank];
 		}
 	} else {
 		if ((id == 8 || id == 11) && isClassic) adjustedId = 19 - id;
-		name = data.roman[adjustedId] + " " + data.major[id];
+		name = data.roman[adjustedId] + ' ' + data.major[id];
 	}
 
-	descriptions.push([name, altName, meanings[id], readings ? readings[id] : ""]);
+	descriptions.push([name, altName, meanings[id], readings ? readings[id] : '']);
 
 	return adjustedId;
 }
@@ -256,15 +256,15 @@ function drawCard() {
 	);
 
 	let showCard = () => {
-		slotImg.removeEventListener("load", showCard);
+		slotImg.removeEventListener('load', showCard);
 		show(slotImg);
 		animation.pause();
 		fadeOut(animatedCardInstance, fadeDuration, true);
 	};
 
 	id = createDescription(id);
-	slotImg.src = deckPath + id + ".jpg";
-	animatedCardInstance.addEventListener("table-reset", showCard);
+	slotImg.src = deckPath + id + '.jpg';
+	animatedCardInstance.addEventListener('table-reset', showCard);
 
 	if (slot == titles.length - 1) {
 		show(resetButton);
@@ -298,27 +298,27 @@ function hideDetails() {
 }
 
 function deselect() {
-	for (const el of selectedCards) el.classList.remove("card-selected");
+	for (const el of selectedCards) el.classList.remove('card-selected');
 	detailsContent.scrollTop = 0;
 }
 
-fetch("res/data.json?1")
+fetch('res/data.json?1')
 .then((response) => response.json())
 .then((json) => {
 	data = json;
 	startButton.disabled = false;
-	startButton.textContent = "НАЧАТЬ";
+	startButton.textContent = 'НАЧАТЬ';
 });
 
 runOnLoad(decor, () => show(decor));
-app.addEventListener("submit", startApp, { once: true });
-spreadSelect.addEventListener("change", handleSpreadChangeInitial);
+app.addEventListener('submit', startApp, { once: true });
+spreadSelect.addEventListener('change', handleSpreadChangeInitial);
 
 // ios fixes
-if ("standalone" in navigator) {
+if ('standalone' in navigator) {
 	// prevent double-tap to zoom
-	app.addEventListener("click", () => {});
+	app.addEventListener('click', () => {});
 	// fix scrolling bug
-	app.style.overflow = "auto";
+	app.style.overflow = 'auto';
 }
 })(document.body);
