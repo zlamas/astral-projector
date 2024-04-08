@@ -51,6 +51,7 @@ let cards = Array.prototype.slice.call(table.getElementsByClassName('card'));
 let selectedCards = table.getElementsByClassName('card-selected');
 let animatedCards = table.getElementsByClassName('card-animated');
 let animatedCardBase = table.removeChild(animatedCards[0]);
+let fallbackTitles = cards.map((_, i) => 'Карта ' + (i + 1));
 
 let hide = (el) => el.classList.add('hidden');
 let show = (el) => el.classList.remove('hidden');
@@ -153,7 +154,7 @@ function handleSpreadChange(event) {
 	if (themeSelect.disabled && event) handleThemeChange();
 
 	app.className = 'sp-' + spreadId;
-	titles = data.titles[spreadId];
+	titles = data.titles[spreadId] || fallbackTitles;
 	spreadDetails.textContent = data.details[spreadId];
 	positionList.textContent = data.positions[spreadId];
 	toggle(positionListTitle, !positionList.textContent);
@@ -201,7 +202,7 @@ function resetTable(event) {
 	showSpreadInfo();
 	deselect();
 
-	for (const el of animatedCards) el.dispatchEvent(new Event('table-reset'));
+	for (let el of animatedCards) el.dispatchEvent(new Event('table-reset'));
 	cards.forEach((el) => fadeOut(el, fadeDuration));
 }
 
@@ -298,11 +299,11 @@ function hideDetails() {
 }
 
 function deselect() {
-	for (const el of selectedCards) el.classList.remove('card-selected');
+	for (let el of selectedCards) el.classList.remove('card-selected');
 	detailsContent.scrollTop = 0;
 }
 
-fetch('res/data.json?1')
+fetch('res/data.json?2')
 .then((response) => response.json())
 .then((json) => {
 	data = json;

@@ -14,8 +14,8 @@
 <link rel="preload" href="img/bg.jpg?" as="image">
 <link rel="preload" href="/fonts/edo.woff2" as="font" crossorigin>
 <link rel="stylesheet" href="/css/common.css">
-<link rel="stylesheet" href="css/projector.css?14">
-<script src="js/projector.min.js?14" defer></script>
+<link rel="stylesheet" href="css/projector.css?15">
+<script src="js/projector.min.js?15" defer></script>
 
 <div class="main">
 	<form class="main-column column">
@@ -42,7 +42,7 @@
 			<option value="swing" data-theme="love">Качели (партнёрский)</option>
 			<option value="choice" data-theme="none">Выбор</option>
 			<option value="marriage" data-theme="love">Уж замуж невтерпёж (или на желание)</option>
-			<option value="one" data-theme="none">Одна карта</option>
+			<option value="free">Свободный режим</option>
 		</select>
 		<select id="theme-select" class="dropdown" autocomplete="off">
 			<option value="none" disabled selected>- Без темы -</option>
@@ -53,17 +53,18 @@
 			<option value="lifegoal">Цель жизни: что важно сегодня</option>
 		</select>
 		<div id="table" class="table hidden">
-			<div class="slot s1"><img class="card hidden" alt></div>
-			<div class="slot s2"><img class="card hidden" alt></div>
-			<div class="slot s3"><img class="card hidden" alt></div>
-			<div class="slot s4"><img class="card hidden" alt></div>
-			<div class="slot s5"><img class="card hidden" alt></div>
-			<div class="slot s6"><img class="card hidden" alt></div>
-			<div class="slot s7"><img class="card hidden" alt></div>
-			<div class="slot s8"><img class="card hidden" alt></div>
-			<div class="slot s9"><img class="card hidden" alt></div>
-			<div class="slot s10"><img class="card hidden" alt></div>
-			<div class="slot s11"><img class="card hidden" alt></div>
+			<div class="slot s1"><img class="card hidden" alt><span>1</span></div>
+			<div class="slot s2"><img class="card hidden" alt><span>2</span></div>
+			<div class="slot s3"><img class="card hidden" alt><span>3</span></div>
+			<div class="slot s4"><img class="card hidden" alt><span>4</span></div>
+			<div class="slot s5"><img class="card hidden" alt><span>5</span></div>
+			<div class="slot s6"><img class="card hidden" alt><span>6</span></div>
+			<div class="slot s7"><img class="card hidden" alt><span>7</span></div>
+			<div class="slot s8"><img class="card hidden" alt><span>8</span></div>
+			<div class="slot s9"><img class="card hidden" alt><span>9</span></div>
+			<div class="slot s10"><img class="card hidden" alt><span>10</span></div>
+			<div class="slot s11"><img class="card hidden" alt><span>11</span></div>
+			<div class="slot s12"><img class="card hidden" alt><span>12</span></div>
 			<img id="btn-deck" class="button-deck table-element hidden fade-in" title="Вытащить карту" alt>
 			<img id="btn-table-reset" class="button-table-reset table-element hidden fade-in" src="img/restart.svg" title="Начать заново" alt>
 			<img id="deck-loading" class="loading-icon table-element" src="img/loading-circle.svg" title="Колода загружается" alt>

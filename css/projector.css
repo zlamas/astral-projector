@@ -222,13 +222,11 @@ p {
 	left: 50%;
 	min-width: 2.7em;
 	box-shadow: 0 0 0.8em inset;
-	counter-increment: slot;
 	margin: -2.5em 0 0 -1.35em;
 	transform: translateZ(-1px);
 	transition: top 1s, left 1s;
 }
-.slot::after {
-	content: counter(slot);
+.slot span {
 	position: absolute;
 	top: 0;
 	left: 105%;
@@ -346,4 +344,15 @@ p {
 .sp-choice .s5 {top: 70%; left: 40%}
 .sp-choice .s6 {top: 70%; left: 60%}
 .sp-choice .s7 {top: 70%; left: 80%}
-.sp-one .s1 {top: 50%}
+.sp-free .s1 {top: 20%; left: 20%}
+.sp-free .s2 {top: 20%; left: 40%}
+.sp-free .s3 {top: 20%; left: 60%}
+.sp-free .s4 {top: 20%; left: 80%}
+.sp-free .s5 {top: 50%; left: 20%}
+.sp-free .s6 {top: 50%; left: 40%}
+.sp-free .s7 {top: 50%; left: 60%}
+.sp-free .s8 {top: 50%; left: 80%}
+.sp-free .s9 {top: 80%; left: 20%}
+.sp-free .s10 {top: 80%; left: 40%}
+.sp-free .s11 {top: 80%; left: 60%}
+.sp-free .s12 {top: 80%; left: 80%}
