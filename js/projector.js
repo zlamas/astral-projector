@@ -49,16 +49,18 @@ let cardInfoElements = detailsMenu.querySelectorAll(
 
 let cards = Array.prototype.slice.call(table.getElementsByClassName('card'));
 let selectedCards = table.getElementsByClassName('card-selected');
-let animatedCards = table.getElementsByClassName('card-animated');
+let animatedCards = app.getElementsByClassName('card-animated');
 let animatedCardBase = table.removeChild(animatedCards[0]);
 let fallbackTitles = cards.map((_, i) => 'Карта ' + (i + 1));
 
 let hide = (el) => el.classList.add('hidden');
 let show = (el) => el.classList.remove('hidden');
-let toggle = (el, condition) => el.classList.toggle('hidden', condition);
-let getOffset = (el) => ({ left: el.offsetLeft + 'px', top: el.offsetTop + 'px' });
-let runOnLoad = (el, callback) =>
-	el.complete ? callback() : el.addEventListener('load', callback, { once: true });
+let toggle = (el, condition) => el.classList.toggle('hidden', !condition);
+
+function getPosition(el) {
+	let rect = el.getBoundingClientRect();
+	return { left: rect.x + 'px', top: rect.y + 'px' };
+}
 
 function fadeOut(el, duration, remove) {
 	el.animate(
@@ -94,14 +96,18 @@ function slideUp(query, duration, callback) {
 	animation.addEventListener('finish', callback);
 }
 
-function moveTo(el, target, duration, callback) {
+function moveTo(el, source, target, duration, callback) {
 	let animation = el.animate(
-		[getOffset(el), getOffset(target)],
+		[getPosition(source), getPosition(target)],
 		Object.assign({ duration }, animationOptions)
 	);
 
 	animation.addEventListener('finish', callback);
 	return animation;
+}
+
+function runOnLoad(el, callback) {
+	el.complete ? callback() : el.addEventListener('load', callback, { once: true });
 }
 
 function startApp(event) {
@@ -112,6 +118,7 @@ function startApp(event) {
 
 	table.addEventListener('click', handleTableClick);
 	resetButton.addEventListener('click', resetTable);
+	app.addEventListener('change', resetTable);
 
 	detailsImage.addEventListener('click', () => show(cardModal));
 	cardModal.addEventListener('click', () => hide(cardModal));
@@ -121,7 +128,6 @@ function startApp(event) {
 		hide(deckLoadingIcon);
 	});
 
-	app.addEventListener('change', resetTable);
 	spreadSelect.addEventListener('change', handleSpreadChange);
 	themeSelect.addEventListener('change', handleThemeChange);
 	deckSelect.addEventListener('change', handleDeckChange);
@@ -157,12 +163,12 @@ function handleSpreadChange(event) {
 	titles = data.titles[spreadId] || fallbackTitles;
 	spreadDetails.textContent = data.details[spreadId];
 	positionList.textContent = data.positions[spreadId];
-	toggle(positionListTitle, !positionList.textContent);
+	toggle(positionListTitle, positionList.textContent);
 }
 
 function handleThemeChange() {
 	readings = data.readings[themeSelect.value];
-	toggle(themeReadingTitle, !readings);
+	toggle(themeReadingTitle, readings);
 }
 
 function handleDeckChange() {
@@ -247,10 +253,11 @@ function drawCard() {
 
 	let slot = drawnCards.push(id) - 1;
 	let slotImg = cards[slot];
-	let animatedCardInstance = table.appendChild(animatedCardBase.cloneNode());
+	let animatedCardInstance = app.appendChild(animatedCardBase.cloneNode());
 
 	let animation = moveTo(
 		animatedCardInstance,
+		deck,
 		slotImg.parentNode,
 		cardDrawDuration,
 		() => runOnLoad(slotImg, showCard)

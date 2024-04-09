@@ -116,6 +116,9 @@ p {
 	box-shadow: 0 0 0.5em currentcolor;
 	transform: translateZ(1px);
 }
+.card-animated {
+	position: absolute;
+}
 .card-alt-name {
 	font-style: italic;
 }
@@ -222,8 +225,7 @@ p {
 	left: 50%;
 	min-width: 2.7em;
 	box-shadow: 0 0 0.8em inset;
-	margin: -2.5em 0 0 -1.35em;
-	transform: translateZ(-1px);
+	transform: translate3d(-50%, -50%, -1px);
 	transition: top 1s, left 1s;
 }
 .slot span {
@@ -233,6 +235,7 @@ p {
 	font: 1.5em / 0 Edo, sans-serif;
 }
 .table {
+	position: relative;
 	animation: fade-in 3s ease-in-out;
 	flex: 1;
 }
@@ -289,7 +292,7 @@ p {
 	}
 }
 .sp-cross .s1, .sp-cross .s2 {top: 50%; left: 37%}
-.sp-cross .s2 {transform: translateZ(-1px) rotate(90deg); transform-origin: 50% 70%}
+.sp-cross .s2 {transform: translate3d(-50%, -50%, -1px) rotate(90deg); transform-origin: 50% 70%}
 .sp-cross .s3 {top: 20%; left: 37%}
 .sp-cross .s4 {top: 80%; left: 37%}
 .sp-cross .s5 {top: 50%; left: 14%}
