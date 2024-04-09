@@ -1,306 +1,271 @@
 (function() {
-"use strict";
-let theme, layout, subject, deck, nextSlotId, slotCount, deckSize, deckArray, descriptions, roman, major, suitNames, rankNames, titles, meanings, readings, extraMajors, altRankNames, altSuitNames;
+'use strict';
+var drawnCards = [];
+var descriptions = [];
+var data;
+var deckSize;
+var titles;
+var meanings;
+var readings;
+var extraMajors;
+var altRanks;
+var altSuits;
+var deckPath;
+var isClassic;
+var spreadName;
 
-const
-openingTime = 3000,
-cardAnimTime = 1000,
-menuFadeTime = 500,
-imgFadeTime = 300,
-imgPath = "img/",
+var openingDuration = 3000;
+var cardDrawDuration = 1000;
+var fadeDuration = 500;
 
-$app = $("#app").click(function(){}), // prevent double-tap to zoom on ios
+var $app = $('body');
+var $decor = $('#decor');
+var $spreadSelect = $('#spread-select');
+var $themeSelect = $('#theme-select');
+var $deckSelect = $('#deck-select');
+var $startButton = $('#btn-start');
+var $table = $('#table');
+var $deck = $('#btn-deck');
+var $resetButton = $('#btn-table-reset');
+var $deckLoadingIcon = $('#deck-loading');
+var $detailsMenu = $('#details');
+var $detailsTitle = $('#details-title');
+var $detailsContent = $('#details-content');
+var $spreadInfo = $('#spread-info');
+var $spreadDetails = $('#spread-details');
+var $positionListTitle = $('#position-list-title');
+var $positionList = $('#position-list');
+var $cardInfo = $('#card-info');
+var $detailsImage = $('#details-card-image');
+var $themeReadingTitle = $('#theme-reading-title');
+var $cardModal = $('#card-modal');
+var $cardModalImage = $('#card-modal-image');
+var $cardInfoElements = $('#card-name, #card-alt-name, #general-reading, #theme-reading');
 
-$layoutSel = $("#layout-sel"),
-$subjectSel = $("#subject-sel"),
-$deckSel = $("#deck-sel"),
+var $cards = $('.card');
+var $animatedCardBase = $('.card-animated').remove();
+var fallbackTitles = $cards.map(function (i) { return 'Карта ' + (i + 1); }).get();
 
-$startButton = $("#start"),
-$showButton = $("#desc-show"),
-$hideButton = $("#desc-hide"),
+var $deckImageElements = $deck.add($animatedCardBase);
+var $cardImageElements = $detailsImage.add($cardModalImage);
 
-$table = $("#table"),
-$deckElem = $("#deck-elem"),
-$slots = $(".slot"),
-$cardImgs = $(".slot img"),
-$animCard = $("<img>").prop("class", "anim-card"),
-
-$descMenu = $("#desc-menu"),
-$descTitle = $("#desc-title"),
-$descContainer = $("#desc-container"),
-
-$layoutInfo = $("#layout-info"),
-$layoutDesc = $("#layout-desc"),
-
-$posContainer = $("#pos-container"),
-$posList = $("#pos-list"),
-
-$textElems = $("#pos-name, #card-name, #card-classic-name, #general-reading, #layout-reading"),
-$cardInfo = $("#card-info"),
-$readingContainers = $(".card-reading"),
-
-$descImg = $("#card-img"),
-$cardModal = $("#card-modal"),
-$cardModalImg = $("#img-zoomed"),
-$descImgElems = $descImg.add($cardModalImg),
-$decor = $("#decor");
-
-function randomInt(min, max) {
-	return Math.floor( Math.random() * (max - min + 1) ) + min;
+function runOnLoad(el, callback) {
+	el.prop('complete') ? callback() : el.one('load', callback);
 }
 
-function updateDescription(id) {
-	const data = descriptions[id];
+function startApp(event) {
+	event.preventDefault();
 
-	$descTitle.text(slotCount > 1 ? "Позиция " + (id + 1) : "");
+	$('#btn-show-details').click(showDetails);
+	$('#btn-hide-details').click(hideDetails);
 
-	data.forEach(function(text, i) {
-		$textElems[i].textContent = text;
+	$table.click(handleTableClick);
+	$resetButton.click(resetTable);
+	$app.change(resetTable);
+
+	$detailsImage.click(function () { $cardModal.show(); });
+	$cardModal.click(function () { $cardModal.hide(); });
+
+	$deck.on('load', function () {
+		$deck.show();
+		$deckLoadingIcon.hide();
+	})
+
+	$spreadSelect.on('change.data', handleSpreadChange);
+	$themeSelect.on('change.data', handleThemeChange);
+	$deckSelect.on('change.data', handleDeckChange);
+	$('select').trigger('change.data');
+
+	$('#header, #intro').slideUp(openingDuration).promise().done(function () {
+		showDetails();
+		$('.button-bar .button').show();
+		$deck.click(drawCard);
 	});
 
-	if (data[3] || data[4])
-		$readingContainers.show();
-
-	$cardInfo.show();
-	$layoutInfo.hide();
-	showDescription();
+	$table.show();
+	$startButton.hide();
 }
 
-function resetDescription() {
-	if (nextSlotId > 0)
-		$descTitle.text("Нажмите на карту, чтобы увидеть её значение");
-	$cardInfo.hide();
-	$readingContainers.hide();
-	$layoutInfo.show();
+function handleSpreadChangeInitial() {
+	var $option = $(this).find(':selected');
+	var theme = $option.data('theme');
+
+	spreadName = $option.text().split(' (')[0];
+	$themeSelect.prop('disabled', theme);
+	if (theme) $themeSelect.val(theme).change();
 }
 
-function showDescription() {
-	$descMenu.fadeIn(menuFadeTime);
-	$showButton.fadeOut(menuFadeTime);
-	$descContainer.scrollTop(0);
+function handleSpreadChange() {
+	var spreadId = this.value;
+	$app.prop('class', 'sp-' + spreadId);
+	titles = data.titles[spreadId] || fallbackTitles;
+	$spreadDetails.text(data.details[spreadId]);
+	$positionList.text(data.positions[spreadId] || '');
+	$positionListTitle.toggle(!!$positionList.text());
 }
 
-function hideDescription() {
-	$descMenu.fadeOut(menuFadeTime);
-	$showButton.fadeIn(menuFadeTime);
-	deselect();
+function handleThemeChange() {
+	readings = data.readings[this.value];
+	$themeReadingTitle.toggle(!!readings);
 }
 
-function resetTable() {
-	nextSlotId = 0;
-	deckArray = [];
-	deckSize = 77 + extraMajors.length;
+function handleDeckChange() {
+	var deckId = this.value;
+
+	$deck.hide();
+	$deckLoadingIcon.show();
+
+	meanings = data.meanings[deckId] || data.meanings.normal;
+	altRanks = data.altRanks[deckId];
+	altSuits = data.altSuits[deckId];
+	extraMajors = data.extraMajors[deckId];
+
+	deckSize = 78;
+	if (extraMajors) deckSize += extraMajors.length;
+
+	isClassic = $(this).find(':selected[data-classic]').length;
+	deckPath = 'img/' + deckId + '/';
+	$deckImageElements.prop('src', deckPath + 'back.jpg');
+}
+
+function handleTableClick(event) {
+	var slot = $cards.index(event.target);
+
+	if (slot >= 0) {
+		showDetails(slot);
+		$(event.target).addClass('card-selected');
+	}
+}
+
+function resetTable(event) {
+	drawnCards = [];
 	descriptions = [];
 
-	$deckElem
-		.hide()
-		.add($animCard)
-		.prop("src", imgPath + deck + "/back.jpg");
+	if (!$(event.target).is($deckSelect)) $deck.show();
+	$resetButton.hide();
+	showSpreadInfo();
+	deselect();
 
-	$(".anim-card")
+	$('.card-animated')
 		.stop(true)
-		.fadeOut(imgFadeTime, function() { this.remove() });
+		.fadeOut(fadeDuration, function () { $(this).remove(); });
 
-	$cardImgs
-		.finish()
-		.fadeOut(imgFadeTime)
-		.off("load");
+	$cards.finish().fadeOut(fadeDuration);
+}
 
-	$slots.css("z-index", "");
-	$descTitle.text("Жмите на колоду, чтобы заполнить расклад");
+function createDescription(id) {
+	var adjustedId = id;
+	var name;
+	var altName;
+
+	if (id > 21) {
+		var suit = Math.floor((id - 22) / 14);
+		var rank = id - 22 - 14 * suit;
+
+		if (suit < 4) {
+			var rankName = data.ranks[rank];
+			var suitName = data.suits[suit];
+
+			altName = rankName + ' ' + suitName;
+
+			if (altRanks && rank > 9) rankName = altRanks[rank - 10];
+			if (altSuits) suitName = altSuits[suit];
+
+			name = rankName + ' ' + suitName;
+			if (name == altName) altName = '';
+		} else {
+			name = extraMajors[rank];
+		}
+	} else {
+		if ((id == 8 || id == 11) && isClassic) adjustedId = 19 - id;
+		name = data.roman[adjustedId] + ' ' + data.major[id];
+	}
+
+	descriptions.push([name, altName, meanings[id], readings ? readings[id] : '']);
+
+	return adjustedId;
 }
 
 function drawCard() {
-	if (nextSlotId == slotCount)
-		return resetTable();
+	var id;
 
-	let id = randomInt(0, deckSize),
-		name = "",
-		altName = "";
+	do id = Math.floor(Math.random() * deckSize);
+	while (drawnCards.indexOf(id) >= 0);
 
-	while (deckArray[id])
-		id = deckArray[id];
-	deckArray[id] = deckSize--;
+	var slot = drawnCards.push(id) - 1;
+	var $slotImg = $cards.eq(slot);
+	var $animatedCardInstance = $animatedCardBase.clone().appendTo($table);
 
-	if (id > 21) {
-		const
-		suit = Math.floor((id - 22) / 14),
-		rank = id - 22 - 14 * suit;
-
-		if (suit < 4) {
-			if (rank > 9 && altRankNames) {
-				name += altRankNames[rank - 10] + " ";
-				altName += rankNames[rank] + " ";
-			} else
-				name += rankNames[rank] + " ";
-
-			if (altSuitNames) {
-				name += altSuitNames[suit];
-				altName += suitNames[suit];
-			} else
-			 	name += suitNames[suit];
-		} else
-			name = extraMajors[rank];
-//	} else if (altMajors[deck]) {
-//		altName = major[id];
-//		name = roman[id] + " " + altMajors[deck][id];
-	} else
-		name = roman[id] + " " + major[id];
-
-	descriptions[nextSlotId] = [
-		titles[nextSlotId],
-		name,
-		altName ? " / " + altName : "",
-		meanings[id],
-		readings ? readings[id] : ""
-	];
-
-	const
-	$slotImg = $cardImgs.eq(nextSlotId),
-	$slotElem = $slotImg.parent(),
-	$animCardInstance = $animCard.clone().appendTo($table),
-	displayCard = function() {
-		$slotImg.fadeIn(imgFadeTime);
-		$animCardInstance.fadeOut(imgFadeTime, function() {
-			this.remove();
+	var showCard = function () {
+		$slotImg.show();
+		$animatedCardInstance.fadeOut(fadeDuration, function () {
+			$(this).remove();
 		});
 	};
 
-	$slotImg.prop("src", imgPath + deck + "/" + id + ".jpg");
+	id = createDescription(id);
+	$slotImg.prop('src', deckPath + id + '.jpg');
 
-	$animCardInstance
-		.css($deckElem.offset())
-		.animate($slotElem.offset(), cardAnimTime, function() {
-			if ($slotImg.prop("complete"))
-				displayCard();
-			else
-				$slotImg.one("load", displayCard);
+	$animatedCardInstance.css($deck.position()).animate(
+		$slotImg.parent().position(),
+		cardDrawDuration,
+		function () { runOnLoad($slotImg, showCard); }
+	);
 
-			$slotElem.css("z-index", 1);
+	if (slot == titles.length - 1) {
+		$resetButton.show();
+		$deck.hide();
+	}
+}
+
+function showCardInfo(slot) {
+	descriptions[slot].forEach(function (text, i) {
+		$cardInfoElements.eq(i).text(text || '');
 	});
 
-	if (++nextSlotId == slotCount)
-		$deckElem.hide().prop("src", imgPath + "restart.svg");
+	$detailsTitle.text(titles[slot]);
+	$cardImageElements.prop('src', $cards.eq(slot).prop('src'));
+	$cardInfo.show();
+	$spreadInfo.hide();
+}
+
+function showSpreadInfo() {
+	$detailsTitle.text(spreadName);
+	$spreadInfo.show();
+	$cardInfo.hide();
+}
+
+function showDetails(slot) {
+	$detailsMenu.show();
+	deselect();
+	slot >= 0 ? showCardInfo(slot) : showSpreadInfo();
+}
+
+function hideDetails() {
+	$detailsMenu.hide();
+	deselect();
 }
 
 function deselect() {
-	$("#selected").prop("id", "");
+	$('.card-selected').removeClass('card-selected');
+	$detailsContent.scrollTop(0);
 }
 
-function setStartButtonState() {
-	$startButton.prop("disabled", !(deck && (subject || theme === "")));
+$.getJSON('res/data.json?2', function (json) {
+	data = json;
+	$startButton.prop('disabled', false).text('НАЧАТЬ');
+});
+
+$('.hidden').hide().removeClass('hidden');
+runOnLoad($decor, function () { $decor.show(); });
+$app.one('submit', startApp);
+$spreadSelect.change(handleSpreadChangeInitial);
+
+// ios fixes
+if ('standalone' in navigator) {
+	// prevent double-tap to zoom
+	$app.click(function () {});
+	// fix scrolling bug
+	$app.css('overflow', 'auto');
 }
-
-$layoutSel.change(function() {
-	layout = this.value;
-	theme = this.selectedOptions[0].getAttribute("theme");
-
-	if (theme == null) {
-		$subjectSel.prop("disabled", false);
-		if (!subject)
-			$subjectSel.prop("selectedIndex", 0);
-	} else
-		$subjectSel.prop("disabled", true).val(theme).change();
-});
-
-// fix scrolling bug on ios
-$(".scrollable").on("touchstart", function(e) {
-	this.atTop = (this.scrollTop <= 0);
-	this.atBottom = (this.scrollTop >= this.scrollHeight - this.clientHeight);
-	this.lastY = e.touches[0].clientY;
-}).on("touchmove", function(e) {
-	const up = (e.touches[0].clientY > this.lastY);
-
-	this.lastY = e.touches[0].clientY;
-
-	if ((up && this.atTop) || (!up && this.atBottom))
-		e.preventDefault();
-});
-
-$decor.add($deckElem)
-	.on("load", function() { $(this).fadeIn(imgFadeTime) });
-
-if ($decor.prop("complete"))
-	$decor.show();
-
-$showButton.click(showDescription);
-$hideButton.click(hideDescription);
-
-$descImg.click(function() {
-	$cardModal.fadeIn(menuFadeTime);
-});
-
-$cardModal.click(function() {
-	$cardModal.fadeOut(menuFadeTime);
-});
-
-$.getJSON("res/text.json", function(data) {
-	setStartButtonState();
-	$app.on("change", setStartButtonState);
-
-	({ roman, major, suitNames, rankNames } = data);
-
-	$layoutSel.on("change.data", function() {
-		titles = data.titles[layout];
-		$layoutDesc.text(data.descriptions[layout]);
-
-		if ((slotCount = titles.length) > 1) {
-			$posContainer.show();
-			$posList.text(data.postext[layout]);
-		} else $posContainer.hide();
-	});
-
-	$subjectSel.on("change.data", function() {
-		subject = this.value;
-		readings = data.readings[subject];
-	});
-
-	$deckSel.on("change.data", function() {
-		deck = this.value;
-		meanings = data.meanings[deck] || data.meanings.normal;
-
-		$.extend(roman,
-			this.selectedOptions[0].hasAttribute("classic") ?
-			{8: "XI", 11: "VIII"} :
-			{8: "VIII", 11: "XI"}
-		);
-
-		extraMajors = data.extraMajorNames[deck] || [];
-		altRankNames = data.altRanks[deck];
-		altSuitNames = data.altSuits[deck];
-	});
-
-	$startButton.text("НАЧАТЬ").click(function() {
-		this.remove();
-		$("#header, #menu-column-2").slideUp(openingTime);
-
-		$table.fadeIn(openingTime, function() {
-			showDescription();
-			$deckElem.click(drawCard);
-		});
-
-		$("select").trigger("change.data");
-
-		$descMenu.hide().click(function(e) { e.stopPropagation() });
-		$app.prop("class", "");
-		resetTable();
-
-		$app.off("change")
-			.change(resetTable)
-			.click(function(e) {
-				const
-				target = e.target,
-				index = $cardImgs.index(target);
-
-				deselect();
-
-				if (index >= 0) {
-					target.id = "selected";
-					$descImgElems.prop("src", target.src);
-					updateDescription(index);
-				} else
-					resetDescription();
-		});
-	});
-});
 })();
