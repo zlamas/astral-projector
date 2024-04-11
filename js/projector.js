@@ -310,7 +310,7 @@ function deselect() {
 	detailsContent.scrollTop = 0;
 }
 
-fetch('res/data.json?2')
+fetch('res/data.json?3')
 .then((response) => response.json())
 .then((json) => {
 	data = json;
