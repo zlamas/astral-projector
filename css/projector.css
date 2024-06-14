@@ -209,6 +209,13 @@ p {
 	cursor: zoom-out;
 	padding: 1em;
 }
+.noscript-warning {
+	position: fixed;
+	width: 100%;
+	background: #b43;
+	font-weight: bold;
+	padding: 12px;
+}
 .scrollable {
 	border-radius: 0.5em;
 	box-shadow: 0 -1.2em 0.8em -1em inset;
