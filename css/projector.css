@@ -129,6 +129,10 @@ p {
 .card-selected {
 	box-shadow: 0 0 0.6em 0.3em red;
 }
+.card-small-text {
+	font-size: 0.8em;
+	font-style: italic;
+}
 .column {
 	max-width: 100vh;
 }
