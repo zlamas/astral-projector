@@ -66,34 +66,34 @@ function fadeOut(el, duration, remove) {
 	el.animate(
 		{ opacity: [getComputedStyle(el).opacity, 0] },
 		Object.assign({ duration }, animationOptions)
-	).addEventListener('finish', remove
-		? () => el.remove()
-		: function () {
-			this.cancel();
+	).onfinish = (event) => {
+		if (remove) {
+			el.remove();
+		} else {
+			event.target.cancel();
 			hide(el);
 		}
-	);
+	};
 }
 
 function slideUp(query, duration, callback) {
-	let animation;
 	let els = app.querySelectorAll(query);
-
-	els.forEach((el) => {
+	Promise.all(Array.prototype.map.call(els, (el) => new Promise((resolve) => {
 		let compStyle = getComputedStyle(el);
-
-		animation = el.animate(
-			{
-				height: [el.offsetHeight + 'px', 0],
-				paddingTop: [compStyle.paddingTop, 0],
-				paddingBottom: [compStyle.paddingBottom, 0]
-			},
+		let keyframes = {
+			height: [el.offsetHeight + 'px', 0],
+			paddingTop: [compStyle.paddingTop, 0],
+			paddingBottom: [compStyle.paddingBottom, 0]
+		};
+		el.animate(
+			keyframes,
 			Object.assign({ duration }, animationOptions)
-		);
-		animation.addEventListener('finish', () => el.remove());
-	});
+		).onfinish = () => {
+			el.remove();
+			resolve();
+		};
+	}))).then(callback);
 	els.forEach((el) => el.style.overflow = 'hidden');
-	animation.addEventListener('finish', callback);
 }
 
 function moveTo(el, source, target, duration, callback) {
@@ -102,7 +102,7 @@ function moveTo(el, source, target, duration, callback) {
 		Object.assign({ duration }, animationOptions)
 	);
 
-	animation.addEventListener('finish', callback);
+	animation.onfinish = callback;
 	return animation;
 }
 
