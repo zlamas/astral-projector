@@ -305,7 +305,7 @@ p {
   }
 }
 .sp-cross .s1, .sp-cross .s2 {top: 50%; left: 37%}
-.sp-cross .s2 {transform: translate(-50%, -50%) rotate(90deg); transform-origin: 50% 70%}
+.sp-cross .s2 {transform: translate(-50%, -50%) rotate(90deg); transform-origin: 25% 66%}
 .sp-cross .s3 {top: 20%; left: 37%}
 .sp-cross .s4 {top: 80%; left: 37%}
 .sp-cross .s5 {top: 50%; left: 14%}
