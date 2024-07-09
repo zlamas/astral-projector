@@ -77,9 +77,9 @@ function fadeOut(el, duration, remove) {
 }
 
 function slideUp(query, duration, callback) {
-    let els = app.querySelectorAll(query);
+    let els = Array.prototype.slice.call(app.querySelectorAll(query));
     Promise.all(
-        Array.prototype.map.call(els, (el) =>
+        els.map((el) =>
             new Promise((resolve) => {
                 let compStyle = getComputedStyle(el);
                 let keyframes = {
