@@ -238,6 +238,7 @@ p {
   box-shadow: 0 0 0.8em inset;
   transform: translate(-50%, -50%);
   transition: top 1s, left 1s;
+  will-change: top, left;
 }
 .slot span {
   position: absolute;
