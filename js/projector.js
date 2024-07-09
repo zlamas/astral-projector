@@ -249,7 +249,7 @@ function drawCard() {
 	let id;
 
 	do id = Math.floor(Math.random() * deckSize);
-	while (drawnCards.indexOf(id) >= 0);
+	while (drawnCards.includes(id));
 
 	let slot = drawnCards.push(id) - 1;
 	let slotImg = cards[slot];
