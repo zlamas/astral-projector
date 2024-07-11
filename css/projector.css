@@ -215,7 +215,9 @@ p {
 }
 .noscript-warning {
   position: fixed;
-  width: 100%;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: #b43;
   font-weight: bold;
   padding: 12px;
