@@ -4,6 +4,7 @@ body {
   width: 100%;
   height: 100%;
   overflow: hidden;
+  overscroll-behavior: contain;
 }
 html {
   background: #643 url(../img/bg.jpg?) center / auto 100% fixed;
@@ -252,7 +253,7 @@ p {
   position: relative;
   animation: fade-in 3s ease-in-out;
   flex: 1;
-  transform: translateZ(-1px); /* safari fix */
+  transform: translateZ(-1px); /* webkit fix */
 }
 .table-element {
   position: absolute;
