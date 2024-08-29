@@ -100,14 +100,11 @@ function slideUp(query, duration, callback) {
     els.forEach((el) => el.style.overflow = 'hidden');
 }
 
-function moveTo(el, source, target, duration, callback) {
-    let animation = el.animate(
+function moveFromTo(el, source, target, duration) {
+    return el.animate(
         [getPosition(source), getPosition(target)],
         Object.assign({ duration }, animationOptions)
     );
-
-    animation.onfinish = callback;
-    return animation;
 }
 
 function runOnLoad(el, callback) {
@@ -116,35 +113,18 @@ function runOnLoad(el, callback) {
 
 function startApp(event) {
     event.preventDefault();
-
-    document.getElementById('btn-show-details').addEventListener('click', showDetails);
-    document.getElementById('btn-hide-details').addEventListener('click', hideDetails);
-
-    table.addEventListener('click', handleTableClick);
-    resetButton.addEventListener('click', resetTable);
     app.addEventListener('change', resetTable);
-
-    detailsImage.addEventListener('click', () => show(cardModal));
-    cardModal.addEventListener('click', () => hide(cardModal));
-
-    deck.addEventListener('load', () => {
-        show(deck);
-        hide(deckLoadingIcon);
-    });
-
     spreadSelect.addEventListener('change', handleSpreadChange);
     themeSelect.addEventListener('change', handleThemeChange);
     deckSelect.addEventListener('change', handleDeckChange);
     handleSpreadChange();
     handleThemeChange();
     handleDeckChange();
-
     slideUp('#header, #intro', openingDuration, () => {
         showDetails();
         app.querySelectorAll('.button-bar .button').forEach(show);
         deck.addEventListener('click', drawCard);
     });
-
     show(table);
     hide(startButton);
 }
@@ -152,7 +132,6 @@ function startApp(event) {
 function handleSpreadChangeInitial() {
     let option = spreadSelect.selectedOptions[0];
     let theme = option.dataset.theme;
-
     spreadName = option.text.split(' (')[0];
     themeSelect.disabled = theme;
     if (theme) themeSelect.value = theme;
@@ -160,10 +139,8 @@ function handleSpreadChangeInitial() {
 
 function handleSpreadChange(event) {
     let spreadId = spreadSelect.value;
-
     if (themeSelect.disabled && event) handleThemeChange();
-
-    app.className = 'sp-' + spreadId;
+    table.id = 'sp-' + spreadId;
     titles = data.titles[spreadId] || fallbackTitles;
     spreadDetails.textContent = data.details[spreadId];
     positionList.textContent = data.positions[spreadId];
@@ -177,7 +154,6 @@ function handleThemeChange() {
 
 function handleDeckChange() {
     let deckId = deckSelect.value;
-
     hide(deck);
     show(deckLoadingIcon);
 
@@ -185,7 +161,6 @@ function handleDeckChange() {
     altSuits = data.altSuits[deckId];
     altRanks = data.altRanks[deckId];
     extraMajors = data.extraMajors[deckId];
-
     deckSize = 78;
     if (extraMajors) deckSize += extraMajors.length;
 
@@ -196,7 +171,6 @@ function handleDeckChange() {
 
 function handleTableClick(event) {
     let slot = cards.indexOf(event.target);
-
     if (slot >= 0) {
         showDetails(slot);
         event.target.classList.add('card-selected');
@@ -220,20 +194,15 @@ function createDescription(id) {
     let adjustedId = id;
     let name;
     let altName;
-
     if (id > 21) {
         let suit = Math.floor((id - 22) / 14);
         let rank = id - 22 - 14 * suit;
-
         if (suit < 4) {
             let rankName = data.ranks[rank];
             let suitName = data.suits[suit];
-
             altName = rankName + ' ' + suitName;
-
             if (altRanks && rank > 9) rankName = altRanks[rank - 10];
             if (altSuits) suitName = altSuits[suit];
-
             name = rankName + ' ' + suitName;
             if (name == altName) altName = '';
         } else {
@@ -243,39 +212,34 @@ function createDescription(id) {
         if ((id == 8 || id == 11) && isClassic) adjustedId = 19 - id;
         name = data.roman[adjustedId] + ' ' + data.major[id];
     }
-
     descriptions.push([name, altName, meanings[id], readings ? readings[id] : '']);
-
     return adjustedId;
 }
 
 function drawCard() {
     let id;
-
     do id = Math.floor(Math.random() * deckSize);
     while (drawnCards.includes(id));
 
     let slot = drawnCards.push(id) - 1;
     let slotImg = cards[slot];
-    let animatedCardInstance = app.appendChild(animatedCardBase.cloneNode());
+    id = createDescription(id);
+    slotImg.src = deckPath + id + '.jpg';
 
-    let animation = moveTo(
+    let animatedCardInstance = app.appendChild(animatedCardBase.cloneNode());
+    let animation = moveFromTo(
         animatedCardInstance,
         deck,
         slotImg.parentNode,
-        cardDrawDuration,
-        () => runOnLoad(slotImg, showCard)
+        cardDrawDuration
     );
-
     let showCard = () => {
         slotImg.removeEventListener('load', showCard);
         show(slotImg);
         animation.pause();
         fadeOut(animatedCardInstance, fadeDuration, true);
     };
-
-    id = createDescription(id);
-    slotImg.src = deckPath + id + '.jpg';
+    animation.onfinish = () => runOnLoad(slotImg, showCard);
     animatedCardInstance.addEventListener('table-reset', showCard);
 
     if (slot == titles.length - 1) {
@@ -299,14 +263,14 @@ function showSpreadInfo() {
 }
 
 function showDetails(slot) {
-    show(detailsMenu);
-    deselect();
     slot >= 0 ? showCardInfo(slot) : showSpreadInfo();
+    deselect();
+    show(detailsMenu);
 }
 
 function hideDetails() {
-    hide(detailsMenu);
     deselect();
+    hide(detailsMenu);
 }
 
 function deselect() {
@@ -322,8 +286,19 @@ fetch('res/data.json?3')
     startButton.textContent = 'НАЧАТЬ';
 });
 
-runOnLoad(decor, () => show(decor));
-app.addEventListener('submit', startApp, { once: true });
-spreadSelect.addEventListener('change', handleSpreadChangeInitial);
 app.onclick = () => {}; // prevent double-tap zoom on ios
+runOnLoad(decor, () => show(decor));
+spreadSelect.addEventListener('change', handleSpreadChangeInitial);
+app.addEventListener('submit', startApp, { once: true });
+
+table.addEventListener('click', handleTableClick);
+resetButton.addEventListener('click', resetTable);
+document.getElementById('btn-show-details').addEventListener('click', showDetails);
+document.getElementById('btn-hide-details').addEventListener('click', hideDetails);
+detailsImage.addEventListener('click', () => show(cardModal));
+cardModal.addEventListener('click', () => hide(cardModal));
+deck.addEventListener('load', () => {
+    show(deck);
+    hide(deckLoadingIcon);
+});
 })(document.body);

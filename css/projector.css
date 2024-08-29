@@ -251,7 +251,7 @@ p {
   box-shadow: 0 0 0.8em inset;
   transform: translate(-50%, -50%);
   transition: top 1s, left 1s;
-  will-change: top, left;
+  will-change: top;
 }
 .slot span {
   position: absolute;
@@ -317,71 +317,71 @@ p {
     }
   }
 }
-.sp-cross .s1, .sp-cross .s2 {top: 50%; left: 37%}
-.sp-cross .s2 {transform: translate(-50%, -50%) rotate(90deg); transform-origin: 25% 66%}
-.sp-cross .s3 {top: 20%; left: 37%}
-.sp-cross .s4 {top: 80%; left: 37%}
-.sp-cross .s5 {top: 50%; left: 14%}
-.sp-cross .s6 {top: 50%; left: 60%}
-.sp-cross .s7 {top: 86%; left: 83%}
-.sp-cross .s8 {top: 62%; left: 83%}
-.sp-cross .s9 {top: 38%; left: 83%}
-.sp-cross .s10 {top: 14%; left: 83%}
-.sp-faust .s1, .sp-disorder .s2, .sp-marriage .s4 {top: 65%; left: 20%}
-.sp-faust .s2, .sp-disorder .s1, .sp-marriage .s1 {top: 20%}
-.sp-faust .s3, .sp-disorder .s3, .sp-marriage .s5 {top: 65%; left: 80%}
-.sp-faust .s4, .sp-disorder .s4, .sp-marriage .s2 {top: 35%; left: 20%}
-.sp-faust .s5, .sp-disorder .s6, .sp-marriage .s6 {top: 80%}
-.sp-faust .s6, .sp-disorder .s5, .sp-marriage .s3 {top: 35%; left: 80%}
-.sp-faust .s7, .sp-disorder .s7, .sp-one .s1 {top: 50%}
-.sp-problem .s1 {top: 30%}
-.sp-problem .s2 {top: 65%; left: 25%}
-.sp-problem .s3 {top: 65%}
-.sp-problem .s4 {top: 65%; left: 75%}
-.sp-progress .s1 {top: 50%; left: 20%}
-.sp-progress .s2 {top: 50%; left: 40%}
-.sp-progress .s3 {top: 50%; left: 60%}
-.sp-progress .s4 {top: 20%; left: 20%}
-.sp-progress .s5 {top: 20%; left: 40%}
-.sp-progress .s6 {top: 20%; left: 60%}
-.sp-progress .s7 {top: 80%; left: 45%}
-.sp-progress .s8 {top: 80%; left: 65%}
-.sp-progress .s9 {top: 80%; left: 85%}
-.sp-progress .s10 {top: 80%; left: 20%}
-.sp-solution .s1, .sp-station .s1 {top: 50%}
-.sp-solution .s2, .sp-station .s7 {top: 25%; left: 30%}
-.sp-solution .s3, .sp-station .s2 {top: 25%; left: 70%}
-.sp-solution .s4, .sp-station .s6 {top: 50%; left: 30%}
-.sp-solution .s5, .sp-station .s3 {top: 50%; left: 70%}
-.sp-solution .s6, .sp-station .s5 {top: 75%; left: 30%}
-.sp-solution .s7, .sp-station .s4 {top: 75%; left: 70%}
-.sp-swing .s1 {top: 20%; left: 25%}
-.sp-swing .s2 {top: 35%; left: 20%}
-.sp-swing .s3 {top: 50%; left: 25%}
-.sp-swing .s4 {top: 65%; left: 20%}
-.sp-swing .s5 {top: 80%; left: 25%}
-.sp-swing .s6 {top: 20%; left: 75%}
-.sp-swing .s7 {top: 35%; left: 80%}
-.sp-swing .s8 {top: 50%; left: 75%}
-.sp-swing .s9 {top: 65%; left: 80%}
-.sp-swing .s10 {top: 80%; left: 75%}
-.sp-swing .s11 {top: 50%}
-.sp-choice .s1 {top: 50%; left: 20%}
-.sp-choice .s2 {top: 30%; left: 40%}
-.sp-choice .s3 {top: 30%; left: 60%}
-.sp-choice .s4 {top: 30%; left: 80%}
-.sp-choice .s5 {top: 70%; left: 40%}
-.sp-choice .s6 {top: 70%; left: 60%}
-.sp-choice .s7 {top: 70%; left: 80%}
-.sp-free .s1 {top: 20%; left: 20%}
-.sp-free .s2 {top: 20%; left: 40%}
-.sp-free .s3 {top: 20%; left: 60%}
-.sp-free .s4 {top: 20%; left: 80%}
-.sp-free .s5 {top: 50%; left: 20%}
-.sp-free .s6 {top: 50%; left: 40%}
-.sp-free .s7 {top: 50%; left: 60%}
-.sp-free .s8 {top: 50%; left: 80%}
-.sp-free .s9 {top: 80%; left: 20%}
-.sp-free .s10 {top: 80%; left: 40%}
-.sp-free .s11 {top: 80%; left: 60%}
-.sp-free .s12 {top: 80%; left: 80%}
+#sp-cross #s1, #sp-cross #s2 {top: 50%; left: 37%}
+#sp-cross #s2 {transform: translate(-50%, -50%) rotate(90deg); transform-origin: 25% 66%}
+#sp-cross #s3 {top: 20%; left: 37%}
+#sp-cross #s4 {top: 80%; left: 37%}
+#sp-cross #s5 {top: 50%; left: 14%}
+#sp-cross #s6 {top: 50%; left: 60%}
+#sp-cross #s7 {top: 86%; left: 83%}
+#sp-cross #s8 {top: 62%; left: 83%}
+#sp-cross #s9 {top: 38%; left: 83%}
+#sp-cross #s10 {top: 14%; left: 83%}
+#sp-faust #s1, #sp-disorder #s2, #sp-marriage #s4 {top: 65%; left: 20%}
+#sp-faust #s2, #sp-disorder #s1, #sp-marriage #s1 {top: 20%}
+#sp-faust #s3, #sp-disorder #s3, #sp-marriage #s5 {top: 65%; left: 80%}
+#sp-faust #s4, #sp-disorder #s4, #sp-marriage #s2 {top: 35%; left: 20%}
+#sp-faust #s5, #sp-disorder #s6, #sp-marriage #s6 {top: 80%}
+#sp-faust #s6, #sp-disorder #s5, #sp-marriage #s3 {top: 35%; left: 80%}
+#sp-faust #s7, #sp-disorder #s7, #sp-one #s1 {top: 50%}
+#sp-problem #s1 {top: 30%}
+#sp-problem #s2 {top: 65%; left: 25%}
+#sp-problem #s3 {top: 65%}
+#sp-problem #s4 {top: 65%; left: 75%}
+#sp-progress #s1 {top: 50%; left: 20%}
+#sp-progress #s2 {top: 50%; left: 40%}
+#sp-progress #s3 {top: 50%; left: 60%}
+#sp-progress #s4 {top: 20%; left: 20%}
+#sp-progress #s5 {top: 20%; left: 40%}
+#sp-progress #s6 {top: 20%; left: 60%}
+#sp-progress #s7 {top: 80%; left: 45%}
+#sp-progress #s8 {top: 80%; left: 65%}
+#sp-progress #s9 {top: 80%; left: 85%}
+#sp-progress #s10 {top: 80%; left: 20%}
+#sp-solution #s1, #sp-station #s1 {top: 50%}
+#sp-solution #s2, #sp-station #s7 {top: 25%; left: 30%}
+#sp-solution #s3, #sp-station #s2 {top: 25%; left: 70%}
+#sp-solution #s4, #sp-station #s6 {top: 50%; left: 30%}
+#sp-solution #s5, #sp-station #s3 {top: 50%; left: 70%}
+#sp-solution #s6, #sp-station #s5 {top: 75%; left: 30%}
+#sp-solution #s7, #sp-station #s4 {top: 75%; left: 70%}
+#sp-swing #s1 {top: 20%; left: 25%}
+#sp-swing #s2 {top: 35%; left: 20%}
+#sp-swing #s3 {top: 50%; left: 25%}
+#sp-swing #s4 {top: 65%; left: 20%}
+#sp-swing #s5 {top: 80%; left: 25%}
+#sp-swing #s6 {top: 20%; left: 75%}
+#sp-swing #s7 {top: 35%; left: 80%}
+#sp-swing #s8 {top: 50%; left: 75%}
+#sp-swing #s9 {top: 65%; left: 80%}
+#sp-swing #s10 {top: 80%; left: 75%}
+#sp-swing #s11 {top: 50%}
+#sp-choice #s1 {top: 50%; left: 20%}
+#sp-choice #s2 {top: 30%; left: 40%}
+#sp-choice #s3 {top: 30%; left: 60%}
+#sp-choice #s4 {top: 30%; left: 80%}
+#sp-choice #s5 {top: 70%; left: 40%}
+#sp-choice #s6 {top: 70%; left: 60%}
+#sp-choice #s7 {top: 70%; left: 80%}
+#sp-free #s1 {top: 20%; left: 20%}
+#sp-free #s2 {top: 20%; left: 40%}
+#sp-free #s3 {top: 20%; left: 60%}
+#sp-free #s4 {top: 20%; left: 80%}
+#sp-free #s5 {top: 50%; left: 20%}
+#sp-free #s6 {top: 50%; left: 40%}
+#sp-free #s7 {top: 50%; left: 60%}
+#sp-free #s8 {top: 50%; left: 80%}
+#sp-free #s9 {top: 80%; left: 20%}
+#sp-free #s10 {top: 80%; left: 40%}
+#sp-free #s11 {top: 80%; left: 60%}
+#sp-free #s12 {top: 80%; left: 80%}

@@ -41,13 +41,12 @@ var $themeReadingTitle = $('#theme-reading-title');
 var $cardModal = $('#card-modal');
 var $cardModalImage = $('#card-modal-image');
 var $cardInfoElements = $('#card-name, #card-alt-name, #general-reading, #theme-reading');
+var $deckImageElements = $deck.add($animatedCardBase);
+var $cardImageElements = $detailsImage.add($cardModalImage);
 
 var $cards = $('.card');
 var $animatedCardBase = $('.card-animated').remove();
 var fallbackTitles = $cards.map(function (i) { return 'Карта ' + (i + 1); }).get();
-
-var $deckImageElements = $deck.add($animatedCardBase);
-var $cardImageElements = $detailsImage.add($cardModalImage);
 
 function runOnLoad(el, callback) {
     el.prop('complete') ? callback() : el.one('load', callback);
@@ -55,33 +54,19 @@ function runOnLoad(el, callback) {
 
 function startApp(event) {
     event.preventDefault();
-
-    $('#btn-show-details').click(showDetails);
-    $('#btn-hide-details').click(hideDetails);
-
-    $table.click(handleTableClick);
-    $resetButton.click(resetTable);
     $app.change(resetTable);
-
-    $detailsImage.click(function () { $cardModal.show(); });
-    $cardModal.click(function () { $cardModal.hide(); });
-
-    $deck.on('load', function () {
-        $deck.show();
-        $deckLoadingIcon.hide();
-    })
-
     $spreadSelect.on('change.data', handleSpreadChange);
     $themeSelect.on('change.data', handleThemeChange);
     $deckSelect.on('change.data', handleDeckChange);
     $('select').trigger('change.data');
-
-    $('#header, #intro').slideUp(openingDuration).promise().done(function () {
-        showDetails();
-        $('.button-bar .button').show();
-        $deck.click(drawCard);
-    });
-
+    $('#header, #intro')
+        .slideUp(openingDuration)
+        .promise()
+        .done(function () {
+            showDetails();
+            $('.button-bar .button').show();
+            $deck.click(drawCard);
+       });
     $table.show();
     $startButton.hide();
 }
@@ -89,7 +74,6 @@ function startApp(event) {
 function handleSpreadChangeInitial() {
     var $option = $(this).find(':selected');
     var theme = $option.data('theme');
-
     spreadName = $option.text().split(' (')[0];
     $themeSelect.prop('disabled', theme);
     if (theme) $themeSelect.val(theme).change();
@@ -97,7 +81,7 @@ function handleSpreadChangeInitial() {
 
 function handleSpreadChange() {
     var spreadId = this.value;
-    $app.prop('class', 'sp-' + spreadId);
+    $table.prop('id', 'sp-' + spreadId);
     titles = data.titles[spreadId] || fallbackTitles;
     $spreadDetails.text(data.details[spreadId]);
     $positionList.text(data.positions[spreadId] || '');
@@ -111,7 +95,6 @@ function handleThemeChange() {
 
 function handleDeckChange() {
     var deckId = this.value;
-
     $deck.hide();
     $deckLoadingIcon.show();
 
@@ -119,7 +102,6 @@ function handleDeckChange() {
     altRanks = data.altRanks[deckId];
     altSuits = data.altSuits[deckId];
     extraMajors = data.extraMajors[deckId];
-
     deckSize = 78;
     if (extraMajors) deckSize += extraMajors.length;
 
@@ -130,7 +112,6 @@ function handleDeckChange() {
 
 function handleTableClick(event) {
     var slot = $cards.index(event.target);
-
     if (slot >= 0) {
         showDetails(slot);
         $(event.target).addClass('card-selected');
@@ -149,28 +130,24 @@ function resetTable(event) {
     $('.card-animated')
         .stop(true)
         .fadeOut(fadeDuration, function () { $(this).remove(); });
-
-    $cards.finish().fadeOut(fadeDuration);
+    $cards
+        .finish()
+        .fadeOut(fadeDuration);
 }
 
 function createDescription(id) {
     var adjustedId = id;
     var name;
     var altName;
-
     if (id > 21) {
         var suit = Math.floor((id - 22) / 14);
         var rank = id - 22 - 14 * suit;
-
         if (suit < 4) {
             var rankName = data.ranks[rank];
             var suitName = data.suits[suit];
-
             altName = rankName + ' ' + suitName;
-
             if (altRanks && rank > 9) rankName = altRanks[rank - 10];
             if (altSuits) suitName = altSuits[suit];
-
             name = rankName + ' ' + suitName;
             if (name == altName) altName = '';
         } else {
@@ -180,37 +157,35 @@ function createDescription(id) {
         if ((id == 8 || id == 11) && isClassic) adjustedId = 19 - id;
         name = data.roman[adjustedId] + ' ' + data.major[id];
     }
-
     descriptions.push([name, altName, meanings[id], readings ? readings[id] : '']);
-
     return adjustedId;
 }
 
 function drawCard() {
     var id;
-
     do id = Math.floor(Math.random() * deckSize);
     while (drawnCards.indexOf(id) >= 0);
 
     var slot = drawnCards.push(id) - 1;
     var $slotImg = $cards.eq(slot);
-    var $animatedCardInstance = $animatedCardBase.clone().appendTo($table);
+    id = createDescription(id);
+    $slotImg.prop('src', deckPath + id + '.jpg');
 
+    var $animatedCardInstance = $animatedCardBase
+        .clone()
+        .appendTo($table)
+        .css($deck.position())
+        .animate(
+            $slotImg.parent().position(),
+            cardDrawDuration,
+            function () { runOnLoad($slotImg, showCard); }
+        );
     var showCard = function () {
         $slotImg.show();
         $animatedCardInstance.fadeOut(fadeDuration, function () {
             $(this).remove();
         });
     };
-
-    id = createDescription(id);
-    $slotImg.prop('src', deckPath + id + '.jpg');
-
-    $animatedCardInstance.css($deck.position()).animate(
-        $slotImg.parent().position(),
-        cardDrawDuration,
-        function () { runOnLoad($slotImg, showCard); }
-    );
 
     if (slot == titles.length - 1) {
         $resetButton.show();
@@ -222,7 +197,6 @@ function showCardInfo(slot) {
     descriptions[slot].forEach(function (text, i) {
         $cardInfoElements.eq(i).text(text || '');
     });
-
     $detailsTitle.text(titles[slot]);
     $cardImageElements.prop('src', $cards.eq(slot).prop('src'));
     $cardInfo.show();
@@ -236,14 +210,14 @@ function showSpreadInfo() {
 }
 
 function showDetails(slot) {
-    $detailsMenu.show();
-    deselect();
     slot >= 0 ? showCardInfo(slot) : showSpreadInfo();
+    deselect();
+    $detailsMenu.show();
 }
 
 function hideDetails() {
-    $detailsMenu.hide();
     deselect();
+    $detailsMenu.hide();
 }
 
 function deselect() {
@@ -251,21 +225,27 @@ function deselect() {
     $detailsContent.scrollTop(0);
 }
 
-$.getJSON('res/data.json?2', function (json) {
+$.getJSON('res/data.json', function (json) {
     data = json;
-    $startButton.prop('disabled', false).text('НАЧАТЬ');
+    $startButton
+        .prop('disabled', false)
+        .text('НАЧАТЬ');
 });
 
 $('.hidden').hide().removeClass('hidden');
+$app.click(function () {}); // prevent double-tap zoom on ios
 runOnLoad($decor, function () { $decor.show(); });
-$app.one('submit', startApp);
 $spreadSelect.change(handleSpreadChangeInitial);
+$app.one('submit', startApp);
 
-// ios fixes
-if ('standalone' in navigator) {
-    // prevent double-tap to zoom
-    $app.click(function () {});
-    // fix scrolling bug
-    $app.css('overflow', 'auto');
-}
+$table.click(handleTableClick);
+$resetButton.click(resetTable);
+$('#btn-show-details').click(showDetails);
+$('#btn-hide-details').click(hideDetails);
+$detailsImage.click(function () { $cardModal.show(); });
+$cardModal.click(function () { $cardModal.hide(); });
+$deck.on('load', function () {
+    $deck.show();
+    $deckLoadingIcon.hide();
+});
 })();
