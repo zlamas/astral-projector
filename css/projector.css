@@ -1,3 +1,7 @@
+:root {
+  --accent: orange;
+  --invalid: red;
+}
 body {
   display: flex;
   position: fixed;
@@ -71,9 +75,12 @@ p {
   cursor: not-allowed;
   opacity: 0.5;
 }
+:user-invalid {
+  box-shadow: 0 0 0.1em 0.1em var(--invalid);
+}
 .button:focus,
 .dropdown:focus {
-  box-shadow: 0 0 0.6em 0.3em red;
+  box-shadow: 0 0 0.3em 0.2em var(--accent);
   outline: 0;
 }
 .button-bar {
@@ -129,7 +136,7 @@ p {
   font-weight: bold;
 }
 .card-selected {
-  box-shadow: 0 0 0.6em 0.3em red;
+  box-shadow: 0 0 0.3em 0.2em var(--accent);
 }
 .card-small-text {
   font-size: 0.8em;
@@ -261,7 +268,7 @@ p {
   left: 0.5em;
 }
 .table-element:hover {
-  color: red;
+  color: var(--accent);
 }
 .title {
   font: 1.8em Edo, sans-serif;
