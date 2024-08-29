@@ -325,12 +325,5 @@ fetch('res/data.json?3')
 runOnLoad(decor, () => show(decor));
 app.addEventListener('submit', startApp, { once: true });
 spreadSelect.addEventListener('change', handleSpreadChangeInitial);
-
-// ios fixes
-if ('standalone' in navigator) {
-    // prevent double-tap to zoom
-    app.addEventListener('click', () => {});
-    // fix scrolling bug
-    app.style.overflow = 'auto';
-}
+app.onclick = () => {}; // prevent double-tap zoom on ios
 })(document.body);
