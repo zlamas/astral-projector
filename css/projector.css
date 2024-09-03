@@ -2,6 +2,9 @@
   --accent: orange;
   --invalid: red;
 }
+html {
+  overscroll-behavior: contain;
+}
 body {
   display: flex;
   position: fixed;
@@ -236,7 +239,6 @@ p {
   border-radius: 0.5em;
   box-shadow: 0 -1.2em 0.8em -1em inset;
   overflow: auto;
-  overscroll-behavior: contain;
   touch-action: pan-y;
 }
 .slot,
