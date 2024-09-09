@@ -14,13 +14,18 @@ let deckPath;
 let isClassic;
 let spreadName;
 
-let openingDuration = 3000;
-let cardDrawDuration = 1000;
-let fadeDuration = 500;
-let animationOptions = {
+const openingDuration = 3000;
+const cardDrawDuration = 1000;
+const fadeDuration = 500;
+const animationOptions = {
     fill: 'forwards',
     easing: 'ease-in-out',
 };
+
+let hide = (el) => el.classList.add('hidden');
+let show = (el) => el.classList.remove('hidden');
+let toggle = (el, condition) => el.classList.toggle('hidden', !condition);
+let toArray = Function.call.bind(Array.prototype.slice);
 
 let decor = document.getElementById('decor');
 let spreadSelect = document.getElementById('spread-select');
@@ -47,15 +52,12 @@ let cardInfoElements = detailsMenu.querySelectorAll(
     '#card-name, #card-alt-name, #general-reading, #theme-reading'
 );
 
-let cards = Array.prototype.slice.call(table.getElementsByClassName('card'));
-let selectedCards = table.getElementsByClassName('card-selected');
-let animatedCards = app.getElementsByClassName('card-animated');
-let animatedCardBase = table.removeChild(animatedCards[0]);
+let cards = toArray(table.getElementsByClassName('card'));
 let fallbackTitles = cards.map((_, i) => 'Карта ' + (i + 1));
 
-let hide = (el) => el.classList.add('hidden');
-let show = (el) => el.classList.remove('hidden');
-let toggle = (el, condition) => el.classList.toggle('hidden', !condition);
+let selectedCards = table.getElementsByClassName('selected');
+let animatedCards = app.getElementsByClassName('card-animated');
+let animatedCardBase = app.removeChild(animatedCards[0]);
 
 function getPosition(el) {
     let rect = el.getBoundingClientRect();
@@ -77,7 +79,8 @@ function fadeOut(el, duration, remove) {
 }
 
 function slideUp(query, duration, callback) {
-    let els = Array.prototype.slice.call(app.querySelectorAll(query));
+    let els = toArray(app.querySelectorAll(query));
+
     Promise.all(
         els.map((el) =>
             new Promise((resolve) => {
@@ -87,6 +90,7 @@ function slideUp(query, duration, callback) {
                     paddingTop: [compStyle.paddingTop, 0],
                     paddingBottom: [compStyle.paddingBottom, 0]
                 };
+
                 el.animate(
                     keyframes,
                     Object.assign({ duration }, animationOptions)
@@ -97,6 +101,7 @@ function slideUp(query, duration, callback) {
             })
         )
     ).then(callback);
+
     els.forEach((el) => el.style.overflow = 'hidden');
 }
 
@@ -108,11 +113,16 @@ function moveFromTo(el, source, target, duration) {
 }
 
 function runOnLoad(el, callback) {
-    el.complete ? callback() : el.addEventListener('load', callback, { once: true });
+    if (el.complete) {
+        callback();
+    } else {
+        el.addEventListener('load', callback, { once: true });
+    }
 }
 
 function startApp(event) {
     event.preventDefault();
+
     app.addEventListener('change', resetTable);
     spreadSelect.addEventListener('change', handleSpreadChange);
     themeSelect.addEventListener('change', handleThemeChange);
@@ -120,11 +130,13 @@ function startApp(event) {
     handleSpreadChange();
     handleThemeChange();
     handleDeckChange();
+
     slideUp('#header, #intro', openingDuration, () => {
-        showDetails();
+        showSpreadInfo(true);
         app.querySelectorAll('.button-bar .button').forEach(show);
         deck.addEventListener('click', drawCard);
     });
+
     show(table);
     hide(startButton);
 }
@@ -132,14 +144,21 @@ function startApp(event) {
 function handleSpreadChangeInitial() {
     let option = spreadSelect.selectedOptions[0];
     let theme = option.dataset.theme;
+
     spreadName = option.text.split(' (')[0];
     themeSelect.disabled = theme;
-    if (theme) themeSelect.value = theme;
+    if (theme) {
+        themeSelect.value = theme;
+    }
 }
 
 function handleSpreadChange(event) {
     let spreadId = spreadSelect.value;
-    if (themeSelect.disabled && event) handleThemeChange();
+
+    if (themeSelect.disabled && event) {
+        handleThemeChange();
+    }
+
     table.id = 'sp-' + spreadId;
     titles = data.titles[spreadId] || fallbackTitles;
     spreadDetails.textContent = data.details[spreadId];
@@ -154,6 +173,7 @@ function handleThemeChange() {
 
 function handleDeckChange() {
     let deckId = deckSelect.value;
+
     hide(deck);
     show(deckLoadingIcon);
 
@@ -161,32 +181,39 @@ function handleDeckChange() {
     altSuits = data.altSuits[deckId];
     altRanks = data.altRanks[deckId];
     extraMajors = data.extraMajors[deckId];
-    deckSize = 78;
-    if (extraMajors) deckSize += extraMajors.length;
 
-    isClassic = deckSelect.selectedOptions[0].hasAttribute('data-classic');
+    deckSize = 78;
+    if (extraMajors) {
+        deckSize += extraMajors.length;
+    }
+
+    isClassic = 'classic' in deckSelect.selectedOptions[0].dataset;
     deckPath = 'img/' + deckId + '/';
     deck.src = animatedCardBase.src = deckPath + 'back.jpg';
 }
 
 function handleTableClick(event) {
     let slot = cards.indexOf(event.target);
+
     if (slot >= 0) {
-        showDetails(slot);
-        event.target.classList.add('card-selected');
+        showCardInfo(slot);
+        event.target.classList.add('selected');
     }
 }
 
 function resetTable(event) {
-    drawnCards = [];
-    descriptions = [];
+    if (event.target != deckSelect) {
+        show(deck);
+    }
 
-    if (event.target != deckSelect) show(deck);
     hide(resetButton);
-    showSpreadInfo();
-    deselect();
+    showSpreadInfo(false);
+    drawnCards.length = descriptions.length = 0;
 
-    for (let el of animatedCards) el.dispatchEvent(new Event('table-reset'));
+    toArray(animatedCards).forEach((el) => {
+        el.dispatchEvent(new Event('table-reset'));
+    });
+
     cards.forEach((el) => fadeOut(el, fadeDuration));
 }
 
@@ -194,52 +221,71 @@ function createDescription(id) {
     let adjustedId = id;
     let name;
     let altName;
+
     if (id > 21) {
         let suit = Math.floor((id - 22) / 14);
         let rank = id - 22 - 14 * suit;
+
         if (suit < 4) {
             let rankName = data.ranks[rank];
             let suitName = data.suits[suit];
+
             altName = rankName + ' ' + suitName;
-            if (altRanks && rank > 9) rankName = altRanks[rank - 10];
-            if (altSuits) suitName = altSuits[suit];
+
+            if (altRanks && rank > 9) {
+                rankName = altRanks[rank - 10];
+            }
+            if (altSuits) {
+                suitName = altSuits[suit];
+            }
             name = rankName + ' ' + suitName;
-            if (name == altName) altName = '';
+
+            if (name == altName) {
+                altName = '';
+            }
         } else {
             name = extraMajors[rank];
         }
     } else {
-        if ((id == 8 || id == 11) && isClassic) adjustedId = 19 - id;
+        if ((id == 8 || id == 11) && isClassic) {
+            adjustedId = 19 - id;
+        }
         name = data.roman[adjustedId] + ' ' + data.major[id];
     }
-    descriptions.push([name, altName, meanings[id], readings ? readings[id] : '']);
+
+    descriptions.push([name, altName, meanings[id], readings && readings[id]]);
+
     return adjustedId;
 }
 
 function drawCard() {
     let id;
-    do id = Math.floor(Math.random() * deckSize);
-    while (drawnCards.includes(id));
+
+    do {
+        id = Math.floor(Math.random() * deckSize);
+    } while (drawnCards.includes(id));
 
     let slot = drawnCards.push(id) - 1;
-    let slotImg = cards[slot];
-    id = createDescription(id);
-    slotImg.src = deckPath + id + '.jpg';
+    let card = cards[slot];
+    let adjustedId = createDescription(id);
+
+    card.src = deckPath + adjustedId + '.jpg';
 
     let animatedCardInstance = app.appendChild(animatedCardBase.cloneNode());
     let animation = moveFromTo(
         animatedCardInstance,
         deck,
-        slotImg.parentNode,
+        card.parentNode,
         cardDrawDuration
     );
     let showCard = () => {
-        slotImg.removeEventListener('load', showCard);
-        show(slotImg);
+        card.removeEventListener('load', showCard);
+        show(card);
         animation.pause();
         fadeOut(animatedCardInstance, fadeDuration, true);
     };
-    animation.onfinish = () => runOnLoad(slotImg, showCard);
+
+    animation.onfinish = () => runOnLoad(card, showCard);
     animatedCardInstance.addEventListener('table-reset', showCard);
 
     if (slot == titles.length - 1) {
@@ -250,31 +296,43 @@ function drawCard() {
 
 function showCardInfo(slot) {
     detailsTitle.textContent = titles[slot];
-    descriptions[slot].forEach((text, i) => cardInfoElements[i].textContent = text);
     detailsImage.src = cardModalImage.src = cards[slot].src;
+
+    descriptions[slot].forEach((text, i) => {
+        cardInfoElements[i].textContent = text;
+    });
+
     hide(spreadInfo);
     show(cardInfo);
+    deselect();
+    openDetails();
 }
 
-function showSpreadInfo() {
+function showSpreadInfo(shouldOpenDetails) {
     detailsTitle.textContent = spreadName;
+
     show(spreadInfo);
     hide(cardInfo);
+    deselect();
+
+    if (shouldOpenDetails) {
+        openDetails();
+    }
 }
 
-function showDetails(slot) {
-    slot >= 0 ? showCardInfo(slot) : showSpreadInfo();
-    deselect();
+function openDetails() {
     show(detailsMenu);
 }
 
-function hideDetails() {
+function closeDetails() {
     deselect();
     hide(detailsMenu);
 }
 
 function deselect() {
-    for (let el of selectedCards) el.classList.remove('card-selected');
+    while (selectedCards[0]) {
+        selectedCards[0].classList.remove('selected');
+    }
     detailsContent.scrollTop = 0;
 }
 
@@ -288,15 +346,19 @@ fetch('res/data.json?3')
 
 app.onclick = () => {}; // prevent double-tap zoom on ios
 runOnLoad(decor, () => show(decor));
+
 spreadSelect.addEventListener('change', handleSpreadChangeInitial);
 app.addEventListener('submit', startApp, { once: true });
 
 table.addEventListener('click', handleTableClick);
 resetButton.addEventListener('click', resetTable);
-document.getElementById('btn-show-details').addEventListener('click', showDetails);
-document.getElementById('btn-hide-details').addEventListener('click', hideDetails);
+
+document.getElementById('btn-show-details').addEventListener('click', showSpreadInfo);
+document.getElementById('btn-hide-details').addEventListener('click', closeDetails);
+
 detailsImage.addEventListener('click', () => show(cardModal));
 cardModal.addEventListener('click', () => hide(cardModal));
+
 deck.addEventListener('load', () => {
     show(deck);
     hide(deckLoadingIcon);

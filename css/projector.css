@@ -1,8 +1,6 @@
 :root {
   --accent: orange;
   --invalid: red;
-}
-html {
   overscroll-behavior: contain;
 }
 body {
@@ -41,11 +39,6 @@ p {
   margin-top: 0;
   text-align: left;
   white-space: pre-line;
-}
-.card,
-.modal,
-.fade-in {
-  animation: fade-in 0.5s;
 }
 .app-title {
   font: 3.8em Edo, sans-serif;
@@ -124,6 +117,7 @@ p {
 }
 .card {
   height: 100%;
+  animation: 0.5s fade-in;
   border-radius: inherit;
   box-shadow: 0 0 0.5em currentcolor;
   transform: translateZ(1px);
@@ -138,9 +132,6 @@ p {
 .card-name {
   font-size: 1.2em;
   font-weight: bold;
-}
-.card-selected {
-  box-shadow: 0 0 0.3em 0.2em var(--accent);
 }
 .card-small-text {
   font-size: 0.8em;
@@ -182,6 +173,9 @@ p {
   text-align: center;
   white-space: normal;
 }
+.fade-in {
+  animation: 0.5s fade-in;
+}
 .header {
   font-size: 0.8em;
 }
@@ -194,7 +188,7 @@ p {
 }
 .loading-icon {
   height: 3em;
-  animation: spin 1s infinite, fade-in 1s 0.2s backwards;
+  animation: 1s infinite spin, 1s 0.2s backwards fade-in;
   cursor: wait;
 }
 .main {
@@ -213,13 +207,14 @@ p {
   position: fixed;
   width: 100%;
   height: 100%;
+  animation: 0.5s fade-in;
   background: rgba(0, 0, 0, 0.8);
   z-index: 99;
 }
 .modal-content {
   width: 100%;
   height: 100%;
-  animation: zoom-in 0.5s;
+  animation: 0.5s zoom-in;
   object-fit: contain;
 }
 .modal-image {
@@ -240,6 +235,9 @@ p {
   box-shadow: 0 -1.2em 0.8em -1em inset;
   overflow: auto;
   touch-action: pan-y;
+}
+.selected {
+  box-shadow: 0 0 0.3em 0.2em var(--accent);
 }
 .slot,
 .table {
@@ -263,7 +261,7 @@ p {
 }
 .table {
   position: relative;
-  animation: fade-in 3s ease-in-out;
+  animation: 3s ease-in-out fade-in;
   flex: 1;
   z-index: -1;
 }
@@ -291,19 +289,9 @@ p {
 .button-help:hover ~ .tooltip {
   display: block;
 }
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-}
 @keyframes spin {
   0% {
     transform: rotate(360deg);
-  }
-}
-@keyframes zoom-in {
-  0% {
-    transform: scale(0.5);
   }
 }
 @media screen and (orientation: landscape) {
