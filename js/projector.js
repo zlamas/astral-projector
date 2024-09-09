@@ -24,7 +24,6 @@ const animationOptions = {
 
 let hide = (el) => el.classList.add('hidden');
 let show = (el) => el.classList.remove('hidden');
-let toggle = (el, condition) => el.classList.toggle('hidden', !condition);
 let toArray = Function.call.bind(Array.prototype.slice);
 
 let decor = document.getElementById('decor');
@@ -41,11 +40,9 @@ let detailsTitle = document.getElementById('details-title');
 let detailsContent = document.getElementById('details-content');
 let spreadInfo = document.getElementById('spread-info');
 let spreadDetails = document.getElementById('spread-details');
-let positionListTitle = document.getElementById('position-list-title');
 let positionList = document.getElementById('position-list');
 let cardInfo = document.getElementById('card-info');
 let detailsImage = document.getElementById('details-card-image');
-let themeReadingTitle = document.getElementById('theme-reading-title');
 let cardModal = document.getElementById('card-modal');
 let cardModalImage = document.getElementById('card-modal-image');
 let cardInfoElements = detailsMenu.querySelectorAll(
@@ -163,12 +160,10 @@ function handleSpreadChange(event) {
     titles = data.titles[spreadId] || fallbackTitles;
     spreadDetails.textContent = data.details[spreadId];
     positionList.textContent = data.positions[spreadId];
-    toggle(positionListTitle, positionList.textContent);
 }
 
 function handleThemeChange() {
     readings = data.readings[themeSelect.value];
-    toggle(themeReadingTitle, readings);
 }
 
 function handleDeckChange() {

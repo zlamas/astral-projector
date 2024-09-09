@@ -259,6 +259,20 @@ p {
   left: 105%;
   font: 1.5em / 0 Edo, sans-serif;
 }
+.smart-title::before {
+  display: block;
+  font-weight: bold;
+  text-align: center;
+}
+.general-reading::before {
+  content: 'Общее значение карты: ';
+}
+.theme-reading:not(:empty)::before {
+  content: 'Значение карты в этом раскладе: ';
+}
+.position-list:not(:empty)::before {
+  content: 'Позиции расклада: ';
+}
 .table {
   position: relative;
   animation: 3s ease-in-out fade-in;
