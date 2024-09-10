@@ -10,7 +10,7 @@ body {
   height: 100%;
   background: #643 url(../img/bg.jpg?) center / auto 100% fixed;
   color: white;
-  font: 2.5vh 'Open Sans', sans-serif;
+  font: 2.5vh "Open Sans", sans-serif;
   justify-content: center;
   text-align: center;
   text-shadow: 2px 2px black;
@@ -41,7 +41,7 @@ p {
   white-space: pre-line;
 }
 .app-title {
-  font: 3.8em Edo, sans-serif;
+  font: 3.8em "Edo", sans-serif;
   margin: 0;
 }
 .bold {
@@ -257,7 +257,7 @@ p {
   position: absolute;
   top: 0;
   left: 105%;
-  font: 1.5em / 0 Edo, sans-serif;
+  font: 1.5em / 0 "Edo", sans-serif;
 }
 .smart-title::before {
   display: block;
@@ -265,13 +265,13 @@ p {
   text-align: center;
 }
 .general-reading::before {
-  content: 'Общее значение карты: ';
+  content: "Общее значение карты: ";
 }
 .theme-reading:not(:empty)::before {
-  content: 'Значение карты в этом раскладе: ';
+  content: "Значение карты в этом раскладе: ";
 }
 .position-list:not(:empty)::before {
-  content: 'Позиции расклада: ';
+  content: "Позиции расклада: ";
 }
 .table {
   position: relative;
@@ -288,7 +288,7 @@ p {
   color: var(--accent);
 }
 .title {
-  font: 1.8em Edo, sans-serif;
+  font: 1.8em "Edo", sans-serif;
 }
 .tooltip {
   display: none;
