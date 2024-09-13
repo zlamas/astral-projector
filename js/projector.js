@@ -45,7 +45,7 @@ let cardInfo = document.getElementById('card-info');
 let detailsImage = document.getElementById('details-card-image');
 let cardModal = document.getElementById('card-modal');
 let cardModalImage = document.getElementById('card-modal-image');
-let cardInfoElements = detailsMenu.querySelectorAll(
+let cardInfoElements = cardInfo.querySelectorAll(
     '#card-name, #card-alt-name, #general-reading, #theme-reading'
 );
 
@@ -54,7 +54,9 @@ let fallbackTitles = cards.map((_, i) => 'Карта ' + (i + 1));
 
 let selectedCards = table.getElementsByClassName('selected');
 let animatedCards = app.getElementsByClassName('card-animated');
-let animatedCardBase = app.removeChild(animatedCards[0]);
+let animatedCardBase = animatedCards[0];
+
+animatedCardBase.remove();
 
 function getPosition(el) {
     let rect = el.getBoundingClientRect();
@@ -192,6 +194,7 @@ function handleTableClick(event) {
 
     if (slot >= 0) {
         showCardInfo(slot);
+        deselect();
         event.target.classList.add('selected');
     }
 }
@@ -266,7 +269,7 @@ function drawCard() {
 
     card.src = deckPath + adjustedId + '.jpg';
 
-    let animatedCardInstance = app.appendChild(animatedCardBase.cloneNode());
+    let animatedCardInstance = animatedCardBase.cloneNode();
     let animation = moveFromTo(
         animatedCardInstance,
         deck,
@@ -280,6 +283,7 @@ function drawCard() {
         fadeOut(animatedCardInstance, fadeDuration, true);
     };
 
+    app.append(animatedCardInstance);
     animation.onfinish = () => runOnLoad(card, showCard);
     animatedCardInstance.addEventListener('table-reset', showCard);
 
@@ -299,7 +303,6 @@ function showCardInfo(slot) {
 
     hide(spreadInfo);
     show(cardInfo);
-    deselect();
     openDetails();
 }
 

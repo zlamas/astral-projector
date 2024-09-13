@@ -26,11 +26,8 @@ body {
     overflow: hidden;
   }
   body {
-    overflow: auto;
+    overflow-y: auto;
   }
-}
-body::-webkit-scrollbar {
-  display: none;
 }
 img {
   display: block;
@@ -50,16 +47,6 @@ p {
 .bold {
   font-weight: bold;
 }
-.button {
-  align-self: center;
-  background: none;
-  border: 1px solid;
-  font-weight: bold;
-  margin: 0;
-  padding: 0.1em 0.5em;
-  text-decoration: none;
-  white-space: nowrap;
-}
 .button,
 .dropdown {
   border-radius: 9em;
@@ -70,6 +57,11 @@ p {
   text-shadow: inherit;
   transition: box-shadow 0.5s, opacity 0.5s;
 }
+.button:focus,
+.dropdown:focus {
+  box-shadow: 0 0 0.3em 0.2em var(--accent);
+  outline: 0;
+}
 :disabled {
   cursor: not-allowed;
   opacity: 0.5;
@@ -77,10 +69,13 @@ p {
 :user-invalid {
   box-shadow: 0 0 0.1em 0.1em var(--invalid);
 }
-.button:focus,
-.dropdown:focus {
-  box-shadow: 0 0 0.3em 0.2em var(--accent);
-  outline: 0;
+.button {
+  background: none;
+  border: 1px solid;
+  font-weight: bold;
+  margin: 0 auto;
+  padding: 0.1em 0.5em;
+  white-space: nowrap;
 }
 .button-bar {
   display: flex;
@@ -147,6 +142,7 @@ p {
   position: absolute;
   height: 100%;
   right: 0;
+  pointer-events: none;
   transform: translateX(50%);
   z-index: -1;
 }
@@ -236,7 +232,7 @@ p {
 .scrollable {
   border-radius: 0.5em;
   box-shadow: 0 -1.2em 0.8em -1em inset;
-  overflow: auto;
+  overflow-y: auto;
   touch-action: pan-y;
 }
 .selected {
@@ -269,7 +265,6 @@ p {
   text-align: center;
 }
 .table {
-  position: relative;
   animation: 3s ease-in-out fade-in;
   flex: 1;
   z-index: -1;
@@ -293,14 +288,13 @@ p {
   border-radius: 10px;
   font-size: 1.5em;
   padding: 10px;
-  z-index: 5;
 }
 .button-help:hover ~ .tooltip {
   display: block;
 }
 @keyframes spin {
   0% {
-    transform: rotate(360deg);
+    transform: rotate(1turn);
   }
 }
 @media screen and (orientation: landscape) {
