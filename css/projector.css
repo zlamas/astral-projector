@@ -1,7 +1,10 @@
 :root {
   --accent: orange;
   --invalid: red;
-  overscroll-behavior: contain;
+}
+html,
+body {
+  overscroll-behavior: none;
 }
 body {
   display: flex;
