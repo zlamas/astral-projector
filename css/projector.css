@@ -222,12 +222,11 @@ p {
 }
 .noscript-warning {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  width: 100%;
   background: #b43;
   font-weight: bold;
   padding: 12px;
+  z-index: 99;
 }
 .scrollable {
   border-radius: 0.5em;
