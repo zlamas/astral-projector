@@ -1,6 +1,6 @@
 fonts/
+res/
 *.ico
 *.jpg
 *.png
-*.json
 *.min.*
