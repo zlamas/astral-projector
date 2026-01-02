@@ -9,11 +9,11 @@
 <link rel="icon" href="img/favicon.ico">
 <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<link rel="preload" href="img/bg.jpg?" as="image">
+<link rel="preload" href="img/bg.jpg" as="image">
 <link rel="preload" href="/fonts/edo.woff2" as="font" crossorigin>
 <link rel="stylesheet" href="/css/common.css?v=2">
-<link rel="stylesheet" href="css/projector.css?v=8">
-<script src="js/projector.min.js?v=3" defer></script>
+<link rel="stylesheet" href="css/projector.css?v=9">
+<script src="js/projector.min.js?v=4" defer></script>
 
 <div class="main">
   <form class="main-column column">
@@ -52,20 +52,20 @@
       <option value="lifegoal">Цель жизни: что важно сегодня</option>
     </select>
     <div id="table" class="table hidden">
-      <div id="s1" class="slot"><img class="card hidden" alt><span>1</span></div>
-      <div id="s2" class="slot"><img class="card hidden" alt><span>2</span></div>
-      <div id="s3" class="slot"><img class="card hidden" alt><span>3</span></div>
-      <div id="s4" class="slot"><img class="card hidden" alt><span>4</span></div>
-      <div id="s5" class="slot"><img class="card hidden" alt><span>5</span></div>
-      <div id="s6" class="slot"><img class="card hidden" alt><span>6</span></div>
-      <div id="s7" class="slot"><img class="card hidden" alt><span>7</span></div>
-      <div id="s8" class="slot"><img class="card hidden" alt><span>8</span></div>
-      <div id="s9" class="slot"><img class="card hidden" alt><span>9</span></div>
-      <div id="s10" class="slot"><img class="card hidden" alt><span>10</span></div>
-      <div id="s11" class="slot"><img class="card hidden" alt><span>11</span></div>
-      <div id="s12" class="slot"><img class="card hidden" alt><span>12</span></div>
-      <img id="btn-deck" class="button-deck table-element hidden fade-in" title="Вытащить карту" alt>
-      <img id="btn-table-reset" class="button-table-reset table-element hidden fade-in" src="img/restart.svg" title="Начать заново" alt>
+      <div class="slot s1"><img class="card hidden" alt><span>1</span></div>
+      <div class="slot s2"><img class="card hidden" alt><span>2</span></div>
+      <div class="slot s3"><img class="card hidden" alt><span>3</span></div>
+      <div class="slot s4"><img class="card hidden" alt><span>4</span></div>
+      <div class="slot s5"><img class="card hidden" alt><span>5</span></div>
+      <div class="slot s6"><img class="card hidden" alt><span>6</span></div>
+      <div class="slot s7"><img class="card hidden" alt><span>7</span></div>
+      <div class="slot s8"><img class="card hidden" alt><span>8</span></div>
+      <div class="slot s9"><img class="card hidden" alt><span>9</span></div>
+      <div class="slot s10"><img class="card hidden" alt><span>10</span></div>
+      <div class="slot s11"><img class="card hidden" alt><span>11</span></div>
+      <div class="slot s12"><img class="card hidden" alt><span>12</span></div>
+      <img id="btn-deck" class="deck table-element hidden fade-in" title="Вытащить карту" alt>
+      <img id="btn-table-reset" class="table-reset table-element hidden fade-in" src="img/restart.svg" title="Начать заново" alt>
       <img id="deck-loading" class="loading-icon table-element" src="img/loading-circle.svg" title="Колода загружается" alt>
     </div>
     <select id="deck-select" class="dropdown" autocomplete="off" required>
@@ -117,6 +117,6 @@
 <div id="card-modal" class="modal-image modal hidden">
   <img id="card-modal-image" class="modal-content" alt>
 </div>
-<img id="decor" class="decor hidden fade-in" src="img/cards.png?" alt>
+<img id="decor" class="decor hidden fade-in" src="img/cards.png" alt>
 <img class="card-animated" alt>
-<noscript class="noscript-warning">Это приложение не сможет работать, поскольку JavaScript отключён. Включите, чтобы продолжить.</noscript>
+<noscript class="error">Это приложение не сможет работать, поскольку JavaScript отключён. Включите, чтобы продолжить.</noscript>

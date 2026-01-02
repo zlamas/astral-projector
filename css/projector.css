@@ -1,6 +1,15 @@
 :root {
-  --accent: orange;
-  --invalid: red;
+  --color-bg: #643;
+  --color-text: white;
+  --color-accent: orange;
+  --color-invalid: red;
+
+  --card-height: 5em;
+  --card-radius: 0.3em;
+
+  --transition-fast: 0.3s;
+  --transition-medium: 0.5s;
+  --transition-slow: 1s;
 }
 html,
 body {
@@ -11,8 +20,8 @@ body {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: #643 url(../img/bg.jpg?) center / auto 100% fixed;
-  color: white;
+  background: var(--color-bg) url(../img/bg.jpg) 50% 0 / auto 100vh;
+  color: var(--color-text);
   font: 2.5vh "Open Sans", sans-serif;
   justify-content: center;
   text-align: center;
@@ -55,11 +64,11 @@ p {
   font-family: inherit;
   font-size: 1.2em;
   text-shadow: inherit;
-  transition: box-shadow 0.5s, opacity 0.5s;
+  transition: var(--transition-fast);
 }
 .button:focus,
 .dropdown:focus {
-  box-shadow: 0 0 0.3em 0.2em var(--accent);
+  box-shadow: 0 0 0.3em 0.2em var(--color-accent);
   outline: 0;
 }
 :disabled {
@@ -67,7 +76,7 @@ p {
   opacity: 0.5;
 }
 :user-invalid {
-  box-shadow: 0 0 0.1em 0.1em var(--invalid);
+  box-shadow: 0 0 0.1em 0.1em var(--color-invalid);
 }
 .button {
   background: none;
@@ -84,38 +93,28 @@ p {
   justify-content: space-around;
   margin: 0.3em 0;
 }
-.button-deck {
-  box-shadow:
-    0.15em 0.15em 0 0.1em #333,
-    0.3em 0.3em 0 0.1em #333,
-    0.15em 0.15em 0.5em 0.3em currentcolor;
-}
 .button-margin {
   margin-top: 0.5em;
 }
 .button-help {
   cursor: help;
 }
-.button-table-reset {
-  height: 3em;
-  border-radius: 9em;
-  box-shadow: 0 0 0.5em currentcolor;
-}
-.button-deck,
-.button-table-reset,
-.card {
+.card,
+.deck,
+.table-reset {
   cursor: pointer;
-  transition: box-shadow 0.5s, color 0.5s;
+  transition: var(--transition-medium);
+  transition-property: box-shadow, color;
 }
-.button-deck,
 .card-animated,
+.deck,
 .slot {
-  height: 5em;
-  border-radius: 0.3em;
+  height: var(--card-height);
+  border-radius: var(--card-radius);
 }
 .card {
   height: 100%;
-  animation: 0.5s fade-in;
+  animation: var(--transition-medium) fade-in;
   border-radius: inherit;
   box-shadow: 0 0 0.5em currentcolor;
   transform: translateZ(1px);
@@ -123,6 +122,17 @@ p {
 .card-animated {
   position: absolute;
   z-index: 29;
+}
+.deck {
+  box-shadow:
+    0.15em 0.15em 0 0.1em #333,
+    0.3em 0.3em 0 0.1em #333,
+    0.15em 0.15em 0.5em 0.3em currentcolor;
+}
+.table-reset {
+  height: 3em;
+  border-radius: 9em;
+  box-shadow: 0 0 0.5em currentcolor;
 }
 .card-alt-name {
   font-style: italic;
@@ -173,7 +183,7 @@ p {
   white-space: normal;
 }
 .fade-in {
-  animation: 0.5s fade-in;
+  animation: var(--transition-medium) fade-in;
 }
 .header {
   font-size: 0.8em;
@@ -206,27 +216,19 @@ p {
   position: fixed;
   width: 100%;
   height: 100%;
-  animation: 0.5s fade-in;
+  animation: var(--transition-medium) fade-in;
   background: rgba(0, 0, 0, 0.8);
   z-index: 99;
 }
 .modal-content {
   width: 100%;
   height: 100%;
-  animation: 0.5s zoom-in;
+  animation: var(--transition-medium) zoom-in;
   object-fit: contain;
 }
 .modal-image {
   cursor: zoom-out;
   padding: 1em;
-}
-.noscript-warning {
-  position: fixed;
-  width: 100%;
-  background: #b43;
-  font-weight: bold;
-  padding: 12px;
-  z-index: 99;
 }
 .scrollable {
   border-radius: 0.5em;
@@ -235,7 +237,7 @@ p {
   touch-action: pan-y;
 }
 .selected {
-  box-shadow: 0 0 0.3em 0.2em var(--accent);
+  box-shadow: 0 0 0.3em 0.2em var(--color-accent);
 }
 .slot,
 .table {
@@ -248,7 +250,7 @@ p {
   min-width: 2.7em;
   box-shadow: 0 0 0.8em inset;
   transform: translate(-50%, -50%);
-  transition: top 1s, left 1s;
+  transition: var(--transition-slow);
   will-change: top;
 }
 .slot span {
@@ -274,7 +276,7 @@ p {
   left: 0.5em;
 }
 .table-element:hover {
-  color: var(--accent);
+  color: var(--color-accent);
 }
 .title {
   font: 1.8em "Edo", sans-serif;
@@ -290,6 +292,14 @@ p {
 }
 .button-help:hover ~ .tooltip {
   display: block;
+}
+.error {
+  position: fixed;
+  width: 100%;
+  background: #b43;
+  font-weight: bold;
+  padding: 12px;
+  z-index: 99;
 }
 @keyframes spin {
   0% {
@@ -309,71 +319,72 @@ p {
     }
   }
 }
-#sp-cross #s1, #sp-cross #s2 {top: 50%; left: 37%}
-#sp-cross #s2 {transform: translate(-50%, -50%) rotate(90deg); transform-origin: 25% 66%}
-#sp-cross #s3 {top: 20%; left: 37%}
-#sp-cross #s4 {top: 80%; left: 37%}
-#sp-cross #s5 {top: 50%; left: 14%}
-#sp-cross #s6 {top: 50%; left: 60%}
-#sp-cross #s7 {top: 86%; left: 83%}
-#sp-cross #s8 {top: 62%; left: 83%}
-#sp-cross #s9 {top: 38%; left: 83%}
-#sp-cross #s10 {top: 14%; left: 83%}
-#sp-faust #s1, #sp-disorder #s2, #sp-marriage #s4 {top: 65%; left: 20%}
-#sp-faust #s2, #sp-disorder #s1, #sp-marriage #s1 {top: 20%}
-#sp-faust #s3, #sp-disorder #s3, #sp-marriage #s5 {top: 65%; left: 80%}
-#sp-faust #s4, #sp-disorder #s4, #sp-marriage #s2 {top: 35%; left: 20%}
-#sp-faust #s5, #sp-disorder #s6, #sp-marriage #s6 {top: 80%}
-#sp-faust #s6, #sp-disorder #s5, #sp-marriage #s3 {top: 35%; left: 80%}
-#sp-faust #s7, #sp-disorder #s7, #sp-one #s1 {top: 50%}
-#sp-problem #s1 {top: 30%}
-#sp-problem #s2 {top: 65%; left: 25%}
-#sp-problem #s3 {top: 65%}
-#sp-problem #s4 {top: 65%; left: 75%}
-#sp-progress #s1 {top: 50%; left: 20%}
-#sp-progress #s2 {top: 50%; left: 40%}
-#sp-progress #s3 {top: 50%; left: 60%}
-#sp-progress #s4 {top: 20%; left: 20%}
-#sp-progress #s5 {top: 20%; left: 40%}
-#sp-progress #s6 {top: 20%; left: 60%}
-#sp-progress #s7 {top: 80%; left: 45%}
-#sp-progress #s8 {top: 80%; left: 65%}
-#sp-progress #s9 {top: 80%; left: 85%}
-#sp-progress #s10 {top: 80%; left: 20%}
-#sp-solution #s1, #sp-station #s1 {top: 50%}
-#sp-solution #s2, #sp-station #s7 {top: 25%; left: 30%}
-#sp-solution #s3, #sp-station #s2 {top: 25%; left: 70%}
-#sp-solution #s4, #sp-station #s6 {top: 50%; left: 30%}
-#sp-solution #s5, #sp-station #s3 {top: 50%; left: 70%}
-#sp-solution #s6, #sp-station #s5 {top: 75%; left: 30%}
-#sp-solution #s7, #sp-station #s4 {top: 75%; left: 70%}
-#sp-swing #s1 {top: 20%; left: 25%}
-#sp-swing #s2 {top: 35%; left: 20%}
-#sp-swing #s3 {top: 50%; left: 25%}
-#sp-swing #s4 {top: 65%; left: 20%}
-#sp-swing #s5 {top: 80%; left: 25%}
-#sp-swing #s6 {top: 20%; left: 75%}
-#sp-swing #s7 {top: 35%; left: 80%}
-#sp-swing #s8 {top: 50%; left: 75%}
-#sp-swing #s9 {top: 65%; left: 80%}
-#sp-swing #s10 {top: 80%; left: 75%}
-#sp-swing #s11 {top: 50%}
-#sp-choice #s1 {top: 50%; left: 20%}
-#sp-choice #s2 {top: 30%; left: 40%}
-#sp-choice #s3 {top: 30%; left: 60%}
-#sp-choice #s4 {top: 30%; left: 80%}
-#sp-choice #s5 {top: 70%; left: 40%}
-#sp-choice #s6 {top: 70%; left: 60%}
-#sp-choice #s7 {top: 70%; left: 80%}
-#sp-free #s1 {top: 20%; left: 20%}
-#sp-free #s2 {top: 20%; left: 40%}
-#sp-free #s3 {top: 20%; left: 60%}
-#sp-free #s4 {top: 20%; left: 80%}
-#sp-free #s5 {top: 50%; left: 20%}
-#sp-free #s6 {top: 50%; left: 40%}
-#sp-free #s7 {top: 50%; left: 60%}
-#sp-free #s8 {top: 50%; left: 80%}
-#sp-free #s9 {top: 80%; left: 20%}
-#sp-free #s10 {top: 80%; left: 40%}
-#sp-free #s11 {top: 80%; left: 60%}
-#sp-free #s12 {top: 80%; left: 80%}
+[data-spread="cross"] .s1 {top: 50%; left: 37%}
+[data-spread="cross"] .s2 {top: 50%; left: 37%; transform: translate(-50%, -50%) rotate(90deg); transform-origin: 25% 66%}
+[data-spread="cross"] .s3 {top: 20%; left: 37%}
+[data-spread="cross"] .s4 {top: 80%; left: 37%}
+[data-spread="cross"] .s5 {top: 50%; left: 14%}
+[data-spread="cross"] .s6 {top: 50%; left: 60%}
+[data-spread="cross"] .s7 {top: 86%; left: 83%}
+[data-spread="cross"] .s8 {top: 62%; left: 83%}
+[data-spread="cross"] .s9 {top: 38%; left: 83%}
+[data-spread="cross"] .s10 {top: 14%; left: 83%}
+[data-spread="faust"] .s1, [data-spread="disorder"] .s2, [data-spread="marriage"] .s4 {top: 65%; left: 20%}
+[data-spread="faust"] .s2, [data-spread="disorder"] .s1, [data-spread="marriage"] .s1 {top: 20%}
+[data-spread="faust"] .s3, [data-spread="disorder"] .s3, [data-spread="marriage"] .s5 {top: 65%; left: 80%}
+[data-spread="faust"] .s4, [data-spread="disorder"] .s4, [data-spread="marriage"] .s2 {top: 35%; left: 20%}
+[data-spread="faust"] .s5, [data-spread="disorder"] .s6, [data-spread="marriage"] .s6 {top: 80%}
+[data-spread="faust"] .s6, [data-spread="disorder"] .s5, [data-spread="marriage"] .s3 {top: 35%; left: 80%}
+[data-spread="faust"] .s7, [data-spread="disorder"] .s7 {top: 50%}
+[data-spread="problem"] .s1 {top: 30%}
+[data-spread="problem"] .s2 {top: 65%; left: 25%}
+[data-spread="problem"] .s3 {top: 65%}
+[data-spread="problem"] .s4 {top: 65%; left: 75%}
+[data-spread="progress"] .s1 {top: 50%; left: 20%}
+[data-spread="progress"] .s2 {top: 50%; left: 40%}
+[data-spread="progress"] .s3 {top: 50%; left: 60%}
+[data-spread="progress"] .s4 {top: 20%; left: 20%}
+[data-spread="progress"] .s5 {top: 20%; left: 40%}
+[data-spread="progress"] .s6 {top: 20%; left: 60%}
+[data-spread="progress"] .s7 {top: 80%; left: 45%}
+[data-spread="progress"] .s8 {top: 80%; left: 65%}
+[data-spread="progress"] .s9 {top: 80%; left: 85%}
+[data-spread="progress"] .s10 {top: 80%; left: 20%}
+[data-spread="solution"] .s1, [data-spread="station"] .s1 {top: 50%}
+[data-spread="solution"] .s2, [data-spread="station"] .s7 {top: 25%; left: 30%}
+[data-spread="solution"] .s3, [data-spread="station"] .s2 {top: 25%; left: 70%}
+[data-spread="solution"] .s4, [data-spread="station"] .s6 {top: 50%; left: 30%}
+[data-spread="solution"] .s5, [data-spread="station"] .s3 {top: 50%; left: 70%}
+[data-spread="solution"] .s6, [data-spread="station"] .s5 {top: 75%; left: 30%}
+[data-spread="solution"] .s7, [data-spread="station"] .s4 {top: 75%; left: 70%}
+[data-spread="swing"] .s1 {top: 20%; left: 25%}
+[data-spread="swing"] .s2 {top: 35%; left: 20%}
+[data-spread="swing"] .s3 {top: 50%; left: 25%}
+[data-spread="swing"] .s4 {top: 65%; left: 20%}
+[data-spread="swing"] .s5 {top: 80%; left: 25%}
+[data-spread="swing"] .s6 {top: 20%; left: 75%}
+[data-spread="swing"] .s7 {top: 35%; left: 80%}
+[data-spread="swing"] .s8 {top: 50%; left: 75%}
+[data-spread="swing"] .s9 {top: 65%; left: 80%}
+[data-spread="swing"] .s10 {top: 80%; left: 75%}
+[data-spread="swing"] .s11 {top: 50%}
+[data-spread="choice"] .s1 {top: 50%; left: 20%}
+[data-spread="choice"] .s2 {top: 30%; left: 40%}
+[data-spread="choice"] .s3 {top: 30%; left: 60%}
+[data-spread="choice"] .s4 {top: 30%; left: 80%}
+[data-spread="choice"] .s5 {top: 70%; left: 40%}
+[data-spread="choice"] .s6 {top: 70%; left: 60%}
+[data-spread="choice"] .s7 {top: 70%; left: 80%}
+[data-spread="free"] .s1 {top: 20%; left: 20%}
+[data-spread="free"] .s2 {top: 20%; left: 40%}
+[data-spread="free"] .s3 {top: 20%; left: 60%}
+[data-spread="free"] .s4 {top: 20%; left: 80%}
+[data-spread="free"] .s5 {top: 50%; left: 20%}
+[data-spread="free"] .s6 {top: 50%; left: 40%}
+[data-spread="free"] .s7 {top: 50%; left: 60%}
+[data-spread="free"] .s8 {top: 50%; left: 80%}
+[data-spread="free"] .s9 {top: 80%; left: 20%}
+[data-spread="free"] .s10 {top: 80%; left: 40%}
+[data-spread="free"] .s11 {top: 80%; left: 60%}
+[data-spread="free"] .s12 {top: 80%; left: 80%}
+[data-spread="one"] .s1 {top: 50%}

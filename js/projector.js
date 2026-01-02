@@ -50,17 +50,15 @@ let cardInfoElements = cardInfo.querySelectorAll(
 );
 
 let cards = toArray(table.getElementsByClassName('card'));
-let fallbackTitles = cards.map((_, i) => 'Карта ' + (i + 1));
+let fallbackTitles = cards.map((_, i) => `Карта ${i + 1}`);
 
 let selectedCards = table.getElementsByClassName('selected');
 let animatedCards = app.getElementsByClassName('card-animated');
 let animatedCardBase = animatedCards[0];
 
-animatedCardBase.remove();
-
 function getPosition(el) {
     let rect = el.getBoundingClientRect();
-    return { left: rect.x + 'px', top: rect.y + 'px' };
+    return { left: `${rect.x}px`, top: `${rect.y}px` };
 }
 
 function fadeOut(el, duration, remove) {
@@ -68,12 +66,8 @@ function fadeOut(el, duration, remove) {
         { opacity: [getComputedStyle(el).opacity, 0] },
         Object.assign({ duration }, animationOptions)
     ).onfinish = (event) => {
-        if (remove) {
-            el.remove();
-        } else {
-            event.target.cancel();
-            hide(el);
-        }
+        event.target.cancel();
+        remove ? el.remove() : hide(el);
     };
 }
 
@@ -85,7 +79,7 @@ function slideUp(query, duration, callback) {
             new Promise((resolve) => {
                 let compStyle = getComputedStyle(el);
                 let keyframes = {
-                    height: [el.offsetHeight + 'px', 0],
+                    height: [compStyle.height, 0],
                     paddingTop: [compStyle.paddingTop, 0],
                     paddingBottom: [compStyle.paddingBottom, 0]
                 };
@@ -158,7 +152,7 @@ function handleSpreadChange(event) {
         handleThemeChange();
     }
 
-    table.id = 'sp-' + spreadId;
+    table.dataset.spread = spreadId;
     titles = data.titles[spreadId] || fallbackTitles;
     spreadDetails.textContent = data.details[spreadId];
     positionList.textContent = data.positions[spreadId];
@@ -185,8 +179,8 @@ function handleDeckChange() {
     }
 
     isClassic = 'classic' in deckSelect.selectedOptions[0].dataset;
-    deckPath = 'img/' + deckId + '/';
-    deck.src = animatedCardBase.src = deckPath + 'back.jpg';
+    deckPath = `img/${deckId}`;
+    deck.src = animatedCardBase.src = `${deckPath}/back.jpg`;
 }
 
 function handleTableClick(event) {
@@ -200,7 +194,7 @@ function handleTableClick(event) {
 }
 
 function resetTable(event) {
-    if (event.target != deckSelect) {
+    if (event.target !== deckSelect) {
         show(deck);
     }
 
@@ -213,6 +207,14 @@ function resetTable(event) {
     });
 
     cards.forEach((el) => fadeOut(el, fadeDuration));
+}
+
+function getRandomCardId() {
+    let id;
+    do {
+        id = Math.floor(Math.random() * deckSize);
+    } while (drawnCards.includes(id));
+    return id;
 }
 
 function createDescription(id) {
@@ -228,7 +230,7 @@ function createDescription(id) {
             let rankName = data.ranks[rank];
             let suitName = data.suits[suit];
 
-            altName = rankName + ' ' + suitName;
+            altName = `${rankName} ${suitName}`;
 
             if (altRanks && rank > 9) {
                 rankName = altRanks[rank - 10];
@@ -236,19 +238,19 @@ function createDescription(id) {
             if (altSuits) {
                 suitName = altSuits[suit];
             }
-            name = rankName + ' ' + suitName;
+            name = `${rankName} ${suitName}`;
 
-            if (name == altName) {
+            if (name === altName) {
                 altName = '';
             }
         } else {
             name = extraMajors[rank];
         }
     } else {
-        if ((id == 8 || id == 11) && isClassic) {
+        if ((id === 8 || id === 11) && isClassic) {
             adjustedId = 19 - id;
         }
-        name = data.roman[adjustedId] + ' ' + data.major[id];
+        name = `${data.roman[adjustedId]} ${data.major[id]}`;
     }
 
     descriptions.push([name, altName, meanings[id], readings && readings[id]]);
@@ -256,19 +258,7 @@ function createDescription(id) {
     return adjustedId;
 }
 
-function drawCard() {
-    let id;
-
-    do {
-        id = Math.floor(Math.random() * deckSize);
-    } while (drawnCards.includes(id));
-
-    let slot = drawnCards.push(id) - 1;
-    let card = cards[slot];
-    let adjustedId = createDescription(id);
-
-    card.src = deckPath + adjustedId + '.jpg';
-
+function animateCard(card) {
     let animatedCardInstance = animatedCardBase.cloneNode();
     let animation = moveFromTo(
         animatedCardInstance,
@@ -286,8 +276,19 @@ function drawCard() {
     app.append(animatedCardInstance);
     animation.onfinish = () => runOnLoad(card, showCard);
     animatedCardInstance.addEventListener('table-reset', showCard);
+}
 
-    if (slot == titles.length - 1) {
+function drawCard() {
+    let id = getRandomCardId();
+    let slot = drawnCards.push(id) - 1;
+    let card = cards[slot];
+
+    id = createDescription(id);
+    card.src = `${deckPath}/${id}.jpg`;
+
+    animateCard(card);
+
+    if (slot === titles.length - 1) {
         show(resetButton);
         hide(deck);
     }
@@ -334,31 +335,47 @@ function deselect() {
     detailsContent.scrollTop = 0;
 }
 
-fetch('res/data.json?3')
-.then((response) => response.json())
-.then((json) => {
-    data = json;
-    startButton.disabled = false;
-    startButton.textContent = 'НАЧАТЬ';
-});
+function initializeApp() {
+    animatedCardBase.remove();
 
-app.onclick = () => {}; // prevent double-tap zoom on ios
-runOnLoad(decor, () => show(decor));
+    app.onclick = () => {}; // prevent double-tap zoom on ios
+    runOnLoad(decor, () => show(decor));
 
-spreadSelect.addEventListener('change', handleSpreadChangeInitial);
-app.addEventListener('submit', startApp, { once: true });
+    spreadSelect.addEventListener('change', handleSpreadChangeInitial);
+    app.addEventListener('submit', startApp, { once: true });
 
-table.addEventListener('click', handleTableClick);
-resetButton.addEventListener('click', resetTable);
+    table.addEventListener('click', handleTableClick);
+    resetButton.addEventListener('click', resetTable);
 
-document.getElementById('btn-show-details').addEventListener('click', showSpreadInfo);
-document.getElementById('btn-hide-details').addEventListener('click', closeDetails);
+    document.getElementById('btn-show-details').addEventListener('click', showSpreadInfo);
+    document.getElementById('btn-hide-details').addEventListener('click', closeDetails);
 
-detailsImage.addEventListener('click', () => show(cardModal));
-cardModal.addEventListener('click', () => hide(cardModal));
+    detailsImage.addEventListener('click', () => show(cardModal));
+    cardModal.addEventListener('click', () => hide(cardModal));
 
-deck.addEventListener('load', () => {
-    show(deck);
-    hide(deckLoadingIcon);
-});
+    deck.addEventListener('load', () => {
+        show(deck);
+        hide(deckLoadingIcon);
+    });
+
+    fetch('res/data.json')
+        .then((response) => {
+            if (!response.ok) throw Error(`HTTP error (status ${response.status})`);
+            return response.json();
+        })
+        .then((json) => {
+            data = json;
+            startButton.textContent = 'НАЧАТЬ';
+            startButton.disabled = false;
+        })
+        .catch((error) => {
+            console.error('Ошибка загрузки данных:', error);
+            app.insertAdjacentHTML('beforeend', '<div class="error">Не удалось загрузить данные</div>');
+            startButton.addEventListener('click', () => location.reload());
+            startButton.textContent = 'Повторить попытку';
+            startButton.disabled = false;
+        });
+}
+
+initializeApp();
 })(document.body);
